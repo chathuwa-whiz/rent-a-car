@@ -4,7 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function AboutUs() {
   return (
-    <div className="relative min-h-screen mb-20">
+    <div className="relative min-h-screen mb-16">
       {/* Top Section - Luxury Car Image */}
       <div className="relative w-full z-10">
         <img
@@ -29,7 +29,7 @@ export default function AboutUs() {
       </div>
 
       {/* Bottom Section - Content & Features */}
-      <div className="relative py-12 px-4 md:px-12">
+      <div className="relative py-14 px-4 md:px-12">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           
           {/* Left Side - Text Section */}
