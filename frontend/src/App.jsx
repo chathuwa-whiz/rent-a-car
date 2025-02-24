@@ -21,8 +21,6 @@ export default function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Admin Routes */}
-
         {/* User Routes */}
         <Route path='/login' element={<UserLogin />} />
         <Route path='/register' element={<UserRegister />} />
