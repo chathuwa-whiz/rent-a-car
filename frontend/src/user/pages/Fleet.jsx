@@ -85,7 +85,7 @@ const carData = [
     booked: false,
     type: "Coupe",
     transmission: "Automatic",
-    seats: 2,
+    seats: 5,
     rentalType: "Per Day"
   }
 ];
@@ -94,6 +94,10 @@ const getModelsByBrand = (brand) => {
   return [...new Set(carData
     .filter(car => car.brand === brand)
     .map(car => car.model))];
+};
+
+const getUniqueBrands = () => {
+  return [...new Set(carData.map(car => car.brand))];
 };
 
 export default function Fleet() {
@@ -105,12 +109,14 @@ export default function Fleet() {
     model: '',
     types: [],
     transmission: [],
-    seats: '4',
+    seats: '',
     availableOnly: false,
     rentalType: 'Any'
   });
   const [filteredCars, setFilteredCars] = useState(carData);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 6;
 
   const handleRangeChange = (newRange) => {
     setRange(newRange);
@@ -148,7 +154,7 @@ export default function Fleet() {
       model: '',
       types: [],
       transmission: [],
-      seats: '4',
+      seats: '',
       availableOnly: false,
       rentalType: 'Any'
     });
@@ -208,11 +214,22 @@ export default function Fleet() {
       result = result.filter(car => car.rentalType === filters.rentalType || car.rentalType === 'Any');
     }
 
+    setCurrentPage(1);
+
     setFilteredCars(result);
   }, [filters, range]);
 
+  const indexOfLastCar = currentPage * carsPerPage;
+  const indexOfFirstCar = indexOfLastCar - carsPerPage;
+  const currentCars = filteredCars.slice(indexOfFirstCar, indexOfLastCar);
+  const totalPages = Math.ceil(filteredCars.length / carsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
-    <div className='relative bg-primarybg p-4'>
+    <div className='relative bg-primarybg h-full p-4'>
       {/* Mobile Filter Toggle Button */}
       <button 
         onClick={toggleFilter}
@@ -255,9 +272,11 @@ export default function Fleet() {
               onChange={(e) => handleFilterChange('brand', e.target.value)}
             >
               <option value="">Select Brand</option>
-              <option value="Honda">Honda</option>
-              <option value="Nissan">Nissan</option>
-              <option value="Hyundai">Hyundai</option>
+              {getUniqueBrands().map(brand => (
+                <option key={brand} value={brand}>
+                  {brand}
+                </option>
+              ))}
             </select>
             <select
               className='py-2 px-6 rounded-lg bg-graydark w-full'
@@ -353,6 +372,7 @@ export default function Fleet() {
               value={filters.seats}
               onChange={(e) => handleFilterChange('seats', e.target.value)}
             >
+              <option value="">Any</option>
               <option value="2">2</option>
               <option value="4">4</option>
               <option value="5">5</option>
@@ -404,7 +424,7 @@ export default function Fleet() {
 
           {/* Vehicle grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5'>
-            {filteredCars.map(car => (
+            {currentCars.map(car => (
               <div key={car.id} className='rounded-2xl border border-graydark'>
                 <div className='relative'>
                   <img src={car.image} alt={car.name} className='w-full' />
@@ -431,6 +451,49 @@ export default function Fleet() {
               </div>
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className='flex justify-center items-center gap-2 mt-8'>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`px-3 py-1 rounded ${
+                  currentPage === 1
+                    ? 'bg-graydark text-graylight cursor-not-allowed'
+                    : 'bg-gasolindark text-white hover:bg-gasolinlight'
+                }`}
+              >
+                Previous
+              </button>
+              
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => handlePageChange(index + 1)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === index + 1
+                      ? 'bg-gasolindark text-white'
+                      : 'bg-graydark text-white hover:bg-gasolinlight'
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className={`px-3 py-1 rounded ${
+                  currentPage === totalPages
+                    ? 'bg-graydark text-graylight cursor-not-allowed'
+                    : 'bg-gasolindark text-white hover:bg-gasolinlight'
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
