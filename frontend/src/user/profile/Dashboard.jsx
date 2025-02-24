@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import civic from "./assets/civic.webp";
 import crv from "./assets/crv.webp";
 import crve from "./assets/crve.webp";
-import user from "./assets/i55.png";
+import userImage from "./assets/i55.png";
 
 const Dashboard = () => {
   const user = {
@@ -76,7 +76,7 @@ const Dashboard = () => {
           <section className="bg-graydark p-5 w-1/4">
             <div className="text-center">
               <img
-                src={user}
+                src={userImage}
                 alt="User"
                 className="w-20 h-20 rounded-full mx-auto"
               />
