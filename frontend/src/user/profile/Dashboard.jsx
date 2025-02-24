@@ -1,5 +1,4 @@
 import React from "react";
-import Sidebar from "./Sidebar";
 import civic from "./assets/civic.webp";
 import crv from "./assets/crv.webp";
 import crve from "./assets/crve.webp";
