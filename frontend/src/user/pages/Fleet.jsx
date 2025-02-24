@@ -229,7 +229,7 @@ export default function Fleet() {
   };
 
   return (
-    <div className='relative bg-primarybg p-4'>
+    <div className='relative bg-primarybg min-h-screen p-4'>
       {/* Mobile Filter Toggle Button */}
       <button 
         onClick={toggleFilter}
