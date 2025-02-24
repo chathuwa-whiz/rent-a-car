@@ -116,7 +116,7 @@ export default function Fleet() {
   const [filteredCars, setFilteredCars] = useState(carData);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const carsPerPage = 6;
+  const carsPerPage = 9;
 
   const handleRangeChange = (newRange) => {
     setRange(newRange);
@@ -229,7 +229,7 @@ export default function Fleet() {
   };
 
   return (
-    <div className='relative bg-primarybg h-full p-4'>
+    <div className='relative bg-primarybg p-4'>
       {/* Mobile Filter Toggle Button */}
       <button 
         onClick={toggleFilter}
