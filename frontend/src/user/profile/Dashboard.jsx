@@ -4,7 +4,7 @@ import crv from "./assets/crv.webp";
 import crve from "./assets/crve.webp";
 import userImage from "./assets/i55.png";
 
-const Dashboard = () => {
+export default function Dashboard() {
   const user = {
     name: "Jake Danial",
     phone: "077 3548 895",
@@ -150,5 +150,3 @@ const Dashboard = () => {
     </div>
   );
 };
-
-export default Dashboard;
