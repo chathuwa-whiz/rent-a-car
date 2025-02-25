@@ -111,7 +111,7 @@ const TextHoverEffect = ({ text }) => {
 
 export default function Footer() {
   return (
-    <div >
+    <div>
       <footer className="pt-22 px-6 md:px-20">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between">
           {/* Left Section */}
@@ -122,8 +122,8 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Middle and Right Sections - Menu & Legal (Grouped Together) */}
-          <div className="flex gap-16 md:gap-24">
+          {/* Middle and Right Sections - Menu & Legal (Columns on Mobile) */}
+          <div className="flex flex-col md:flex-row gap-16 md:gap-24">
             {/* Menu Section */}
             <div>
               <h3 className="text-graylight font-semibold">Menu</h3>
