@@ -46,73 +46,94 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="h-screen bg-primarybg text-white md:ml-64 ">
+    <div className="text-white px-6 pb-6">
 
-      {/* Main Content */}
-      <main className="flex-1 p-10">
-        <h2 className="text-2xl font-semibold">Welcome, {user.name}!</h2>
-
-        <div className="flex gap-3">
-          {/* Active Rentals */}
-          <section className="mt-6 bg-graydark p-6 rounded-lg w-3/4">
-            <h3 className="text-gasolinlight text-2xl">Active Rentals</h3>
-            <div className="flex items-center mt-4">
-              <img
-                src={activeRental.image}
-                alt={activeRental.car}
-                className="w-40 h-24 rounded"
-              />
-              <div className="ml-4">
-                <h4 className="text-xl font-bold">{activeRental.car}</h4>
-                <p className="text-darkred font-bold">{activeRental.design}</p>
-                <p>From: {activeRental.from}</p>
-                <p>To: {activeRental.to}</p>
-              </div>
+      <div className="flex justify-between gap-3 w-full">
+        {/* Active Rentals */}
+        <section className="bg-black px-6 py-3 rounded-lg w-3/4">
+          <h3 className="text-gasolinlight text-2xl">Active Rentals</h3>
+          <div className="flex items-center justify-between mt-4">
+            <img
+              src={activeRental.image}
+              alt={activeRental.car}
+              className="w-70"
+            />
+            <div>
+              <h4 className="text-2xl font-bold">{activeRental.car}</h4>
+              <p className="text-darkred font-bold">{activeRental.design}</p>
             </div>
-          </section>
-
-          {/* User Profile */}
-          <section className="bg-graydark p-5 w-1/4">
-            <div className="text-center">
-              <img
-                src={userImage}
-                alt="User"
-                className="w-20 h-20 rounded-full mx-auto"
-              />
-              <h3 className="mt-4 text-xl font-semibold">{user.name}</h3>
-              <p className="text-sm text-graylight">Phone: {user.phone}</p>
-              <p className="text-sm text-graylight">Email: {user.email}</p>
-              <p className="text-sm text-graylight">DOB: {user.dob}</p>
-              <p className="text-sm text-graylight">License: {user.license}</p>
+            <div className="border border-gasolindark bg-primarybg rounded-lg px-5 py-2">
+              <p className="flex justify-between gap-20">
+                <span>From</span>
+                <span>:{activeRental.from}</span>
+              </p>
+              <p className="flex justify-between">
+                <span>To</span>
+                <span>:{activeRental.to}</span>
+              </p>
             </div>
-          </section>
-        </div>
-
-        {/* Rental History */}
-        <section className="mt-6 w-full">
-          <h3 className="text-darkred text-2xl">Rental History</h3>
-          <div className="mt-4 space-y-4">
-            {rentalHistory.map((rental, index) => (
-              <div
-                key={index}
-                className="flex items-center bg-graydark p-4 rounded-lg"
-              >
-                <img
-                  src={rental.image}
-                  alt={rental.car}
-                  className="w-32 h-20 rounded"
-                />
-                <div className="ml-4">
-                  <h4 className="text-xl font-bold">{rental.car}</h4>
-                  <p className="text-darkred font-bold">{rental.design}</p>
-                  <p>From: {rental.from}</p>
-                  <p>To: {rental.to}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </section>
-      </main>
+
+        {/* User Profile */}
+        <section className="bg-black p-5 w-1/4 rounded-lg overflow-hidden">
+          <div className="flex text-center">
+            <h3 className="mt-4 text-xl font-semibold mx-auto">{user.name}</h3>
+            <img
+              src={userImage}
+              alt="User"
+              className="w-20 h-20 rounded-full"
+            />
+          </div>
+          <div className="flex justify-between mt-3">
+            <div className="flex flex-col space-y-2">
+              <p className="text-sm text-graylight">Phone</p>
+              <p className="text-sm text-graylight">Email</p>
+              <p className="text-sm text-graylight">DOB</p>
+              <p className="text-sm text-graylight">License</p>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <p className="text-sm text-graylight">: {user.phone}</p>
+              <p className="text-sm text-graylight">: {user.email}</p>
+              <p className="text-sm text-graylight">: {user.dob}</p>
+              <p className="text-sm text-graylight">: {user.license}</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* Rental History */}
+      <div className="mt-6">
+        <h3 className="text-darkred font-semibold text-2xl">Rental History</h3>
+        <div className="mt-4 space-y-4 px-10">
+          {rentalHistory.map((rental, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between bg-black py-4 px-10 rounded-lg border border-gasolindark"
+            >
+              <img
+                src={rental.image}
+                alt={rental.car}
+                className="w-40"
+              />
+              <div>
+                <h4 className="text-2xl font-bold">{rental.car}</h4>
+                <p className="text-darkred font-bold">{rental.design}</p>
+              </div>
+              <div className="border border-darkred bg-primarybg rounded-lg px-5 py-2">
+                <p className="flex justify-between gap-20">
+                  <span>From</span>
+                  <span>:{rental.from}</span>
+                </p>
+                <p className="flex justify-between">
+                  <span>To</span>
+                  <span>:{rental.to}</span>
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

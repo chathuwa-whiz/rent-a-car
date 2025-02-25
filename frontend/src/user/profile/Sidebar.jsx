@@ -3,11 +3,11 @@ import { FaSignOutAlt, FaWallet, FaCar, FaUser } from "react-icons/fa";
 
 const Sidebar = () => {
   return (
-    <aside className="fixed top-0 left-0 h-full w-64 bg-primarybg p-5 flex flex-col justify-between z-50">
+    <aside className="top-0 left-0 w-1/6 p-5 flex flex-col justify-between">
       <div>
         <h1 className="text-xl font-bold text-white">RENTACAR</h1>
         <nav className="space-y-4 mt-6 text-[20px]">
-          <a href="#" className="flex items-center text-white hover:text-gasolinlight focus:text-gasolinlight mb-6">
+          <a href="" className="flex items-center text-white hover:text-gasolinlight focus:text-gasolinlight mb-6">
             <FaCar className="mr-4" /> Dashboard
           </a>
           <a href="#" className="flex items-center text-white hover:text-gasolinlight focus:text-gasolinlight mb-6">
