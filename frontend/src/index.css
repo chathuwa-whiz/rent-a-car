@@ -1,13 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-*: initial;
-  --color-primarybg: #1c1c1c;
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-darkred: #970102;
-  --color-gasolindark: #177a65;
-  --color-gasolinlight: #24ac90;
-  --color-graydark: #6e6969;
-  --color-graylight: #b8b8b8;
+    --color-*: initial;
+    --color-primarybg: #1C1C1C;
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    --color-darkred: #970102;
+    --color-gasolindark: #177A65;
+    --color-gasolinlight: #24AC90;
+    --color-graydark: #6E6969;
+    --color-graylight: #B8B8B8;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

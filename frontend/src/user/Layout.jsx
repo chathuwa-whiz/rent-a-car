@@ -9,12 +9,12 @@ import Footer from './components/Footer'
 export default function Layout() {
   return (
     <div>
-        <Header />
-        <Hero />
-        <Specials />
-        <AboutUs />
-        <Contact />
-        <Footer />
+      <Header />
+      <Hero />
+      <Specials />
+      <AboutUs />
+      <Contact />
+      <Footer />
     </div>
   )
 }
