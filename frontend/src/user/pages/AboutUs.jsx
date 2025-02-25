@@ -16,7 +16,7 @@ export default function AboutUs() {
         {/* "RENT A CAR" Banner */}
         <div className="absolute top-[80%] md:top-[20%] right-[38%] md:right-[37.5%] w-[40%] md:w-[6%] h-[30%] md:h-[50%] 
         bg-gradient-to-r from-gasolindark to-gasolinlight md:px-2 py-4 md:py-16 font-bold z-50">
-          <h3 className="text-xl md:text-3xl w-full md:w-[12rem] text-[#fff] pl-4 md:pl-14 font-extrabold leading-tight">
+          <h3 className="text-xl md:text-3xl w-full md:w-[12rem] text-white pl-4 md:pl-14 font-extrabold leading-tight">
             RENT A CAR
           </h3>
         </div>
@@ -34,7 +34,7 @@ export default function AboutUs() {
           
           {/* Left Side - Text Section */}
           <div className="mt-16 md:mt-20 md:-ml-10">
-            <h2 className="text-2xl md:text-3xl text-[#fff] font-extrabold">
+            <h2 className="text-2xl md:text-3xl text-white font-extrabold">
               LUXURY CAR RENTAL SRI LANKA
             </h2>
             <p className="text-graydark my-6 md:my-8 w-full md:w-md leading-relaxed text-sm md:text-base">

@@ -2,6 +2,9 @@
 
 @theme {
     --color-*: initial;
+    --color-primarybg: #1c1c1c;
+    --color-white: #ffffff;
+    --color-black: #000000;
     --color-darkred: #970102;
     --color-gasolindark: #177A65;
     --color-gasolinlight: #24AC90;
