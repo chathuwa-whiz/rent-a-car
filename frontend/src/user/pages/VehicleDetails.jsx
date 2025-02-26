@@ -95,7 +95,7 @@ export default function VehicleDetails() {
 
           {/* button */}
           <button 
-            onClick={() => navigate('/payment')}
+            onClick={() => navigate(`/payment/${vehicle.id}`)}
             className='from-gasolindark to-gasolinlight from-20% bg-gradient-to-b text-white font-semibold rounded-lg p-2 md:p-3 hover:opacity-90 transition-opacity'>
             Book Now
           </button>
