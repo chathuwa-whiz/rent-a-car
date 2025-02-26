@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { TbSearch, TbArrowLeft, TbHeart, TbArrowRight, TbAdjustmentsHorizontal, TbX } from 'react-icons/tb'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import Header from '../components/Header';
 
 const carData = [
   {
@@ -229,11 +230,11 @@ export default function Fleet() {
   };
 
   return (
-    <div className='relative bg-primarybg min-h-screen p-4'>
+    <div className='relative bg-primarybg min-h-screen px-4 pt-24'>
       {/* Mobile Filter Toggle Button */}
       <button 
         onClick={toggleFilter}
-        className='lg:hidden fixed top-4 right-4 z-50 bg-gasolindark text-white p-2 rounded-full shadow-lg'
+        className='lg:hidden fixed top-4 left-4 z-50 bg-gasolindark opacity-50 text-white p-2 rounded-full shadow-lg'
       >
         {isFilterVisible ? <TbX size={24} /> : <TbAdjustmentsHorizontal size={24} />}
       </button>
@@ -417,13 +418,13 @@ export default function Fleet() {
 
         {/* Vehicle list */}
         <div className='w-full lg:w-3/4'>
-          <div className='flex gap-2 items-center mb-5'>
+          {/* <div className='flex gap-2 items-center mb-5'>
             <TbArrowLeft className='text-graydark' />
             <div className='font-bold text-graydark'>Back</div>
-          </div>
+          </div> */}
 
           {/* Vehicle grid */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
             {currentCars.map(car => (
               <div key={car.id} className='rounded-2xl border border-graydark'>
                 <div className='relative'>

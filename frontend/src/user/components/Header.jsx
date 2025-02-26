@@ -41,8 +41,8 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-6 text-white">
-            <a href="#" className="hover:text-graylight">Home</a>
-            <a href="#" className="hover:text-graylight">Garage</a>
+            <a href="/" className="hover:text-graylight">Home</a>
+            <a href="/fleet" className="hover:text-graylight">Fleet</a>
             <a href="#" className="hover:text-graylight">About Us</a>
             <a href="#" className="hover:text-graylight">Contacts</a>
           </div>
@@ -72,8 +72,8 @@ export default function Header() {
         {/* Mobile Dropdown Menu */}
         {isOpen && (
           <div className="md:hidden flex flex-col items-center space-y-4 mt-4 py-4">
-            <a href="#" className="text-white hover:text-graylight">Home</a>
-            <a href="#" className="text-white hover:text-graylight">Garage</a>
+            <a href="/" className="text-white hover:text-graylight">Home</a>
+            <a href="/fleet" className="text-white hover:text-graylight">Garage</a>
             <a href="#" className="text-white hover:text-graylight">About Us</a>
             <a href="#" className="text-white hover:text-graylight">Contacts</a>
 

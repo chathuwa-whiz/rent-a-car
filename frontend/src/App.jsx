@@ -2,7 +2,8 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // Unregistered User Routes
-import UserLayout from './user/Layout'
+import RootLayout from './user/RootLayout'
+import Landing from './user/pages/Landing'
 import UserLogin from './user/pages/Login'
 import UserRegister from './user/pages/Register'
 import Fleet from './user/pages/Fleet'
@@ -24,10 +25,12 @@ export default function App() {
         {/* User Routes */}
         <Route path='/login' element={<UserLogin />} />
         <Route path='/register' element={<UserRegister />} />
-        <Route path='/fleet' element={<Fleet />} />
-        <Route path='/payment' element={<Payment />} />
-        <Route path='/vehicledetails' element={<VehicleDetails />} />
-        <Route path="/" element={<UserLayout />} />
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<Landing />} />
+          <Route path='fleet' element={<Fleet />} />
+          <Route path='vehicledetails' element={<VehicleDetails />} />
+          <Route path='/payment' element={<Payment />} />
+        </Route>
 
         {/* User Profile / Registered User Routes */}
         <Route path='/user/profile' element={<UserProfileLayout />}>

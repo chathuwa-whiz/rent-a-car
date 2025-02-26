@@ -128,8 +128,8 @@ export default function Footer() {
             <div>
               <h3 className="text-graylight font-semibold">Menu</h3>
               <ul className="mt-2 text-graydark space-y-2">
-                <li><a href="#" className="hover:text-graylight">Home</a></li>
-                <li><a href="#" className="hover:text-graylight">Garage</a></li>
+                <li><a href="" className="hover:text-graylight">Home</a></li>
+                <li><a href="/fleet" className="hover:text-graylight">Fleet</a></li>
                 <li><a href="#" className="hover:text-graylight">About</a></li>
                 <li><a href="#" className="hover:text-graylight">Contact</a></li>
               </ul>
