@@ -28,8 +28,8 @@ export default function App() {
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Landing />} />
           <Route path='fleet' element={<Fleet />} />
-          <Route path='vehicledetails' element={<VehicleDetails />} />
-          <Route path='/payment' element={<Payment />} />
+          <Route path='vehicle/:id' element={<VehicleDetails />} />
+          <Route path='payment' element={<Payment />} />
         </Route>
 
         {/* User Profile / Registered User Routes */}
