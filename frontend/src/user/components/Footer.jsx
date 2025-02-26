@@ -12,10 +12,13 @@ const TextHoverEffect = ({ text }) => {
       const svgRect = svgRef.current.getBoundingClientRect();
       const cxPercentage = ((cursor.x - svgRect.left) / svgRect.width) * 100;
       const cyPercentage = ((cursor.y - svgRect.top) / svgRect.height) * 100;
-      setMaskPosition({
-        cx: `${cxPercentage}%`,
-        cy: `${cyPercentage}%`,
-      });
+
+      if (!isNaN(cxPercentage) && !isNaN(cyPercentage)) {
+        setMaskPosition({
+          cx: `${cxPercentage}%`,
+          cy: `${cyPercentage}%`,
+        });
+      }
     }
   }, [cursor]);
 
@@ -32,13 +35,7 @@ const TextHoverEffect = ({ text }) => {
       className="select-none"
     >
       <defs>
-        <linearGradient
-          id="textGradient"
-          gradientUnits="userSpaceOnUse"
-          cx="50%"
-          cy="50%"
-          r="25%"
-        >
+        <linearGradient id="textGradient" gradientUnits="userSpaceOnUse">
           {hovered && (
             <>
               <stop offset="0%" stopColor={"#177A65"} />
@@ -46,27 +43,14 @@ const TextHoverEffect = ({ text }) => {
             </>
           )}
         </linearGradient>
-        <motion.radialGradient
-          id="revealMask"
-          gradientUnits="userSpaceOnUse"
-          r="20%"
-          animate={maskPosition}
-          transition={{
-            duration: 0,
-            ease: "easeOut",
-          }}
-        >
+
+        <radialGradient id="revealMask" cx={maskPosition.cx} cy={maskPosition.cy} r="30%">
           <stop offset="0%" stopColor="white" />
           <stop offset="100%" stopColor="black" />
-        </motion.radialGradient>
+        </radialGradient>
+
         <mask id="textMask">
-          <rect
-            x="0"
-            y="0"
-            width="100%"
-            height="100%"
-            fill="url(#revealMask)"
-          />
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#revealMask)" />
         </mask>
       </defs>
       <text
@@ -110,6 +94,18 @@ const TextHoverEffect = ({ text }) => {
 };
 
 export default function Footer() {
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 1024);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   return (
     <div>
       <footer className="pt-22 px-6 md:px-20">
@@ -137,7 +133,7 @@ export default function Footer() {
 
             {/* Legal Section */}
             <div>
-              <h3 className="text-graylight font-semibold">Legal</h3>
+              <h3 className="text-graylight font-semibold -mt-8 md:mt-0">Legal</h3>
               <ul className="mt-2 text-graydark space-y-2">
                 <li><a href="#" className="hover:text-graylight">Terms of service</a></li>
                 <li><a href="#" className="hover:text-graylight">Privacy Policy</a></li>
@@ -151,10 +147,34 @@ export default function Footer() {
         <div className="mt-10 pb-6 border-t border-graydark"></div>
       </footer>
 
-      {/* Last Text Section with Hover Effect */}
-      <div className="h-[200px] md:h-[400px] flex justify-center items-center">
-        <TextHoverEffect text="RENTACAR" />
-      </div>
+      {/* Apply text hover effect on large screens */}
+      {isLargeScreen ? (
+        <div className="h-[200px] md:h-[400px] flex justify-center items-center">
+          <TextHoverEffect text="RENTACAR" />
+        </div>
+      ) : (
+        /* Static Gradient Text for Smaller Screens */
+        <div className="h-[200px] md:h-[400px] flex justify-center items-center">
+          <svg width="100%" height="100%" viewBox="0 0 390 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="staticGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#177A65" />
+                <stop offset="100%" stopColor="#24AC90" />
+              </linearGradient>
+            </defs>
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="font-bold text-7xl"
+              fill="url(#staticGradient)"
+            >
+              RENTACAR
+            </text>
+          </svg>
+        </div>
+      )}
     </div>
   );
 }

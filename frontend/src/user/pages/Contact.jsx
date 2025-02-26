@@ -3,17 +3,17 @@ import { FaFacebookF, FaInstagram, FaEnvelope, FaWhatsapp, FaFacebookMessenger }
 export default function ContactPage() {
   return (
     <div className="  md:py-16 px-6 md:px-20 flex justify-center items-center min-h-[70vh]">
-      <div className="max-w-6xl w-full flex flex-col md:flex-row justify-between items-center relative">
+      <div className="max-w-6xl w-full flex flex-col lg:flex-row justify-between items-center relative">
 
         {/* Background Text */}
-        <div
-          className="absolute text-black inset-0 text-[6rem] md:text-[19.5rem] font-extrabold flex justify-center items-center opacity-15 pointer-events-none select-none"
-        >
-          CONTACT
-        </div>
+        <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+        <h1 className="text-[5rem] sm:text-[10rem] lg:text-[13rem] xl:text-[19rem] text-black  font-extrabold uppercase opacity-10 ">
+          Contact
+        </h1>
+      </div>
         
         {/* Left & Middle Section */}
-        <div className="relative z-10 w-full md:w-1/4 flex flex-row gap-2 md:gap-36 justify-between items-center md:items-start mb-16 md:mb-0">
+        <div className="relative z-10 w-full lg:w-1/4 flex flex-row gap-2 lg:gap-16 xl:gap-36 justify-between items-center md:items-start mb-16 md:mb-0">
           
           {/* Logo */}
           <div className="bg-transparent md:mt-2 px-6 py-4 border border-graylight text-lg text-graylight font-semibold text-center">
@@ -23,7 +23,7 @@ export default function ContactPage() {
           {/* Contact Info */}
           <div className="text-graylight text-left ml-4 md:ml-0">
             <p>COLOMBO | SRI LANKA</p>
-            <p className="mt-2">+1234567890</p>
+            <p className="my-2">+1234567890</p>
             <p>rentacar@gmail.com</p>
 
             {/* Social Icons */}
@@ -37,7 +37,7 @@ export default function ContactPage() {
         </div>
 
         {/* Right Section - Contact Form */}
-        <div className="relative md:mt-8 z-10 w-full md:w-2/4 bg-transparent">
+        <div className="relative md:mt-8 z-10 w-full lg:w-2/4 bg-transparent">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-1 flex flex-col gap-4">
               <input
