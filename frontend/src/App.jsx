@@ -17,6 +17,11 @@ import UserProfilePayment from './user/profile/Payment'
 import UserProfileRentals from './user/profile/Rentals'
 import UserProfileAccount from './user/profile/Account'
 
+// Admin Routes
+import AdminLayout from './admin/Layout'
+import AdminDashboard from './admin/pages/Dashboard'
+import AdminMaintenance from './admin/pages/Maintenance'
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -38,6 +43,12 @@ export default function App() {
           <Route path='payment' element={<UserProfilePayment />} />
           <Route path='rentals' element={<UserProfileRentals />} />
           <Route path='account' element={<UserProfileAccount />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route path='/admin' element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path='maintenance' element={<AdminMaintenance />} />
         </Route>
 
       </Routes>
