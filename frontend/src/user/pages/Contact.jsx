@@ -23,7 +23,7 @@ export default function ContactPage() {
           {/* Contact Info */}
           <div className="text-graylight text-left ml-4 md:ml-0">
             <p>COLOMBO | SRI LANKA</p>
-            <p className="mt-2">+1234567890</p>
+            <p className="my-2">+1234567890</p>
             <p>rentacar@gmail.com</p>
 
             {/* Social Icons */}
