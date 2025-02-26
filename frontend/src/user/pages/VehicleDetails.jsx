@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const vehicle = {
   id: 1,
@@ -20,6 +21,9 @@ const vehicle = {
 }
 
 export default function VehicleDetails() {
+
+  const navigate = useNavigate()
+
   return (
     <div className='relative min-h-screen px-4 pt-24'>
       {/* Main container */}
@@ -90,7 +94,9 @@ export default function VehicleDetails() {
           </div>
 
           {/* button */}
-          <button className='from-gasolindark to-gasolinlight from-20% bg-gradient-to-b text-white font-semibold rounded-lg p-2 md:p-3 hover:opacity-90 transition-opacity'>
+          <button 
+            onClick={() => navigate('/payment')}
+            className='from-gasolindark to-gasolinlight from-20% bg-gradient-to-b text-white font-semibold rounded-lg p-2 md:p-3 hover:opacity-90 transition-opacity'>
             Book Now
           </button>
         </div>
