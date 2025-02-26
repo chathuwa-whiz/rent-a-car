@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const Login = () => {
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-row h-screen w-full sm:bg-primarybg">
@@ -30,7 +33,7 @@ const Login = () => {
           <input
             type="email"
             placeholder="eg : Example@gmail.com"
-            className="w-full p-3 mt-1 rounded-md border sm:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
+            className="w-full pl-3 py-2 mt-1 rounded-md border sm:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
           />
 
           <label className="block mt-4 text-lg sm:text-graylight">Password</label>
@@ -38,10 +41,10 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your Password"
-              className="w-full p-3 mt-1 rounded-md border sm:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
+              className="w-full pl-3 py-2 mt-1 rounded-md border sm:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
             />
             <span
-              className="absolute text-xl top-5 right-3 text-graydark cursor-pointer"
+              className="absolute text-xl top-4 right-3 text-graydark cursor-pointer"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEye /> : <FaEyeSlash />}
@@ -53,9 +56,13 @@ const Login = () => {
           Login
         </button>
 
-        <p className="mt-4 text-graylight">
+        <p className="mt-4 text-xs sm:text-sm text-graylight">
           Don't have an account?{" "}
-          <span className="text-white cursor-pointer">Sign-Up</span>
+          <span 
+            className="text-white cursor-pointer"
+            onClick={() => navigate("/register")}>
+            Sign-Up
+          </span>
         </p>
       </div>
 
@@ -73,4 +80,3 @@ const Login = () => {
   );
 };
 
-export default Login;
