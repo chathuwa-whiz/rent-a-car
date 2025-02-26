@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { TbSearch, TbArrowLeft, TbHeart, TbArrowRight, TbAdjustmentsHorizontal, TbX } from 'react-icons/tb'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import Header from '../components/Header';
+import { useNavigate } from 'react-router-dom';
 
 const carData = [
   {
@@ -229,8 +229,10 @@ export default function Fleet() {
     setCurrentPage(pageNumber);
   };
 
+  const navigate = useNavigate();
+
   return (
-    <div className='relative bg-primarybg min-h-screen px-4 pt-24'>
+    <div className='relative min-h-screen px-4 pt-24'>
       {/* Mobile Filter Toggle Button */}
       <button 
         onClick={toggleFilter}
@@ -443,7 +445,10 @@ export default function Fleet() {
                       <span className='text-gasolindark'>Rs.{car.price}</span>
                       <span className='text-graydark'> / Per Day</span>
                     </p>
-                    <div className='flex items-center gap-2 text-gasolindark font-bold'>
+                    <div 
+                      className='flex items-center gap-2 text-gasolindark font-bold cursor-pointer'
+                      onClick={() => navigate(`/vehicle/${car.id}`)}
+                    >
                       <p>DRIVE NOW</p>
                       <TbArrowRight />
                     </div>
