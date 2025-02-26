@@ -8,13 +8,13 @@ import Footer from './components/Footer'
 
 export default function Layout() {
   return (
-    <div>
-      <Header />
-      <Hero />
-      <Specials />
-      <AboutUs />
-      <Contact />
-      <Footer />
+    <div className='bg-[#1C1C1C] overflow-hidden'>
+        <Header />
+        <Hero />
+        <Specials />
+        <AboutUs />
+        <Contact />
+        <Footer />
     </div>
   )
 }
