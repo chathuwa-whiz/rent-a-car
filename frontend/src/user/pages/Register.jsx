@@ -10,7 +10,7 @@ export default function Register() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-row w-full min-h-screen sm:bg-primarybg">
+    <div className="flex flex-row w-full min-h-screen pt-24">
       {/* Left Section (Welcome) */}
       <div className="hidden sm:flex w-1/2 bg-gradient-to-b from-[#2dd6b5] via-gasolindark to-primarybg rounded-t-[50px] flex-col justify-center items-center text-white mt-2 ml-2 flex-grow">
         <h3 className="text-2xl font-bold">RENTACAR</h3>

@@ -23,11 +23,11 @@ export default function App() {
       <Routes>
 
         {/* User Routes */}
-        <Route path='/login' element={<UserLogin />} />
-        <Route path='/register' element={<UserRegister />} />
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Landing />} />
           <Route path='fleet' element={<Fleet />} />
+          <Route path='login' element={<UserLogin />} />
+          <Route path='register' element={<UserRegister />} />
           <Route path='vehicle/:id' element={<VehicleDetails />} />
           <Route path='payment/:id' element={<Payment />} />
         </Route>

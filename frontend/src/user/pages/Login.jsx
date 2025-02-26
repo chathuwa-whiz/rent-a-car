@@ -9,7 +9,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-row h-screen w-full sm:bg-primarybg">
+    <div className="flex flex-row h-screen w-full pt-24">
       {/* Left Section (Login) */}
       <div className="w-full sm:w-1/2 text-white flex flex-col justify-center items-center p-6 sm:p-10 bg-gradient-to-b from-gasolinlight to-primarybg sm:bg-none">
         <h2 className="text-3xl font-semibold">Login</h2>

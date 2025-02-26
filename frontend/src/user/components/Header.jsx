@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; 
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,6 +25,8 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  const navigate = useNavigate();
 
   return (
     <nav
@@ -63,7 +66,9 @@ export default function Header() {
             <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
               EN
             </button>
-            <button className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-gray-200">
+            <button 
+              onClick={() => navigate("/register")}
+              className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight cursor-pointer">
               Sign Up
             </button>
           </div>
@@ -81,7 +86,9 @@ export default function Header() {
               <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
                 EN
               </button>
-              <button className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-gray-200">
+              <button 
+                onClick={() => navigate("/login")}
+                className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight">
                 Sign Up
               </button>
             </div>
