@@ -23,6 +23,9 @@ import AdminDashboard from './admin/pages/Dashboard'
 import AdminMaintenance from './admin/pages/Maintenance'
 import AdminVehicle from './admin/pages/Vehicle'
 import AdminCustomer from './admin/pages/Customer'
+import AdminBooking from './admin/pages/Booking'
+import AdminPayment from './admin/pages/Payment'
+import AdminReport from './admin/pages/Report'
 
 export default function App() {
   return (
@@ -53,6 +56,9 @@ export default function App() {
           <Route path='maintenance' element={<AdminMaintenance />} />
           <Route path='vehicle' element={<AdminVehicle />} />
           <Route path='customers' element={<AdminCustomer />} />
+          <Route path='bookings' element={<AdminBooking />} />
+          <Route path='payment' element={<AdminPayment />} />
+          <Route path='reports' element={<AdminReport />} />
         </Route>
 
       </Routes>
