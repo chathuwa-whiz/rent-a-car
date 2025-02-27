@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, Car, Edit, Trash2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Filter, Car, Edit, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const vehicles = [
   { id: 1, name: 'BMW X5', type: 'SUV', year: 2024, registration: 'ABC123', status: 'available', price: 150, image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=400' },
@@ -10,7 +10,7 @@ const vehicles = [
   { id: 6, name: 'Toyota Belta', type: 'Sedan', year: 2023, registration: 'DEF456', status: 'maintenance', price: 100, image: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=400' }
 ];
 
-const statusColors = { available: 'bg-gasolinlight text-black', rented: 'bg-blue text-black', maintenance: 'bg-yellowlight text-black' };
+const statusColors = { available: 'bg-[#bafff0] text-gasolinlight', rented: 'bg-[#cadbf3] text-blue', maintenance: 'bg-[#fff6c6] text-yellowdark' };
 const statusIcons = { available: CheckCircle, rented: Car, maintenance: AlertTriangle };
 
 const Vehicles = () => {
@@ -26,9 +26,9 @@ const Vehicles = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col lg:flex-row justify-start lg:justify-between gap-4 lg:items-center">
         <h1 className="text-2xl font-bold text-graydark">Vehicle Management</h1>
-        <button className="bg-blue text-white px-4 py-2 rounded-lg hover:bg-blue flex items-center">
+        <button className="w-[200px] bg-blue text-white px-4 py-2 rounded-lg hover:bg-blue flex justify-center items-center">
           <Plus className="h-5 w-5 mr-2" /> Add New Vehicle
         </button>
       </div>
@@ -38,7 +38,7 @@ const Vehicles = () => {
           <input
             type="text"
             placeholder="Search vehicles..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-2 focus:ring-blue"
+            className="w-full pl-10 text-sm pr-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -46,7 +46,7 @@ const Vehicles = () => {
         </div>
         <div className="relative">
           <select
-            className="appearance-none bg-white pl-10 pr-8 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-2 focus:ring-blue"
+            className="appearance-none bg-white text-sm pl-10 pr-8 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -81,10 +81,10 @@ const Vehicles = () => {
                   <p className="text-lg font-semibold mt-2">${vehicle.price}/day</p>
                 </div>
                 <div className="mt-4 flex space-x-2">
-                  <button className="flex-1 bg-blue text-black px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center">
+                  <button className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center">
                     <Edit className="h-4 w-4 mr-2" /> Edit
                   </button>
-                  <button className="flex-1 bg-darkred text-black px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center">
+                  <button className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center">
                     <Trash2 className="h-4 w-4 mr-2" /> Delete
                   </button>
                 </div>
