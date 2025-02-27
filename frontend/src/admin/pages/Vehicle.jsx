@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, Car, Edit, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
+import AddVehicleModal from '../components/AddVehicleModal'; // Import the modal component
 
 const vehicles = [
   { id: 1, name: 'BMW X5', type: 'SUV', year: 2024, registration: 'ABC123', status: 'available', price: 150, image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=400' },
@@ -16,23 +17,41 @@ const statusIcons = { available: CheckCircle, rented: Car, maintenance: AlertTri
 export default function Vehicles() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [vehiclesList, setVehiclesList] = useState(vehicles); // State to manage vehicles list
 
-  const filteredVehicles = vehicles.filter(vehicle => {
+  const filteredVehicles = vehiclesList.filter(vehicle => {
     return (
       (filterStatus === 'all' || vehicle.status === filterStatus) &&
       vehicle.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
 
+  const handleAddVehicle = (newVehicle) => {
+    // Add the new vehicle to the list
+    const newVehicleWithId = {
+      ...newVehicle,
+      id: vehiclesList.length + 1, // Generate a unique ID
+      status: newVehicle.availability, // Map availability to status
+      image: newVehicle.images.length > 0 ? URL.createObjectURL(newVehicle.images[0]) : 'https://via.placeholder.com/400' // Use the first image as the main image
+    };
+    setVehiclesList([...vehiclesList, newVehicleWithId]);
+    setIsModalOpen(false); // Close the modal
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row justify-start lg:justify-between gap-4 lg:items-center">
         <h1 className="text-2xl font-bold">Vehicle Management</h1>
-        <button className="w-[200px] bg-blue text-white px-4 py-2 rounded-lg hover:bg-[#0024b5] flex justify-center items-center cursor-pointer">
+        <button
+          className="w-[200px] bg-blue text-white px-4 py-2 rounded-lg hover:bg-[#0024b5] flex justify-center items-center cursor-pointer"
+          onClick={() => setIsModalOpen(true)} // Open the modal
+        >
           <Plus className="h-5 w-5 mr-2" /> Add New Vehicle
         </button>
       </div>
-      
+
+      {/* Search and Filter Section */}
       <div className="flex space-x-4">
         <div className="flex-1 relative">
           <input
@@ -58,7 +77,8 @@ export default function Vehicles() {
           <Filter className="absolute left-3 top-2.5 h-5 w-5 text-graylight" />
         </div>
       </div>
-      
+
+      {/* Vehicle Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredVehicles.map((vehicle) => {
           const StatusIcon = statusIcons[vehicle.status];
@@ -71,7 +91,7 @@ export default function Vehicles() {
                     <h3 className="text-lg font-semibold">{vehicle.name}</h3>
                     <p className="text-graylight text-sm">{vehicle.type} • {vehicle.year}</p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm flex items-center ${statusColors[vehicle.status]}`}> 
+                  <span className={`px-3 py-1 rounded-full text-sm flex items-center ${statusColors[vehicle.status]}`}>
                     <StatusIcon className="h-4 w-4 mr-1" />
                     {vehicle.status.charAt(0).toUpperCase() + vehicle.status.slice(1)}
                   </span>
@@ -93,7 +113,13 @@ export default function Vehicles() {
           );
         })}
       </div>
+
+      {/* Add New Vehicle Modal */}
+      <AddVehicleModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddVehicle}
+      />
     </div>
   );
-};
-
+}
