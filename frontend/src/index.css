@@ -11,3 +11,23 @@
     --color-graydark: #6E6969;
     --color-graylight: #B8B8B8;
 }
+
+::-webkit-scrollbar {
+    width: 12px; 
+    height: 12px; 
+}
+
+::-webkit-scrollbar-track {
+    background: #1c1c1c; 
+   
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #24AC90; 
+    border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #177A65; 
+}
+
