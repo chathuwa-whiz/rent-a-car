@@ -13,7 +13,7 @@ const vehicles = [
 const statusColors = { available: 'bg-[#bafff0] text-gasolinlight', rented: 'bg-[#cadbf3] text-blue', maintenance: 'bg-[#fff6c6] text-yellowdark' };
 const statusIcons = { available: CheckCircle, rented: Car, maintenance: AlertTriangle };
 
-const Vehicles = () => {
+export default function Vehicles() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
@@ -27,8 +27,8 @@ const Vehicles = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col lg:flex-row justify-start lg:justify-between gap-4 lg:items-center">
-        <h1 className="text-2xl font-bold text-graydark">Vehicle Management</h1>
-        <button className="w-[200px] bg-blue text-white px-4 py-2 rounded-lg hover:bg-blue flex justify-center items-center">
+        <h1 className="text-2xl font-bold">Vehicle Management</h1>
+        <button className="w-[200px] bg-blue text-white px-4 py-2 rounded-lg hover:bg-[#0024b5] flex justify-center items-center cursor-pointer">
           <Plus className="h-5 w-5 mr-2" /> Add New Vehicle
         </button>
       </div>
@@ -46,7 +46,7 @@ const Vehicles = () => {
         </div>
         <div className="relative">
           <select
-            className="appearance-none bg-white text-sm pl-10 pr-8 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
+            className="appearance-none bg-white text-sm pl-10 pr-8 py-2 rounded-lg border border-graylight cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -81,10 +81,10 @@ const Vehicles = () => {
                   <p className="text-lg font-semibold mt-2">${vehicle.price}/day</p>
                 </div>
                 <div className="mt-4 flex space-x-2">
-                  <button className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center">
+                  <button className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center cursor-pointer">
                     <Edit className="h-4 w-4 mr-2" /> Edit
                   </button>
-                  <button className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center">
+                  <button className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center cursor-pointer">
                     <Trash2 className="h-4 w-4 mr-2" /> Delete
                   </button>
                 </div>
@@ -97,4 +97,3 @@ const Vehicles = () => {
   );
 };
 
-export default Vehicles;
