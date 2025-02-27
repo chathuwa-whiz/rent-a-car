@@ -21,6 +21,8 @@ import UserProfileAccount from './user/profile/Account'
 import AdminLayout from './admin/Layout'
 import AdminDashboard from './admin/pages/Dashboard'
 import AdminMaintenance from './admin/pages/Maintenance'
+import AdminVehicle from './admin/pages/Vehicle'
+import AdminCustomer from './admin/pages/Customer'
 
 export default function App() {
   return (
@@ -49,6 +51,8 @@ export default function App() {
         <Route path='/admin' element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path='maintenance' element={<AdminMaintenance />} />
+          <Route path='vehicle' element={<AdminVehicle />} />
+          <Route path='customers' element={<AdminCustomer />} />
         </Route>
 
       </Routes>
