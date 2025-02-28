@@ -25,17 +25,17 @@ export default function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentCar((prev) => (prev + 1) % carData.length);
-    }, 5000);
+    }, 5000); 
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="relative w-full h-screen bg-gradient-to-b from-black via-[#1c1b1b] to-white md:bg-gradient-to-r md:from-black md:via-[#626262] md:to-white flex flex-col md:flex-row items-center justify-between px-6 md:px-16 overflow-hidden">
-
+      
       {/* Left Section (Social Icons & Content) */}
       <div className="flex flex-row items-center justify-center md:justify-start gap-x-10 md:gap-x-16 w-full mt-20 md:mt-0 md:ml-4">
-
+        
         {/* Social Icons */}
         <div className="flex flex-col mt-4 xl:mt-10 space-y-11 md:space-y-13 lg:space-y-16 xl:space-y-23 text-graydark">
           <FaFacebookF className="text-lg lg:text-xl cursor-pointer hover:text-graylight transition" />
@@ -63,10 +63,10 @@ export default function Hero() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentCar}
-              initial={{ x: -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 100, opacity: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
+              initial={{ x: -100, opacity: 0 }} 
+              animate={{ x: 0, opacity: 1 }} 
+              exit={{ x: 100, opacity: 0 }} 
+              transition={{ duration: 0.8, ease: "easeInOut" }} 
               className="mt-2 transition-opacity duration-500 ease-in-out"
             >
               <p className="text-sm lg:text-2xl font-bold pb-2">{carData[currentCar].name}</p>
@@ -74,12 +74,6 @@ export default function Hero() {
                 {carData[currentCar].price}
               </p>
               <span className="text-sm lg:text-lg font-bold text-graylight"> / Per Day</span>
-              {/* Booking Button */}
-              <button
-                onClick={() => navigate(`vehicle/${carData[currentCar].id}`)}
-                className="mt-6 lg:mt-12 px-8 lg:px-12 py-2 lg:py-3 border-2 cursor-pointer border-gasolindark text-sm lg:text-lg font-semibold rounded-[2px] hover:bg-gasolinlight hover:border-gasolinlight transition">
-                Book Now
-              </button>
             </motion.div>
           </AnimatePresence>
 
@@ -87,7 +81,7 @@ export default function Hero() {
           <button className="mt-6 lg:mt-12 px-8 lg:px-12 py-2 lg:py-3 border-2 cursor-pointer border-gasolindark text-sm lg:text-lg font-semibold rounded-[2px] hover:bg-gasolinlight hover:border-gasolinlight transition">
             Book Now
           </button>
-        </div>
+        </div>     
       </div>
 
       {/* Car Image Wrapper with Framer Motion (Slide-in Effect) */}
