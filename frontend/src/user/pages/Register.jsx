@@ -44,7 +44,7 @@ export default function Register() {
 
           <div className="flex gap-2 mb-2">
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm sm:text-graylight">First Name</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">First Name</label>
               <input
                 type="text"
                 placeholder="John"
