@@ -11,7 +11,11 @@ const vehicles = [
   { id: 6, name: 'Toyota Belta', type: 'Sedan', year: 2023, registration: 'DEF456', status: 'maintenance', price: 100, image: 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&q=80&w=400' }
 ];
 
-const statusColors = { available: 'bg-[#bafff0] text-gasolinlight', rented: 'bg-[#cadbf3] text-blue', maintenance: 'bg-[#fff6c6] text-yellowdark' };
+const statusColors = { 
+  available: 'bg-[#bafff0] text-gasolinlight', 
+  rented: 'bg-lightblue text-blue', 
+  maintenance: 'bg-[#fff6c6] text-yellowdark' };
+
 const statusIcons = { available: CheckCircle, rented: Car, maintenance: AlertTriangle };
 
 export default function Vehicles() {
@@ -101,10 +105,10 @@ export default function Vehicles() {
                   <p className="text-lg font-semibold mt-2">${vehicle.price}/day</p>
                 </div>
                 <div className="mt-4 flex space-x-2">
-                  <button className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center cursor-pointer">
+                  <button className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded flex items-center justify-center cursor-pointer">
                     <Edit className="h-4 w-4 mr-2" /> Edit
                   </button>
-                  <button className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center cursor-pointer">
+                  <button className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded flex items-center justify-center cursor-pointer">
                     <Trash2 className="h-4 w-4 mr-2" /> Delete
                   </button>
                 </div>
