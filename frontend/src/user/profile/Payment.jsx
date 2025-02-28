@@ -1,6 +1,7 @@
 import React from 'react'
 import visa from '/visa.png'
 import master from '/master.png'
+import { MdDelete } from 'react-icons/md'
 
 export default function Payment() {
   return (
@@ -83,45 +84,16 @@ export default function Payment() {
         </div>
 
         {/* Right section - personal details view */}
-        <div className='w-full lg:w-1/2 mt-6 lg:mt-0'>
-          {/* email */}
-          <div className='flex flex-col space-y-2 mb-6'>
-            <p className='text-sm sm:text-base'>Email</p>
-            <input
-              type='email'
-              className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
-              placeholder='jakedaniel@gmail.com'
-            />
-          </div>
-
-          {/* mobile */}
-          <div className='flex flex-col space-y-2 mb-6'>
-            <p className='text-sm sm:text-base'>Mobile</p>
-            <input
-              type='tel'
-              className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
-              placeholder='011-234 3452'
-            />
-          </div>
-
-          {/* emergency contact */}
-          <div className='flex flex-col space-y-2 mb-6'>
-            <p className='text-sm sm:text-base'>Emergency Contact</p>
-            <input
-              type='tel'
-              className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
-              placeholder='011-231 1234'
-            />
-          </div>
-
-          {/* driver licence */}
-          <div className='flex flex-col space-y-2 mb-6'>
-            <p className='text-sm sm:text-base'>Driver License Number</p>
-            <input
-              type='text'
-              className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
-              placeholder='B12322323'
-            />
+        <div className='w-full lg:w-1/2 mt-6 lg:mt-0 space-y-5 xl:px-20'>
+          <div className='flex flex-col sm:flex-row justify-between p-3 sm:p-4 h-auto sm:h-24 bg-primarybg rounded-lg gap-2'>
+            <img src={visa} className='w-24 sm:w-auto object-contain mb-2 sm:mb-0' />
+            <p className='text-gasolindark font-medium text-sm sm:text-base'>
+              1111 2222 3333 4444
+            </p>
+            <div className='flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-between mt-2 sm:mt-0'>
+              <p className='font-medium text-sm sm:text-base'>Jake Daniel</p>
+              <MdDelete color='darkred' size={24} className='cursor-pointer hover:opacity-80' />
+            </div>
           </div>
         </div>
       </div>
