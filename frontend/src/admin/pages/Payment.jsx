@@ -66,7 +66,7 @@ export default function Payments() {
             <div>
               <p className="text-sm text-graydark">Total Revenue</p>
               <h3 className="text-2xl font-bold mt-1">$48,294</h3>
-              <p className="text-sm text-gasolindark mt-2">+12% from last month</p>
+              <p className="text-sm text-green mt-2">+12% from last month</p>
             </div>
             <div className="bg-[#bafff0] text-gasolindark p-3 rounded-full">
               <ArrowUpRight className="h-6 w-6" />
@@ -79,7 +79,7 @@ export default function Payments() {
             <div>
               <p className="text-sm text-graydark">Failed Payments</p>
               <h3 className="text-2xl font-bold mt-1">$1,240</h3>
-              <p className="text-sm text-darkred mt-2">3 payments failed</p>
+              <p className="text-sm text-lightred mt-2">3 payments failed</p>
             </div>
             <div className="bg-[#f2dddd] text-darkred p-3 rounded-full">
               <ArrowDownRight className="h-6 w-6" />

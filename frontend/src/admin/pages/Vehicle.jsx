@@ -21,8 +21,8 @@ const statusIcons = { available: CheckCircle, rented: Car, maintenance: AlertTri
 export default function Vehicles() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const [vehiclesList, setVehiclesList] = useState(vehicles); // State to manage vehicles list
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [vehiclesList, setVehiclesList] = useState(vehicles); 
 
   const filteredVehicles = vehiclesList.filter(vehicle => {
     return (
@@ -35,9 +35,9 @@ export default function Vehicles() {
     // Add the new vehicle to the list
     const newVehicleWithId = {
       ...newVehicle,
-      id: vehiclesList.length + 1, // Generate a unique ID
-      status: newVehicle.availability, // Map availability to status
-      image: newVehicle.images.length > 0 ? URL.createObjectURL(newVehicle.images[0]) : 'https://via.placeholder.com/400' // Use the first image as the main image
+      id: vehiclesList.length + 1, 
+      status: newVehicle.availability, 
+      image: newVehicle.images.length > 0 ? URL.createObjectURL(newVehicle.images[0]) : 'https://via.placeholder.com/400'
     };
     setVehiclesList([...vehiclesList, newVehicleWithId]);
     setIsModalOpen(false); // Close the modal
