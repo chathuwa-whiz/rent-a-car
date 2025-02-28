@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFacebookF, FaInstagram, FaEnvelope, FaWhatsapp, FaFacebookMessenger } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const carData = [
   {
+    id: 1,
     name: "BMW M3 SEDAN",
     price: "$600",
     image: "/hero.png",
   },
   {
+    id: 2,
     name: "Toyota Corolla",
     price: "$400",
     image: "/hero2.png",
@@ -17,6 +20,7 @@ const carData = [
 
 export default function Hero() {
   const [currentCar, setCurrentCar] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -73,7 +77,9 @@ export default function Hero() {
             </div>
 
             {/* Booking Button */}
-            <button className="mt-6 lg:mt-12 px-8 lg:px-12 py-2 lg:py-3 border-2 cursor-pointer border-gasolindark text-sm lg:text-lg font-semibold rounded-[2px] hover:bg-gasolinlight hover:border-gasolinlight transition">
+            <button 
+              onClick={() => navigate(`vehicle/${carData[currentCar].id}`)}
+              className="mt-6 lg:mt-12 px-8 lg:px-12 py-2 lg:py-3 border-2 cursor-pointer border-gasolindark text-sm lg:text-lg font-semibold rounded-[2px] hover:bg-gasolinlight hover:border-gasolinlight transition">
               Book Now
             </button>
           </motion.div>
