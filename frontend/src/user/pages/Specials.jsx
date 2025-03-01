@@ -5,8 +5,10 @@ import { ArrowRight } from "lucide-react";
 import { TbCarSuvFilled } from "react-icons/tb";
 import { IoCarSport } from "react-icons/io5";
 import { FaCarSide } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 export default function Specials() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [carsPerPage, setCarsPerPage] = useState(3);
 
@@ -21,18 +23,18 @@ export default function Specials() {
   }, []);
 
   const cars = [
-    { name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-    { name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-    { name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-    { name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
+    { id: "1", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
+    { id: "2", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
+    { id: "3", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
+    { id: "4", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
+    { id: "5", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
+    { id: "6", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
+    { id: "7", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
+    { id: "8", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
+    { id: "9", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
+    { id: "10", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
+    { id: "11", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
+    { id: "12", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
   ];
 
   const totalPages = Math.ceil(cars.length / carsPerPage);
@@ -105,7 +107,9 @@ export default function Specials() {
                 <p className="text-gasolindark tracking-widest text-sm lg:text-base">
                   {car.price} <span className="text-graydark tracking-wide">/ Per Day</span>
                 </p>
-                <button className="text-gasolindark flex items-center gap-1 lg:gap-2 cursor-pointer hover:text-gasolinlight transition text-xs lg:text-base">
+                <button 
+                  onClick={() => navigate(`/vehicle/${car.id}`)}
+                  className="text-gasolindark flex items-center gap-1 lg:gap-2 cursor-pointer hover:text-gasolinlight transition text-xs lg:text-base">
                   DRIVE NOW <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
                 </button>
               </div>
