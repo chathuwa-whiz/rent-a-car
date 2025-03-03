@@ -5,7 +5,7 @@ import User from '../model/User.js';
 export const getAllUsers = async (req, res) => {
 
     try {
-
+        
         const users = await User.find();
         res.status(200).json(users);
     } catch (error) {
@@ -32,7 +32,7 @@ export const getUserById = async (req, res) => {
 
 //READ USER BY ROLE
 
-export const getUserRole = async (req,res)  => {
+export const getUserByRole = async (req,res)  => {
 
     try {
 

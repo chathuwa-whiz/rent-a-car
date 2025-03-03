@@ -61,14 +61,14 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    license: { 
-      type: String, 
-      unique: true,
-      validate: {
-        validator: (v) => /^[A-Za-z][0-9]{7}$/.test(v),
-        message: (props) => `${props.value} is not a valid license number!`,
-      },
-    },
+    // license: { 
+    //   type: String, 
+    //   unique: true,
+    //   validate: {
+    //     validator: (v) => /^[A-Za-z][0-9]{7}$/.test(v),
+    //     message: (props) => `${props.value} is not a valid license number!`,
+    //   },
+    // },
 
   }, { timestamps: true });
 
