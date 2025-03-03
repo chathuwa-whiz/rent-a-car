@@ -3,20 +3,12 @@ import app from './app.js';
 import connectDB from './config/db.js';
 import express from "express";
 import cors from "cors";
-import vehicleRoutes from "./routes/vehicleRoutes.js";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
-
-// Middleware
-app.use(express.json());
-app.use(cors());
-
-// Routes
-app.use("/api/vehicles", vehicleRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
