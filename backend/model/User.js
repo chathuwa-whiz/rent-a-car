@@ -61,14 +61,6 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    // license: { 
-    //   type: String, 
-    //   unique: true,
-    //   validate: {
-    //     validator: (v) => /^[A-Za-z][0-9]{7}$/.test(v),
-    //     message: (props) => `${props.value} is not a valid license number!`,
-    //   },
-    // },
 
   }, { timestamps: true });
 
@@ -79,7 +71,12 @@ userSchema.pre("save", async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
     }
     next();
-});  
+});
+
+userSchema.methods.generateAuthToken = function () {
+
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+};   
 
 const User = mongoose.model("User", userSchema);
 
