@@ -64,7 +64,7 @@ export const getCardsByUserId = async (req, res) => {
 export const getCardById = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = req.user.userId;
+        const user = req.user;
         
         const card = await Card.findById(id);
         console.log(id);
