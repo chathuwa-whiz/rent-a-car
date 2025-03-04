@@ -1,9 +1,5 @@
 import User from '../model/User.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 //CREATE USER
 
@@ -32,12 +28,13 @@ export const register = async(req, res) => {
 
         await user.save();
 
+        const token = user.generateAuthToken();
 
+        if(!token) {
+            return res.status(400).json({ message: 'Token not generated' });
+        }
 
-        res.status(201).json({ 
-            message: 'User registered successfully',
-            user, role
-        });
+        res.status(201).json({ token, user });
 
     }catch (error){
         res.status(500).json({ message: error.message });
@@ -64,21 +61,13 @@ export const login = async(req, res) => {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign(
-            {id: user._id, role: user.role},
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-        );
+        const token = user.generateAuthToken();
 
         if(!token) {
             return res.status(400).json({ message: 'Token not generated' });
         }
         
-        res.status(201).json({ 
-            message: 'Login successful',
-            user: {id: user._id, role: user.role},
-            token
-         });
+        res.status(201).json({ token, user });
 
     } catch (error) {
 
