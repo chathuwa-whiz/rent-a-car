@@ -79,12 +79,7 @@ userSchema.pre("save", async function (next) {
         this.password = await bcrypt.hash(this.password, salt);
     }
     next();
-});
-
-userSchema.methods.generateAuthToken = function () {
-
-    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: '24h' });
-};   
+});  
 
 const User = mongoose.model("User", userSchema);
 
