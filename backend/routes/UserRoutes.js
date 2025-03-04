@@ -1,13 +1,13 @@
 import { getAllUsers, getUserById, getUserByRole, updateUser, deleteUser } from '../controller/UserController.js';
 import express from 'express';
-import adminMiddleware from '../middleware/AdminMiddleware.js';
+import { authenticate, authorize} from '../middleware/AuthMiddleware.js';
 
 const userRoutes = express.Router();
 
-userRoutes.get('/', adminMiddleware, getAllUsers);
-userRoutes.get('/:id', getUserById);
-userRoutes.get('/role/:role',adminMiddleware, getUserByRole);
-userRoutes.put('/:id', updateUser);
-userRoutes.delete('/:id', deleteUser);
+userRoutes.get('/', authenticate, authorize("admin") , getAllUsers);
+userRoutes.get('/:id',authenticate, authorize("user", "admin"), getUserById);
+userRoutes.get('/role/:role',authenticate, authorize("admin"), getUserByRole);
+userRoutes.put('/:id',authenticate, authorize("user", "admin"), updateUser);
+userRoutes.delete('/:id',authenticate, authorize("user", "admin"), deleteUser);
 
 export default userRoutes;
