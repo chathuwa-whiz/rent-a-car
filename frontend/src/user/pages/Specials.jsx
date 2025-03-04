@@ -40,7 +40,7 @@ export default function Specials() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPage((prev) => (prev < totalPages ? prev + 1 : 1));
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [totalPages]);
