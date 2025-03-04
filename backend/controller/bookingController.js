@@ -25,27 +25,33 @@ export const getBookingById = async (req, res) => {
 
 // Create a new booking (Only for logged-in users)
 export const createBooking = async (req, res) => {
-  try {
-    const { vehicleId, dates, total } = req.body;
-    const userId = req.user.id; // Get user ID from authentication middleware
-
-    // Check if vehicle exists
-    const vehicle = await Vehicle.findById(vehicleId);
-    if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
-
-    const newBooking = new Booking({
-      user: userId, // Associate booking with the logged-in user
-      vehicle: vehicleId,
-      dates,
-      total,
-    });
-
-    await newBooking.save();
-    res.status(201).json(newBooking);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    try {
+      const { vehicleId, name, phone, address, dates, total } = req.body;
+      const userId = req.user.id; // Get user ID from authentication middleware
+  
+      // Check if vehicle exists
+      const vehicle = await Vehicle.findById(vehicleId);
+      if (!vehicle) return res.status(404).json({ message: "Vehicle not found" });
+  
+      // Create new booking
+      const newBooking = new Booking({
+        user: userId,
+        vehicle: vehicleId,
+        name,
+        phone,
+        address,
+        dates,
+        total,
+      });
+  
+      await newBooking.save();
+      res.status(201).json(newBooking);
+    } catch (error) {
+      console.error("Booking creation error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  };
+  
 
 // Get user-specific bookings (Booking history)
 export const getUserBookings = async (req, res) => {

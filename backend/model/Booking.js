@@ -11,6 +11,18 @@ const bookingSchema = new mongoose.Schema({
     ref: "Vehicle", 
     required: true,
   },
+  name: { 
+    type: String, 
+    required: true 
+  },
+  phone: { 
+    type: String, 
+    required: true 
+  },
+  address: { 
+    type: String, 
+    required: true 
+  },
   dates: {
     from: { type: Date, required: true },
     to: { type: Date, required: true },
