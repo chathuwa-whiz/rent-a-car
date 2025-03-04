@@ -158,7 +158,7 @@ export const deletePayment = async (req,res) => {
 
         const paymentId = req.params.paymentId;
 
-        await Payment.findByIdAndDelete(paymentId);
+        await Payment.deleteOne(paymentId);
 
         res.status(200).json({ message: "Payment deleted successfully" });
     } catch (error) {

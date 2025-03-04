@@ -6,6 +6,7 @@ import authMiddleware from './middleware/AuthMiddleware.js';
 import authRoutes from './routes/AuthRoutes.js';
 import userRoutes from './routes/UserRoutes.js';
 import paymentRoutes from './routes/PaymentRoutes.js';
+import cardRoutes from './routes/CardRoutes.js';
 
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authMiddleware, userRoutes);
 app.use('/api/payment',authMiddleware, paymentRoutes);
+app.use('/api/card',authMiddleware, cardRoutes);
 
 
 export default app;

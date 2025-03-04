@@ -1,7 +1,7 @@
 import { createPayment, getPayments, getPaymentByUserId, getPaymentsByPaymentDate, getPaymentsByPaymentMethod, getPaymentsByStatus, updatePayment, deletePayment } from '../controller/PaymentController.js';
 import express from 'express';
 
-import adminMiddleware from '../middleware/adminMiddleware.js';
+import adminMiddleware from '../middleware/AdminMiddleware.js';
 
 const paymentRoutes = express.Router();
 
