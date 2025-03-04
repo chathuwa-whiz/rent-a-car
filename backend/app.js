@@ -3,11 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import vehicleRoutes from "./routes/vehicleRoutes.js";
 
-//Auth
 import authRoutes from './routes/AuthRoutes.js';
-
-//USER
 import userRoutes from './routes/UserRoutes.js';
+import paymentRoutes from './routes/PaymentRoutes.js';
+import cardRoutes from './routes/CardRoutes.js';
 
 
 dotenv.config();
@@ -21,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 //API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/card', cardRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 
 export default app;
