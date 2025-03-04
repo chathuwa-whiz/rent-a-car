@@ -64,17 +64,19 @@ export const getCardsByUserId = async (req, res) => {
 export const getCardById = async (req, res) => {
     try {
         const { id } = req.params;
-        const { userId } = req.user._id;
+        const user = req.user.userId;
         
         const card = await Card.findById(id);
         console.log(id);
         
-        console.log(userId);
+        console.log(user);
         
 
         if (!card) {
             return res.status(404).json({ message: "Card not found" });
         }
+
+        //Menna methna case eka thiyenw
 
         // if (card.userId.toString() !== userId) {
         //     return res.status(403).json({ message: "You don't have permission to access this card" });
@@ -98,6 +100,8 @@ export const updateCard = async (req, res) => {
         if (!card) {
             return res.status(404).json({ message: "Card not found" });
         }
+
+        //Menna methna case eka thiyenw
 
         // if (card.userId !== userId) {
         //     return res.status(403).json({ message: "You don't have permission to update this card" });
@@ -128,6 +132,8 @@ export const deleteCard = async (req, res) => {
         if (!card) {
             return res.status(404).json({ message: "Card not found" });
         }
+
+        //Menna methna case eka thiyenw
 
         // if (card.userId.toString() !== userId) {
         //     return res.status(403).json({ message: "You don't have permission to delete this card" });

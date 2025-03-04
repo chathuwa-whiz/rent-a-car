@@ -10,22 +10,10 @@ const cardSchema = new mongoose.Schema({
     cardNumber: {
         type: String,
         required: true,
-        // set: function(cardNumber) {
-        //     return cryptoUtils.encryptData(cardNumber);
-        // },
-        // get: function(cardNumber) {
-        //     return cryptoUtils.decryptData(cardNumber);
-        // }
     },
     cvv: {
         type: String,
         required: true,
-        // set: function(cvv) {
-        //     return cryptoUtils.encryptData(cvv);
-        // },
-        // get: function(cvv) {
-        //     return cryptoUtils.decryptData(cvv);
-        // }
     },
     expiryDate: {
         type: String,
