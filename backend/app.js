@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authMiddleware from './middleware/AuthMiddleware.js';
+import vehicleRoutes from "./routes/vehicleRoutes.js";
 
 import authRoutes from './routes/AuthRoutes.js';
 import userRoutes from './routes/UserRoutes.js';
@@ -19,9 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //API Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/user', authMiddleware, userRoutes);
-app.use('/api/payment',authMiddleware, paymentRoutes);
-app.use('/api/card',authMiddleware, cardRoutes);
-
+app.use('/api/user', userRoutes);
+app.use("/api/vehicles", vehicleRoutes);
 
 export default app;
