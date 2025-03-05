@@ -17,6 +17,10 @@
     --color-green: #009D32;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 ::-webkit-scrollbar {
     width: 12px; 
     height: 12px; 

@@ -46,8 +46,8 @@ export default function Header() {
           <div className="hidden md:flex space-x-6 text-white">
             <a href="/" className="hover:text-graylight">Home</a>
             <a href="/fleet" className="hover:text-graylight">Fleet</a>
-            <a href="#" className="hover:text-graylight">About Us</a>
-            <a href="#" className="hover:text-graylight">Contacts</a>
+            <a href="#aboutus" className="hover:text-graylight">About Us</a>
+            <a href="#contact" className="hover:text-graylight">Contacts</a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -79,8 +79,8 @@ export default function Header() {
           <div className="md:hidden flex flex-col items-center space-y-4 mt-4 py-4">
             <a href="/" className="text-white hover:text-graylight">Home</a>
             <a href="/fleet" className="text-white hover:text-graylight">Garage</a>
-            <a href="#" className="text-white hover:text-graylight">About Us</a>
-            <a href="#" className="text-white hover:text-graylight">Contacts</a>
+            <a href="#aboutus" className="text-white hover:text-graylight">About Us</a>
+            <a href="#contact" className="text-white hover:text-graylight">Contacts</a>
 
             <div className="flex items-center space-x-4 mt-4">
               <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
