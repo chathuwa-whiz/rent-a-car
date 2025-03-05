@@ -1,21 +1,21 @@
 import React from "react";
+import { useGetPaymentHashMutation } from "../../redux/services/payhereSlice";
 
 const PayButton = ({ booking }) => {
+  const [getPaymentHash, { isLoading }] = useGetPaymentHashMutation();
+
   const handlePayment = async () => {
     try {
-      // Fetch hash from backend
-      const response = await fetch("http://localhost:5010/api/payhere/hash", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(booking),
-      });
+      // Fetch payment hash from the backend using Redux
+      const { data, error } = await getPaymentHash(booking);
 
-      const data = await response.json();
-      if (!data.success) {
-        console.error("Payment Initialization Failed:", data.message);
-        alert("Payment failed: " + data.message);
+      if (error || !data.success) {
+        console.error("Payment Initialization Failed:", error || data.message);
+        alert("Payment failed: " + (error?.message || data.message));
         return;
       }
+
+      const userEmail = localStorage.getItem("userEmail") || "no-email@example.com";
 
       const payment = {
         sandbox: true,
@@ -23,20 +23,17 @@ const PayButton = ({ booking }) => {
         return_url: "http://localhost:5173/user/profile/rentals",
         cancel_url: undefined,
         notify_url: "http://localhost:5010/api/payhere/notify",
-        order_id: booking.booking_id,  // Updated from order_id to booking_id
+        order_id: booking.booking_id,
         items: booking.items,
         amount: Number(booking.amount).toFixed(2),
         currency: "LKR",
         first_name: booking.first_name,
         last_name: booking.last_name,
-        email: booking.email,
+        email: userEmail,
         phone: booking.phone,
         address: booking.address || "No Address Provided",
         city: booking.city || "No City Provided",
         country: booking.country || "Sri Lanka",
-        // delivery_address: "Colombo",
-        // delivery_city: "Colombo",
-        // delivery_country: "Sri Lanka",
         hash: data.hash,
       };
 
@@ -68,9 +65,10 @@ const PayButton = ({ booking }) => {
   return (
     <button
       onClick={handlePayment}
-      className= "w-full from-gasolindark to-gasolinlight from-20% bg-gradient-to-b text-white font-semibold rounded-lg p-3 md:p-4 hover:opacity-90 transition-opacity mt-4 mx-4 mb-4"
+      className="w-full from-gasolindark to-gasolinlight from-20% bg-gradient-to-b text-white font-semibold rounded-lg p-3 md:p-4 hover:opacity-90 transition-opacity mt-4 mx-4 mb-4"
+      disabled={isLoading}
     >
-      Pay Now
+      {isLoading ? "Processing..." : "Pay Now"}
     </button>
   );
 };

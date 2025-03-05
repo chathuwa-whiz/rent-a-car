@@ -7,6 +7,8 @@ export default function Payment() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
 
+  const user = JSON.parse(localStorage.getItem("user"));
+
   // Extract booking details from URL params
   const name = searchParams.get("name");
   const phone = searchParams.get("phone");
@@ -31,13 +33,16 @@ export default function Payment() {
   const rentalDays = Math.max(1, (end - start) / (1000 * 60 * 60 * 24) + 1); // Ensure at least 1 day
   const totalPrice = (rentalDays * vehicle.price).toFixed(2); // Ensure two decimal places
 
+  // Use authenticated user's email
+  const userEmail = user?.email || "customer@example.com";
+
   // Booking details for PayHere
   const bookingDetails = {
     booking_id: `BOOKING-${id}-${Date.now()}`, // Unique booking ID
     amount: totalPrice,
     first_name: name?.split(" ")[0] || "Customer",
     last_name: name?.split(" ")[1] || "",
-    email: "customer@example.com", // Replace with actual email if available
+    email: userEmail, // Use authenticated user's email
     phone: phone,
     items: `${vehicle.brand} ${vehicle.model} - ${rentalDays} Days`,
   };
@@ -61,6 +66,7 @@ export default function Payment() {
             <div className="flex justify-between p-4 border-b border-graydark">
               <div className="flex flex-col space-y-2 text-sm md:text-base text-graylight">
                 <p>Name</p>
+                <p>Email</p>
                 <p>Phone</p>
                 <p>Address</p>
                 <p>Rent</p>
@@ -69,6 +75,7 @@ export default function Payment() {
               </div>
               <div className="flex flex-col space-y-2 text-sm md:text-base text-graydark text-right">
                 <p>{name}</p>
+                <p>{userEmail}</p>
                 <p>{phone}</p>
                 <p>{address}</p>
                 <p>Rs.{vehicle.price} / {vehicle.rentalType}</p>
