@@ -100,6 +100,9 @@ export default function Fleet() {
 
   const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
 
+  console.log('vehicleData: ', vehicleData);
+  
+
   useEffect(() => {
     if (vehicleData) {
       const Loadedvehicles = vehicleData.map(vehicle => ({
@@ -118,22 +121,22 @@ export default function Fleet() {
         rentalType: vehicle.rentalType,
         securityDeposit: vehicle.securityDeposit,
         availability: vehicle.availability,
-        images: vehicle.images,
+        images: vehicle.images[0],
       }));
       
-      setVehicles(vehicles);
+      setVehicles(Loadedvehicles);
       setIsLoading(false);
     }
   }, [vehicleData]);
 
   const getModelsByBrand = (brand) => {
-    return [...new Set(vehicles
+    return [...new Set(vehicleData
       .filter(car => car.brand === brand)
       .map(car => car.model))];
   };
   
   const getUniqueBrands = () => {
-    return [...new Set(vehicles.map(car => car.brand))];
+    return [...new Set(vehicleData.map(car => car.brand))];
   };
 
   const [range, setRange] = useState([2000, 500000]);
@@ -147,7 +150,7 @@ export default function Fleet() {
     availableOnly: false,
     rentalType: 'Any'
   });
-  const [filteredCars, setFilteredCars] = useState(vehicles);
+  const [filteredCars, setFilteredCars] = useState(vehicleData);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const carsPerPage = 9;
@@ -263,6 +266,10 @@ export default function Fleet() {
   };
 
   const navigate = useNavigate();
+
+  if(!vehicledataFetched && isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className='relative min-h-screen px-4 pt-24'>
@@ -460,10 +467,10 @@ export default function Fleet() {
 
           {/* Vehicle grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
-            {currentCars.map(car => (
+            {vehicleData.map(car => (
               <div key={car.id} className='rounded-2xl border border-graydark'>
                 <div className='relative'>
-                  <img src={car.image} alt={car.name} className='w-full' />
+                  <img src={car.images} alt={car.name} className='w-full' />
                   <div className='absolute top-2 right-2 rounded-full p-2'>
                     <TbHeart className='text-graydark' />
                   </div>
