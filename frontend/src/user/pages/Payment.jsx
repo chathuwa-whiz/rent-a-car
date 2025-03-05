@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useGetVehicleQuery } from "../../redux/services/vehicleSlice";
+import PayButton from "../components/PayButton";
 
 export default function Payment() {
   const { id } = useParams();
@@ -28,14 +29,25 @@ export default function Payment() {
   const start = new Date(startDate);
   const end = new Date(endDate);
   const rentalDays = Math.max(1, (end - start) / (1000 * 60 * 60 * 24) + 1); // Ensure at least 1 day
-  const totalPrice = rentalDays * vehicle.price;
+  const totalPrice = (rentalDays * vehicle.price).toFixed(2); // Ensure two decimal places
+
+  // Booking details for PayHere
+  const bookingDetails = {
+    booking_id: `BOOKING-${id}-${Date.now()}`, // Unique booking ID
+    amount: totalPrice,
+    first_name: name?.split(" ")[0] || "Customer",
+    last_name: name?.split(" ")[1] || "",
+    email: "customer@example.com", // Replace with actual email if available
+    phone: phone,
+    items: `${vehicle.brand} ${vehicle.model} - ${rentalDays} Days`,
+  };
 
   return (
     <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-32 pt-24">
       <div className="flex justify-center items-center">
-        {/* Order Preview Section */}
+        {/* Booking Preview Section */}
         <div className="w-full lg:w-1/2 flex flex-col border border-graydark rounded-2xl">
-          {/* Car Image - Reduced Height */}
+          {/* Car Image */}
           <div className="relative h-32 sm:h-40 md:h-48 lg:h-56">
             <img
               src={vehicle.images[0]}
@@ -44,7 +56,7 @@ export default function Payment() {
             />
           </div>
 
-          {/* Order Details */}
+          {/* Booking Details */}
           <div className="px-4 sm:px-8 md:px-12">
             <div className="flex justify-between p-4 border-b border-graydark">
               <div className="flex flex-col space-y-2 text-sm md:text-base text-graylight">
@@ -74,10 +86,10 @@ export default function Payment() {
             </div>
           </div>
 
-          {/* Pay Now Button */}
-          <button className="from-gasolindark to-gasolinlight from-20% bg-gradient-to-b text-white font-semibold rounded-lg p-3 md:p-4 hover:opacity-90 transition-opacity mt-4 mx-4 mb-4">
-            Pay Now
-          </button>
+          {/* Pay Now Button - Using PayHere */}
+          <div className="flex justify-center p-4">
+            <PayButton booking={bookingDetails} />
+          </div>
         </div>
       </div>
     </div>
