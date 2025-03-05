@@ -3,105 +3,14 @@ import { TbSearch, TbArrowLeft, TbHeart, TbArrowRight, TbAdjustmentsHorizontal, 
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { useNavigate } from 'react-router-dom';
-import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice'
-
-// const carData = [
-//   {
-//     id: 1,
-//     brand: "Honda",
-//     model: "HR-V Hybrid",
-//     image: "/car-model.png",
-//     price: 120000,
-//     booked: true,
-//     type: "SUV",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 2,
-//     brand: "Honda",
-//     model: "Civic",
-//     image: "/car-model.png",
-//     price: 150000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 3,
-//     brand: "Honda",
-//     model: "City",
-//     image: "/car-model.png",
-//     price: 100000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 4,
-//     brand: "Honda",
-//     model: "Accord",
-//     image: "/car-model.png",
-//     price: 200000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Hours"
-//   },
-//   {
-//     id: 5,
-//     brand: "Nissan",
-//     model: "Sunny",
-//     image: "/car-model.png",
-//     price: 80000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 6,
-//     brand: "Nissan",
-//     model: "X-Trail",
-//     image: "/car-model.png",
-//     price: 180000,
-//     booked: false,
-//     type: "SUV",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Hours"
-//   },
-//   {
-//     id: 7,
-//     brand: "Hyundai",
-//     model: "i10",
-//     image: "/car-model.png",
-//     price: 60000,
-//     booked: false,
-//     type: "Coupe",
-//     transmission: "Automatic",
-//     seats: 5,
-//     rentalType: "Per Day"
-//   }
-// ];
-
+import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice';
 
 export default function Fleet() {
+  
+  const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
 
   const [vehicles, setVehicles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
-
-  console.log('vehicleData: ', vehicleData);
-  
 
   useEffect(() => {
     if (vehicleData) {
@@ -139,7 +48,7 @@ export default function Fleet() {
     return [...new Set(vehicleData.map(car => car.brand))];
   };
 
-  const [range, setRange] = useState([2000, 500000]);
+  const [range, setRange] = useState([0, 500]);
   const [filters, setFilters] = useState({
     search: '',
     brand: '',
@@ -150,7 +59,7 @@ export default function Fleet() {
     availableOnly: false,
     rentalType: 'Any'
   });
-  const [filteredCars, setFilteredCars] = useState(vehicleData);
+  const [filteredCars, setFilteredCars] = useState(vehicles);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const carsPerPage = 9;
@@ -195,7 +104,7 @@ export default function Fleet() {
       availableOnly: false,
       rentalType: 'Any'
     });
-    setRange([2000, 500000]);
+    setRange([0, 500]);
   };
 
   const toggleFilter = () => {
@@ -267,7 +176,7 @@ export default function Fleet() {
 
   const navigate = useNavigate();
 
-  if(!vehicledataFetched && isLoading) {
+  if(!vehicledataFetched) {
     return <div>Loading...</div>
   }
 
@@ -349,8 +258,8 @@ export default function Fleet() {
               </div>
               <Slider
                 range
-                min={2000}
-                max={500000}
+                min={0}
+                max={500}
                 value={range}
                 onChange={handleRangeChange}
                 trackStyle={[{ backgroundColor: '#177A65' }]}
@@ -487,7 +396,7 @@ export default function Fleet() {
                     </p>
                     <div 
                       className='flex items-center gap-2 text-gasolindark font-bold cursor-pointer'
-                      onClick={() => navigate(`/vehicle/${car.id}`)}
+                      onClick={() => navigate(`/vehicle/${car._id}`)}
                     >
                       <p>DRIVE NOW</p>
                       <TbArrowRight />
