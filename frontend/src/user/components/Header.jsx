@@ -63,9 +63,9 @@ export default function Header() {
 
           {/* Language & Sign Up (Desktop View) */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
+            {/* <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
               EN
-            </button>
+            </button> */}
             <button 
               onClick={() => navigate("/register")}
               className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight cursor-pointer">
