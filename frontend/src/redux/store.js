@@ -14,7 +14,7 @@ export const store = configureStore({
         [userApi.reducerPath]: userApi.reducer,
         [vehicleApi.reducerPath]: vehicleApi.reducer,
         [bookingApi.reducerPath]: bookingApi.reducer,
-        [bookingApi.reducerPath]: bookingApi.reducer,
+        [paymentApi.reducerPath]: paymentApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
