@@ -267,6 +267,10 @@ export default function Fleet() {
 
   const navigate = useNavigate();
 
+  if(!vehicledataFetched && isLoading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className='relative min-h-screen px-4 pt-24'>
       {/* Mobile Filter Toggle Button */}
