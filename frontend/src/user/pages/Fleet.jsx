@@ -3,110 +3,33 @@ import { TbSearch, TbArrowLeft, TbHeart, TbArrowRight, TbAdjustmentsHorizontal, 
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { useNavigate } from 'react-router-dom';
-import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice'
-
-// const carData = [
-//   {
-//     id: 1,
-//     brand: "Honda",
-//     model: "HR-V Hybrid",
-//     image: "/car-model.png",
-//     price: 120000,
-//     booked: true,
-//     type: "SUV",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 2,
-//     brand: "Honda",
-//     model: "Civic",
-//     image: "/car-model.png",
-//     price: 150000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 3,
-//     brand: "Honda",
-//     model: "City",
-//     image: "/car-model.png",
-//     price: 100000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 4,
-//     brand: "Honda",
-//     model: "Accord",
-//     image: "/car-model.png",
-//     price: 200000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Hours"
-//   },
-//   {
-//     id: 5,
-//     brand: "Nissan",
-//     model: "Sunny",
-//     image: "/car-model.png",
-//     price: 80000,
-//     booked: false,
-//     type: "Sedan",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Day"
-//   },
-//   {
-//     id: 6,
-//     brand: "Nissan",
-//     model: "X-Trail",
-//     image: "/car-model.png",
-//     price: 180000,
-//     booked: false,
-//     type: "SUV",
-//     transmission: "Automatic",
-//     seats: 4,
-//     rentalType: "Per Hours"
-//   },
-//   {
-//     id: 7,
-//     brand: "Hyundai",
-//     model: "i10",
-//     image: "/car-model.png",
-//     price: 60000,
-//     booked: false,
-//     type: "Coupe",
-//     transmission: "Automatic",
-//     seats: 5,
-//     rentalType: "Per Day"
-//   }
-// ];
-
+import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice';
 
 export default function Fleet() {
-
-  const [vehicles, setVehicles] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  
   const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
 
-  console.log('vehicleData: ', vehicleData);
-  
+  const [vehicles, setVehicles] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [range, setRange] = useState([0, 500]);
+  const [filters, setFilters] = useState({
+    search: '',
+    brand: '',
+    model: '',
+    types: [],
+    transmission: [],
+    seats: '',
+    availableOnly: false,
+    rentalType: 'Any'
+  });
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 9;
 
   useEffect(() => {
     if (vehicleData) {
       const Loadedvehicles = vehicleData.map(vehicle => ({
-        
         id: vehicle._id,
         brand: vehicle.brand,
         model: vehicle.model,
@@ -125,83 +48,12 @@ export default function Fleet() {
       }));
       
       setVehicles(Loadedvehicles);
+      setFilteredCars(Loadedvehicles);
       setIsLoading(false);
     }
   }, [vehicleData]);
 
-  const getModelsByBrand = (brand) => {
-    return [...new Set(vehicleData
-      .filter(car => car.brand === brand)
-      .map(car => car.model))];
-  };
-  
-  const getUniqueBrands = () => {
-    return [...new Set(vehicleData.map(car => car.brand))];
-  };
-
-  const [range, setRange] = useState([2000, 500000]);
-  const [filters, setFilters] = useState({
-    search: '',
-    brand: '',
-    model: '',
-    types: [],
-    transmission: [],
-    seats: '',
-    availableOnly: false,
-    rentalType: 'Any'
-  });
-  const [filteredCars, setFilteredCars] = useState(vehicleData);
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const carsPerPage = 9;
-
-  const handleRangeChange = (newRange) => {
-    setRange(newRange);
-  };
-
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value
-    }));
-  };
-
-  const handleTypeToggle = (type) => {
-    setFilters(prev => ({
-      ...prev,
-      types: prev.types.includes(type)
-        ? prev.types.filter(t => t !== type)
-        : [...prev.types, type]
-    }));
-  };
-
-  const handleTransmissionToggle = (transmission) => {
-    setFilters(prev => ({
-      ...prev,
-      transmission: prev.transmission.includes(transmission)
-        ? prev.transmission.filter(t => t !== transmission)
-        : [...prev.transmission, transmission]
-    }));
-  };
-
-  const resetFilters = () => {
-    setFilters({
-      search: '',
-      brand: '',
-      model: '',
-      types: [],
-      transmission: [],
-      seats: '',
-      availableOnly: false,
-      rentalType: 'Any'
-    });
-    setRange([2000, 500000]);
-  };
-
-  const toggleFilter = () => {
-    setIsFilterVisible(!isFilterVisible);
-  };
-
+  // Apply filters whenever filters or range changes
   useEffect(() => {
     let result = vehicles;
 
@@ -248,13 +100,69 @@ export default function Fleet() {
 
     // Apply rental type filter
     if (filters.rentalType !== 'Any') {
-      result = result.filter(car => car.rentalType === filters.rentalType || car.rentalType === 'Any');
+      result = result.filter(car => car.rentalType === filters.rentalType);
     }
 
     setCurrentPage(1);
-
     setFilteredCars(result);
-  }, [filters, range]);
+  }, [filters, range, vehicles]);
+
+  const getModelsByBrand = (brand) => {
+    return [...new Set(vehicles
+      .filter(car => car.brand === brand)
+      .map(car => car.model))];
+  };
+  
+  const getUniqueBrands = () => {
+    return [...new Set(vehicles.map(car => car.brand))];
+  };
+
+  const handleRangeChange = (newRange) => {
+    setRange(newRange);
+  };
+
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  const handleTypeToggle = (type) => {
+    setFilters(prev => ({
+      ...prev,
+      types: prev.types.includes(type)
+        ? prev.types.filter(t => t !== type)
+        : [...prev.types, type]
+    }));
+  };
+
+  const handleTransmissionToggle = (transmission) => {
+    setFilters(prev => ({
+      ...prev,
+      transmission: prev.transmission.includes(transmission)
+        ? prev.transmission.filter(t => t !== transmission)
+        : [...prev.transmission, transmission]
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      search: '',
+      brand: '',
+      model: '',
+      types: [],
+      transmission: [],
+      seats: '',
+      availableOnly: false,
+      rentalType: 'Any'
+    });
+    setRange([0, 500]);
+  };
+
+  const toggleFilter = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
 
   const indexOfLastCar = currentPage * carsPerPage;
   const indexOfFirstCar = indexOfLastCar - carsPerPage;
@@ -267,7 +175,7 @@ export default function Fleet() {
 
   const navigate = useNavigate();
 
-  if(!vehicledataFetched && isLoading) {
+  if(!vehicledataFetched) {
     return <div>Loading...</div>
   }
 
@@ -349,8 +257,8 @@ export default function Fleet() {
               </div>
               <Slider
                 range
-                min={2000}
-                max={500000}
+                min={0}
+                max={500}
                 value={range}
                 onChange={handleRangeChange}
                 trackStyle={[{ backgroundColor: '#177A65' }]}
@@ -460,14 +368,9 @@ export default function Fleet() {
 
         {/* Vehicle list */}
         <div className='w-full lg:w-3/4'>
-          {/* <div className='flex gap-2 items-center mb-5'>
-            <TbArrowLeft className='text-graydark' />
-            <div className='font-bold text-graydark'>Back</div>
-          </div> */}
-
           {/* Vehicle grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
-            {vehicleData.map(car => (
+            {currentCars.map(car => (
               <div key={car.id} className='rounded-2xl border border-graydark'>
                 <div className='relative'>
                   <img src={car.images} alt={car.name} className='w-full' />
