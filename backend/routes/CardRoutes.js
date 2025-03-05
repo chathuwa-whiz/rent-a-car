@@ -6,34 +6,34 @@ import { authenticate, authorize } from '../middleware/AuthMiddleware.js';
 const cardRoutes = express.Router();
 
 
-cardRoutes.post('/',
-    authenticate,
-    authorize("user","admin"),
-     addCard);
+// cardRoutes.post('/',
+//     authenticate,
+//     authorize("user","admin"),
+//      addCard);
 
-cardRoutes.get('/',
-    authenticate,
-    authorize("user","admin"),
-     getAllCards);
+// cardRoutes.get('/',
+//     authenticate,
+//     authorize("user","admin"),
+//      getAllCards);
 
-cardRoutes.get('/user/:userId',
-    authenticate,
-    authorize("user","admin"), 
-    getCardsByUserId);
+// cardRoutes.get('/user/:userId',
+//     authenticate,
+//     authorize("user","admin"), 
+//     getCardsByUserId);
 
-cardRoutes.get('/:id',
-    authenticate,
-    authorize("user","admin"), 
-    getCardById);
+// cardRoutes.get('/:id',
+//     authenticate,
+//     authorize("user","admin"), 
+//     getCardById);
 
-cardRoutes.put('/:id',
-    authenticate,
-    authorize("user","admin"), 
-    updateCard);
+// cardRoutes.put('/:id',
+//     authenticate,
+//     authorize("user","admin"), 
+//     updateCard);
 
-cardRoutes.delete('/:id',
-    authenticate,
-    authorize("user","admin"), 
-    deleteCard);
+// cardRoutes.delete('/:id',
+//     authenticate,
+//     authorize("user","admin"), 
+//     deleteCard);
 
 export default cardRoutes;

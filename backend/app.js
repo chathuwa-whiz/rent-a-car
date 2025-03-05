@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/payment', paymentRoutes);
-app.use('/api/card', cardRoutes);
+// app.use('/api/card', cardRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 
 export default app;

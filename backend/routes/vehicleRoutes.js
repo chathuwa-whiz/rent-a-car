@@ -7,11 +7,29 @@ import {
   deleteVehicle,
 } from "../controller/vehicleController.js";
 
+import { authenticate, authorize } from "../middleware/AuthMiddleware.js";
+
 const router = express.Router();
 
-router.get("/", getVehicles);
-router.post("/", upload.array("images", 5), addVehicle);
-router.put("/:id", updateVehicle);
-router.delete("/:id", deleteVehicle);
+router.get("/",
+  authenticate,
+  authorize("user","admin"),
+   getVehicles);
+
+router.post("/",
+  authenticate,
+  authorize("admin"),
+   upload.array("images", 5), 
+   addVehicle);
+
+router.put("/:id",
+  authenticate,
+  authorize("admin"),
+   updateVehicle);
+
+router.delete("/:id",
+  authenticate,
+  authorize("admin"),
+   deleteVehicle);
 
 export default router;
