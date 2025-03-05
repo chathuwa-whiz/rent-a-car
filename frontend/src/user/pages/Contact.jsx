@@ -1,20 +1,32 @@
 import { FaFacebookF, FaInstagram, FaEnvelope, FaWhatsapp, FaFacebookMessenger } from "react-icons/fa";
+import { motion } from "framer-motion";
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
 export default function ContactPage() {
   return (
-    <div className="  md:py-16 px-6 md:px-20 flex justify-center items-center min-h-[70vh]">
-      <div className="max-w-6xl w-full flex flex-col lg:flex-row justify-between items-center relative">
-
+    <div className="md:py-16 px-6 md:px-20 flex justify-center items-center min-h-[70vh]">
+      <motion.div
+        className="max-w-6xl w-full flex flex-col lg:flex-row justify-between items-center relative"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.2 }}
+      >
         {/* Background Text */}
         <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-        <h1 className="text-[5rem] sm:text-[10rem] lg:text-[13rem] xl:text-[19rem] text-black  font-extrabold uppercase opacity-10 ">
-          Contact
-        </h1>
-      </div>
-        
+          <h1 className="text-[5rem] sm:text-[10rem] lg:text-[13rem] xl:text-[19rem] text-black font-extrabold uppercase opacity-10">
+            Contact
+          </h1>
+        </div>
+
         {/* Left & Middle Section */}
-        <div className="relative z-10 w-full lg:w-1/4 flex flex-row gap-2 lg:gap-16 xl:gap-36 justify-between items-center md:items-start mb-16 md:mb-0">
-          
+        <motion.div 
+          className="relative z-10 w-full lg:w-1/4 flex flex-row gap-2 lg:gap-16 xl:gap-36 justify-between items-center md:items-start mb-16 md:mb-0"
+          variants={fadeIn}
+        >
           {/* Logo */}
           <div className="bg-transparent md:mt-2 px-6 py-4 border border-graylight text-lg text-graylight font-semibold text-center">
             RENTACAR
@@ -34,10 +46,13 @@ export default function ContactPage() {
               <FaEnvelope className="text-lg md:text-xl cursor-pointer hover:text-graylight transition" />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Section - Contact Form */}
-        <div className="relative md:mt-8 z-10 w-full lg:w-2/4 bg-transparent">
+        <motion.div 
+          className="relative md:mt-8 z-10 w-full lg:w-2/4 bg-transparent"
+          variants={fadeIn}
+        >
           <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-1 flex flex-col gap-4">
               <input
@@ -69,8 +84,8 @@ export default function ContactPage() {
               </button>
             </div>
           </form>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
