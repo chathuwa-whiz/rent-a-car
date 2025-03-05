@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import vehicleRoutes from "./routes/vehicleRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 import authRoutes from './routes/AuthRoutes.js';
 import userRoutes from './routes/UserRoutes.js';
@@ -23,5 +24,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/payment', paymentRoutes);
 // app.use('/api/card', cardRoutes);
 app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 export default app;
