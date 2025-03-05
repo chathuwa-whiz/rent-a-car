@@ -5,7 +5,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 export default function AboutUs() {
   return (
-    <div className="relative min-h-screen mb-16">
+    <div id="aboutus" className="relative min-h-screen mb-16">
       {/* Top Section - Luxury Car Image */}
       <div className="relative w-full z-10">
         <motion.img

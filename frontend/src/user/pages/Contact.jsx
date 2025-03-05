@@ -8,7 +8,7 @@ const fadeIn = {
 
 export default function ContactPage() {
   return (
-    <div className="md:py-16 px-6 md:px-20 flex justify-center items-center min-h-[70vh]">
+    <div id="contact" className="md:py-16 px-6 md:px-20 flex justify-center items-center min-h-[70vh]">
       <motion.div
         className="max-w-6xl w-full flex flex-col lg:flex-row justify-between items-center relative"
         initial="hidden"
