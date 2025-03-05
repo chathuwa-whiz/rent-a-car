@@ -3,105 +3,138 @@ import { TbSearch, TbArrowLeft, TbHeart, TbArrowRight, TbAdjustmentsHorizontal, 
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { useNavigate } from 'react-router-dom';
+import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice'
 
-const carData = [
-  {
-    id: 1,
-    brand: "Honda",
-    model: "HR-V Hybrid",
-    image: "/car-model.png",
-    price: 120000,
-    booked: true,
-    type: "SUV",
-    transmission: "Automatic",
-    seats: 4,
-    rentalType: "Per Day"
-  },
-  {
-    id: 2,
-    brand: "Honda",
-    model: "Civic",
-    image: "/car-model.png",
-    price: 150000,
-    booked: false,
-    type: "Sedan",
-    transmission: "Automatic",
-    seats: 4,
-    rentalType: "Per Day"
-  },
-  {
-    id: 3,
-    brand: "Honda",
-    model: "City",
-    image: "/car-model.png",
-    price: 100000,
-    booked: false,
-    type: "Sedan",
-    transmission: "Automatic",
-    seats: 4,
-    rentalType: "Per Day"
-  },
-  {
-    id: 4,
-    brand: "Honda",
-    model: "Accord",
-    image: "/car-model.png",
-    price: 200000,
-    booked: false,
-    type: "Sedan",
-    transmission: "Automatic",
-    seats: 4,
-    rentalType: "Per Hours"
-  },
-  {
-    id: 5,
-    brand: "Nissan",
-    model: "Sunny",
-    image: "/car-model.png",
-    price: 80000,
-    booked: false,
-    type: "Sedan",
-    transmission: "Automatic",
-    seats: 4,
-    rentalType: "Per Day"
-  },
-  {
-    id: 6,
-    brand: "Nissan",
-    model: "X-Trail",
-    image: "/car-model.png",
-    price: 180000,
-    booked: false,
-    type: "SUV",
-    transmission: "Automatic",
-    seats: 4,
-    rentalType: "Per Hours"
-  },
-  {
-    id: 7,
-    brand: "Hyundai",
-    model: "i10",
-    image: "/car-model.png",
-    price: 60000,
-    booked: false,
-    type: "Coupe",
-    transmission: "Automatic",
-    seats: 5,
-    rentalType: "Per Day"
-  }
-];
+// const carData = [
+//   {
+//     id: 1,
+//     brand: "Honda",
+//     model: "HR-V Hybrid",
+//     image: "/car-model.png",
+//     price: 120000,
+//     booked: true,
+//     type: "SUV",
+//     transmission: "Automatic",
+//     seats: 4,
+//     rentalType: "Per Day"
+//   },
+//   {
+//     id: 2,
+//     brand: "Honda",
+//     model: "Civic",
+//     image: "/car-model.png",
+//     price: 150000,
+//     booked: false,
+//     type: "Sedan",
+//     transmission: "Automatic",
+//     seats: 4,
+//     rentalType: "Per Day"
+//   },
+//   {
+//     id: 3,
+//     brand: "Honda",
+//     model: "City",
+//     image: "/car-model.png",
+//     price: 100000,
+//     booked: false,
+//     type: "Sedan",
+//     transmission: "Automatic",
+//     seats: 4,
+//     rentalType: "Per Day"
+//   },
+//   {
+//     id: 4,
+//     brand: "Honda",
+//     model: "Accord",
+//     image: "/car-model.png",
+//     price: 200000,
+//     booked: false,
+//     type: "Sedan",
+//     transmission: "Automatic",
+//     seats: 4,
+//     rentalType: "Per Hours"
+//   },
+//   {
+//     id: 5,
+//     brand: "Nissan",
+//     model: "Sunny",
+//     image: "/car-model.png",
+//     price: 80000,
+//     booked: false,
+//     type: "Sedan",
+//     transmission: "Automatic",
+//     seats: 4,
+//     rentalType: "Per Day"
+//   },
+//   {
+//     id: 6,
+//     brand: "Nissan",
+//     model: "X-Trail",
+//     image: "/car-model.png",
+//     price: 180000,
+//     booked: false,
+//     type: "SUV",
+//     transmission: "Automatic",
+//     seats: 4,
+//     rentalType: "Per Hours"
+//   },
+//   {
+//     id: 7,
+//     brand: "Hyundai",
+//     model: "i10",
+//     image: "/car-model.png",
+//     price: 60000,
+//     booked: false,
+//     type: "Coupe",
+//     transmission: "Automatic",
+//     seats: 5,
+//     rentalType: "Per Day"
+//   }
+// ];
 
-const getModelsByBrand = (brand) => {
-  return [...new Set(carData
-    .filter(car => car.brand === brand)
-    .map(car => car.model))];
-};
-
-const getUniqueBrands = () => {
-  return [...new Set(carData.map(car => car.brand))];
-};
 
 export default function Fleet() {
+
+  const [vehicles, setVehicles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
+
+  useEffect(() => {
+    if (vehicleData) {
+      const Loadedvehicles = vehicleData.map(vehicle => ({
+        
+        id: vehicle._id,
+        brand: vehicle.brand,
+        model: vehicle.model,
+        engine: vehicle.engine,
+        topSpeed: vehicle.topSpeed,
+        acceleration: vehicle.acceleration,
+        price: vehicle.price,
+        booked: vehicle.booked,
+        type: vehicle.type,
+        transmission: vehicle.transmission,
+        seats: vehicle.seats,
+        rentalType: vehicle.rentalType,
+        securityDeposit: vehicle.securityDeposit,
+        availability: vehicle.availability,
+        images: vehicle.images,
+      }));
+      
+      setVehicles(vehicles);
+      setIsLoading(false);
+    }
+  }, [vehicleData]);
+
+  const getModelsByBrand = (brand) => {
+    return [...new Set(vehicles
+      .filter(car => car.brand === brand)
+      .map(car => car.model))];
+  };
+  
+  const getUniqueBrands = () => {
+    return [...new Set(vehicles.map(car => car.brand))];
+  };
 
   const [range, setRange] = useState([2000, 500000]);
   const [filters, setFilters] = useState({
@@ -114,7 +147,7 @@ export default function Fleet() {
     availableOnly: false,
     rentalType: 'Any'
   });
-  const [filteredCars, setFilteredCars] = useState(carData);
+  const [filteredCars, setFilteredCars] = useState(vehicles);
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const carsPerPage = 9;
@@ -167,7 +200,7 @@ export default function Fleet() {
   };
 
   useEffect(() => {
-    let result = carData;
+    let result = vehicles;
 
     // Apply search filter
     if (filters.search) {

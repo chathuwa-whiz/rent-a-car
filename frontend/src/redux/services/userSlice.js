@@ -1,0 +1,58 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+export const userApi = createApi({
+
+    reducerPath: "userApi",
+    baseQuery: fetchBaseQuery({
+
+        baseUrl: "http://localhost:5010/api",
+        prepareHeaders: (headers) => {
+
+            const token = localStorage.getItem('token');
+            if(token){
+                headers.set('Authorization', `Bearer ${token}`);
+            }
+            return headers;
+        }
+    }),
+
+    endpoints: (builder) => ({
+
+        getUsers: builder.query({
+            query: () => '/users',
+        }),
+
+        getUserById: builder.query({
+            query: (id) => `/user/${id}`,
+        }),
+
+        getUserByRole: builder.query({
+            query: (role) => `/user/role/${role}`,
+        }),
+
+        updateUser: builder.mutation({
+            query: ({id, user}) => ({
+                url: `users/${id}`,
+                method: 'PUT',
+                body: user,
+            }),
+        }),
+
+        deleteUser: builder.mutation({
+            query: (id) => ({
+                url: `/users/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+    }),
+});
+
+export const {
+
+    useGetUsersQuery,
+    useGetUserByIdQuery,
+    useGetUserByRoleQuery,
+    useUpdateUserMutation,
+    useDeleteUserMutation,
+
+} = userApi;
