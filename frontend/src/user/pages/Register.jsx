@@ -2,12 +2,58 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import toast from 'react-hot-toast';
+import { useRegisterMutation } from "../../redux/services/authSlice"
 
 export default function Register() {
+
+  const [ register ] = useRegisterMutation();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const navigate = useNavigate();
+
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [phone, setPhone] = useState("");
+  const [sphone, setSphone] = useState("");
+  const [nic, setNic] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cpassword, setCpassword] = useState("");
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+      const user = {
+
+        firstName: fname,
+        lastName: lname,
+        phone: phone,
+        secondaryPhone: sphone,
+        nic: nic,
+        address: address,
+        email: email,
+        password: password,
+        confirmPassword: cpassword,
+        role: "user",
+      }
+
+      const result  = await register(user).unwrap();
+      console.log('registration result: ', result);
+      toast.success("Registration successful");
+      navigate("/login");
+      
+    } catch (error) {
+
+      console.log('registration error: ', error);
+      toast.error(error.data.message);
+    }
+  };
+
 
   return (
     <div className="flex flex-row w-full min-h-screen pt-24">
@@ -47,6 +93,7 @@ export default function Register() {
               <label className="block text-xs sm:text-sm lg:text-graylight">First Name</label>
               <input
                 type="text"
+                onChange={(e) => setFname(e.target.value)}
                 placeholder="John"
                 className="w-full text-xs sm:text-sm py-1 pl-2 mt-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
               />
@@ -55,6 +102,7 @@ export default function Register() {
               <label className="block text-xs sm:text-sm lg:text-graylight">Last Name</label>
               <input
                 type="text"
+                onChange={(e) => setLname(e.target.value)}
                 placeholder="Doe"
                 className="w-full text-xs sm:text-sm py-1 pl-2 mt-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
               />
@@ -66,6 +114,7 @@ export default function Register() {
               <label className="block text-xs sm:text-sm lg:text-graylight">Phone Number</label>
               <input
                 type="tel"
+                onChange={(e) => setPhone(e.target.value)}
                 placeholder="123456789"
                 className="w-full text-xs sm:text-sm py-1 pl-2 mt-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
               />
@@ -74,6 +123,7 @@ export default function Register() {
               <label className="block text-xs sm:text-sm lg:text-graylight">Secondary Phone</label>
               <input
                 type="tel"
+                onChange={(e) => setSphone(e.target.value)}
                 placeholder="987654321"
                 className="w-full text-xs sm:text-sm py-1 pl-2 mt-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
               />
@@ -83,6 +133,7 @@ export default function Register() {
           <label className="block text-xs sm:text-sm lg:text-graylight">NIC</label>
           <input
             type="text"
+            onChange={(e) => setNic(e.target.value)}
             placeholder="123456789v"
             className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
           />
@@ -90,12 +141,14 @@ export default function Register() {
           <label className="block text-xs mt-1 sm:text-sm lg:text-graylight">Address</label>
           <textarea
             placeholder="No 6, Colombo, Sri Lanka"
+            onChange={(e) => setAddress(e.target.value)}
             className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
           />
 
           <label className="block text-xs sm:text-sm lg:text-graylight">Email</label>
           <input
             type="email"
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="example@gmail.com"
             className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
           />
@@ -107,6 +160,7 @@ export default function Register() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter password"
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full text-xs sm:text-sm py-1 pl-2 mt-1 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
                 />
                 <span
@@ -125,6 +179,7 @@ export default function Register() {
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Re-enter password"
+                  onChange={(e) => setCpassword(e.target.value)}
                   className="w-full text-xs sm:text-sm py-1 pl-2 mt-1 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
                 />
                 <span
@@ -138,7 +193,7 @@ export default function Register() {
           </div>
         </div>
 
-        <button className="w-full max-w-md mt-4 p-2 bg-white text-black rounded-[5px] font-bold text-sm">
+        <button onClick={handleSubmit} className="w-full max-w-md mt-4 p-2 bg-white text-black rounded-[5px] font-bold text-sm">
           Sign Up
         </button>
 

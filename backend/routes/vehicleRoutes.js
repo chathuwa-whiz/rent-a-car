@@ -12,8 +12,6 @@ import { authenticate, authorize } from "../middleware/AuthMiddleware.js";
 const router = express.Router();
 
 router.get("/",
-  authenticate,
-  authorize("user","admin"),
    getVehicles);
 
 router.post("/",
