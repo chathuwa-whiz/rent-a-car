@@ -5,6 +5,7 @@ import {
   addVehicle,
   updateVehicle,
   deleteVehicle,
+  getVehicle
 } from "../controller/vehicleController.js";
 
 import { authenticate, authorize } from "../middleware/AuthMiddleware.js";
@@ -13,6 +14,9 @@ const router = express.Router();
 
 router.get("/",
    getVehicles);
+
+router.get("/:id",
+  getVehicle);
 
 router.post("/",
   authenticate,
