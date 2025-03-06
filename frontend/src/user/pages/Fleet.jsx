@@ -4,8 +4,11 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { useNavigate } from 'react-router-dom';
 import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice';
+import { useGetVehiclesQuery } from '../../redux/services/vehicleSlice';
 
 export default function Fleet() {
+  
+  const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
   
   const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
 
@@ -54,6 +57,79 @@ export default function Fleet() {
   }, [vehicleData]);
 
   // Apply filters whenever filters or range changes
+  const getModelsByBrand = (brand) => {
+    return [...new Set(vehicleData
+      .filter(car => car.brand === brand)
+      .map(car => car.model))];
+  };
+  
+  const getUniqueBrands = () => {
+    return [...new Set(vehicleData.map(car => car.brand))];
+  };
+
+  const [range, setRange] = useState([0, 500]);
+  const [filters, setFilters] = useState({
+    search: '',
+    brand: '',
+    model: '',
+    types: [],
+    transmission: [],
+    seats: '',
+    availableOnly: false,
+    rentalType: 'Any'
+  });
+  const [filteredCars, setFilteredCars] = useState(vehicles);
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 9;
+
+  const handleRangeChange = (newRange) => {
+    setRange(newRange);
+  };
+
+  const handleFilterChange = (key, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
+  const handleTypeToggle = (type) => {
+    setFilters(prev => ({
+      ...prev,
+      types: prev.types.includes(type)
+        ? prev.types.filter(t => t !== type)
+        : [...prev.types, type]
+    }));
+  };
+
+  const handleTransmissionToggle = (transmission) => {
+    setFilters(prev => ({
+      ...prev,
+      transmission: prev.transmission.includes(transmission)
+        ? prev.transmission.filter(t => t !== transmission)
+        : [...prev.transmission, transmission]
+    }));
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      search: '',
+      brand: '',
+      model: '',
+      types: [],
+      transmission: [],
+      seats: '',
+      availableOnly: false,
+      rentalType: 'Any'
+    });
+    setRange([0, 500]);
+  };
+
+  const toggleFilter = () => {
+    setIsFilterVisible(!isFilterVisible);
+  };
+
   useEffect(() => {
     let result = vehicles;
 
@@ -176,6 +252,7 @@ export default function Fleet() {
   const navigate = useNavigate();
 
   if(!vehicledataFetched) {
+  if(!vehicledataFetched) {
     return <div>Loading...</div>
   }
 
@@ -257,6 +334,8 @@ export default function Fleet() {
               </div>
               <Slider
                 range
+                min={0}
+                max={500}
                 min={0}
                 max={500}
                 value={range}
@@ -390,7 +469,7 @@ export default function Fleet() {
                     </p>
                     <div 
                       className='flex items-center gap-2 text-gasolindark font-bold cursor-pointer'
-                      onClick={() => navigate(`/vehicle/${car.id}`)}
+                      onClick={() => navigate(`/vehicle/${car._id}`)}
                     >
                       <p>DRIVE NOW</p>
                       <TbArrowRight />
