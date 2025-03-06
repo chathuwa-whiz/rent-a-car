@@ -13,19 +13,21 @@ export const getVehicles = async (req, res) => {
 // Add a new vehicle with Cloudinary image upload
 export const addVehicle = async (req, res) => {
   try {
-
-    // Ensure files exist
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: "No images uploaded" });
+    // Ensure required primary image exists
+    if (!req.files || !req.files.primaryImage || req.files.primaryImage.length === 0) {
+      return res.status(400).json({ message: "No primary image uploaded" });
     }
 
     const {
       brand, model, engine, topSpeed, acceleration, price,
-      type, transmission, seats, rentalType, securityDeposit, availability
+      type, transmission, seats, rentalType, securityDeposit, availability, description
     } = req.body;
 
-    // Extract Cloudinary URLs
-    const imageUrls = req.files.map(file => file.path);
+    // Extract Cloudinary URLs:
+    // - primaryImage: first (and only) file from primaryImage field
+    // - thumbnails: files from thumbnails field (if any)
+    const primaryImage = req.files.primaryImage[0].path;
+    const thumbnails = req.files.thumbnails ? req.files.thumbnails.map(file => file.path) : [];
 
     const newVehicle = new Vehicle({
       brand,
@@ -41,7 +43,9 @@ export const addVehicle = async (req, res) => {
       rentalType,
       securityDeposit,
       availability,
-      images: imageUrls, 
+      primaryImage,
+      thumbnails,
+      description,
     });
 
     const savedVehicle = await newVehicle.save();
@@ -51,6 +55,9 @@ export const addVehicle = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+
 
 // Get a single vehicle
 export const getVehicle = async (req, res) => {

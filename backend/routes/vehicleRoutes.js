@@ -19,10 +19,13 @@ router.get("/:id",
   getVehicle);
 
 router.post("/",
-  authenticate,
-  authorize("admin"),
-   upload.array("images", 5), 
-   addVehicle);
+    authenticate,
+    authorize("admin"),
+    upload.fields([
+      { name: "primaryImage", maxCount: 1 },
+      { name: "thumbnails", maxCount: 4 }
+    ]),
+    addVehicle);
 
 router.put("/:id",
   authenticate,

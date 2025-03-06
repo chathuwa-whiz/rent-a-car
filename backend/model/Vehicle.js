@@ -14,7 +14,9 @@ const vehicleSchema = new mongoose.Schema({
   rentalType: { type: String, required: true },
   securityDeposit: { type: Number, required: true },
   availability: { type: String, default: "available" },
-  images: [{ type: String }], // Cloudinary URLs
+  primaryImage: { type: String, required: true }, // Primary image Cloudinary URL
+  thumbnails: [{ type: String }],              // Thumbnail images Cloudinary URLs
+  description: { type: String }                  // Description of the vehicle
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
