@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import toast from 'react-hot-toast';
-import { useRegisterMutation } from "../../redux/services/authSlice"
+import toast from "react-hot-toast";
+import { useRegisterMutation } from "../../redux/services/authSlice";
 
 export default function Register() {
+  const [register] = useRegisterMutation();
 
-  const [ register ] = useRegisterMutation();
+  const [identificationType, setIdentificationType] = useState("nic");
+  const [nicNumber, setNicNumber] = useState("");
+  const [passportNumber, setPassportNumber] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -24,36 +27,33 @@ export default function Register() {
   const [cpassword, setCpassword] = useState("");
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
       const user = {
-
         firstName: fname,
         lastName: lname,
         phone: phone,
         secondaryPhone: sphone,
-        nic: nic,
         address: address,
         email: email,
         password: password,
         confirmPassword: cpassword,
         role: "user",
-      }
+        identificationType: identificationType,
+        nic: identificationType === "nic" ? nicNumber : "",
+        passport: identificationType === "passport" ? passportNumber : "",
+      };
 
-      const result  = await register(user).unwrap();
-      console.log('registration result: ', result);
+      const result = await register(user).unwrap();
+      console.log("registration result: ", result);
       toast.success("Registration successful");
       navigate("/login");
-      
     } catch (error) {
-
-      console.log('registration error: ', error);
+      console.log("registration error: ", error);
       toast.error(error.data.message);
     }
   };
-
 
   return (
     <div className="flex flex-row w-full min-h-screen pt-24">
@@ -64,7 +64,8 @@ export default function Register() {
           Join Us & <br /> Start Your Journey!
         </h2>
         <p className="text-graylight text-center text-xs sm:text-sm mt-6 max-w-xs">
-          Sign up to access reliable car rentals, tailored to your needs. Your adventure starts here!
+          Sign up to access reliable car rentals, tailored to your needs. Your
+          adventure starts here!
         </p>
       </div>
 
@@ -87,10 +88,11 @@ export default function Register() {
         </div>
 
         <div className="w-full max-w-md space-y-2 p">
-
           <div className="flex gap-2 mb-2">
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm lg:text-graylight">First Name</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                First Name
+              </label>
               <input
                 type="text"
                 onChange={(e) => setFname(e.target.value)}
@@ -99,7 +101,9 @@ export default function Register() {
               />
             </div>
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm lg:text-graylight">Last Name</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                Last Name
+              </label>
               <input
                 type="text"
                 onChange={(e) => setLname(e.target.value)}
@@ -111,7 +115,9 @@ export default function Register() {
 
           <div className="flex gap-2 mt-1">
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm lg:text-graylight">Phone Number</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                Phone Number
+              </label>
               <input
                 type="tel"
                 onChange={(e) => setPhone(e.target.value)}
@@ -120,7 +126,9 @@ export default function Register() {
               />
             </div>
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm lg:text-graylight">Secondary Phone</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                Secondary Phone
+              </label>
               <input
                 type="tel"
                 onChange={(e) => setSphone(e.target.value)}
@@ -130,32 +138,92 @@ export default function Register() {
             </div>
           </div>
 
-          <label className="block text-xs sm:text-sm lg:text-graylight">NIC</label>
-          <input
-            type="text"
-            onChange={(e) => setNic(e.target.value)}
-            placeholder="123456789v"
-            className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
-          />
+          <div className="mb-2">
+            <label className="block text-xs sm:text-sm lg:text-graylight">
+              Identification Type
+            </label>
+            <div className="flex mt-1">
+              <label className="mr-4">
+                <input
+                  type="radio"
+                  value="nic"
+                  checked={identificationType === "nic"}
+                  onChange={() => setIdentificationType("nic")}
+                  className="mr-1"
+                />
+                <span className="text-xs sm:text-sm lg:text-graylight">
+                  NIC
+                </span>
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="passport"
+                  checked={identificationType === "passport"}
+                  onChange={() => setIdentificationType("passport")}
+                  className="mr-1"
+                />
+                <span className="text-xs sm:text-sm lg:text-graylight">
+                  Passport
+                </span>
+              </label>
+            </div>
+          </div>
 
-          <label className="block text-xs mt-1 sm:text-sm lg:text-graylight">Address</label>
-          <textarea
-            placeholder="No 6, Colombo, Sri Lanka"
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
-          />
+          {identificationType === "nic" ? (
+            <div>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                NIC Number
+              </label>
+              <input
+                type="text"
+                onChange={(e) => setNicNumber(e.target.value)}
+                placeholder="123456789v"
+                className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                Passport Number
+              </label>
+              <input
+                type="text"
+                onChange={(e) => setPassportNumber(e.target.value)}
+                placeholder="AB1234567"
+                className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
+              />
+            </div>
+          )}
 
-          <label className="block text-xs sm:text-sm lg:text-graylight">Email</label>
-          <input
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@gmail.com"
-            className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
-          />
+          <div>
+            <label className="block text-xs mt-1 sm:text-sm lg:text-graylight">
+              Address
+            </label>
+            <textarea
+              placeholder="No 6, Colombo, Sri Lanka"
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs sm:text-sm lg:text-graylight">
+              Email
+            </label>
+            <input
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@gmail.com"
+              className="w-full text-xs sm:text-sm py-1 pl-2 rounded-[5px] border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
+            />
+          </div>
 
           <div className="flex gap-2 mt-1">
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm lg:text-graylight">Password</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -170,11 +238,15 @@ export default function Register() {
                   {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </span>
               </div>
-              <p className="text-xs text-graylight mt-1">Must be at least 8 characters.</p>
+              <p className="text-xs text-graylight mt-1">
+                Must be at least 8 characters.
+              </p>
             </div>
 
             <div className="w-1/2">
-              <label className="block text-xs sm:text-sm lg:text-graylight">Confirm Password</label>
+              <label className="block text-xs sm:text-sm lg:text-graylight">
+                Confirm Password
+              </label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -193,17 +265,23 @@ export default function Register() {
           </div>
         </div>
 
-        <button onClick={handleSubmit} className="w-full max-w-md mt-4 p-2 bg-white text-black rounded-[5px] font-bold text-sm">
+        <button
+          onClick={handleSubmit}
+          className="w-full max-w-md mt-4 p-2 bg-white text-black rounded-[5px] font-bold text-sm"
+        >
           Sign Up
         </button>
 
         <p className="mt-2 text-xs sm:text-sm text-graylight">
           Already have an account?{" "}
-          <span className="text-white cursor-pointer" onClick={() => navigate("/login")}>
+          <span
+            className="text-white cursor-pointer"
+            onClick={() => navigate("/login")}
+          >
             Login
           </span>
         </p>
       </div>
     </div>
   );
-};
+}
