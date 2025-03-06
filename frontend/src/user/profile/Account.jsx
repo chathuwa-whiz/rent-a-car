@@ -78,6 +78,21 @@ export default function Account() {
     }
   }
 
+  const handleDeleteUser = async () => {
+
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      try {
+        await deleteUser(userId).unwrap();
+        localStorage.removeItem("user");
+        toast.success("Account deleted successfully");
+        window.location.href = "/login";
+      } catch (error) {
+        toast.error("Error deleting account");
+        console.log("Failed to delete account:", error);
+      }
+    }
+  }
+
   if (isLoading) {
     return <div className="text-white text-center">Loading user data...</div>;
   }
@@ -157,7 +172,7 @@ export default function Account() {
             <button onClick={handleUserUpdate} className='bg-gasolindark text-white px-5 py-2 rounded-md hover:bg-gasolinlight cursor-pointer w-full sm:w-auto'>
               Edit Details
             </button>
-            <button className='bg-darkred text-white px-5 py-2 rounded-lg cursor-pointer w-full sm:w-auto'>
+            <button  onClick={handleDeleteUser} className='bg-darkred text-white px-5 py-2 rounded-lg cursor-pointer w-full sm:w-auto'>
               Delete Profile
             </button>
           </div>
