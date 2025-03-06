@@ -38,7 +38,7 @@ export default function Payment() {
 
   // Booking details for PayHere
   const bookingDetails = {
-    booking_id: `BOOKING-${id}-${Date.now()}`, // Unique booking ID
+    booking_id: `BOOKING-${id}-${Date.now()}`,
     amount: totalPrice,
     first_name: name?.split(" ")[0] || "Customer",
     last_name: name?.split(" ")[1] || "",
@@ -46,11 +46,10 @@ export default function Payment() {
     phone: phone,
     items: `${vehicle.brand} ${vehicle.model} - ${rentalDays} Days`,
 
-    // Add the fields your PayButton references:
-    vehicleId: id,       // The vehicle's ID
-    startDate,           // For your booking dates
-    endDate,             // ...
-    address              // So booking.address is not undefined
+    vehicleId: id,      
+    startDate,          
+    endDate,           
+    address             
   };
 
   return (
