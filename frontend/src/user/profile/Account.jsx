@@ -1,7 +1,56 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import user from "./assets/i55.png"
+import { useGetUserByIdQuery } from "../../redux/services/userSlice"
+import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function Account() {
+
+  const userId = JSON.parse(localStorage.getItem("user"))?._id;
+  
+  const { data: userData, isSuccess, isLoading } = useGetUserByIdQuery(userId);
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    nic: '',
+    passport: '',
+    address: '',
+    email: '',
+    phone: '',
+    secondaryPhone: '',
+  });
+
+  useEffect(() => {
+    if (isSuccess && userData) {
+      const {
+        firstName,
+        lastName,
+        nic,
+        passport,
+        address,
+        email,
+        phone,
+        secondaryPhone,
+      } = userData;
+
+      setFormData({
+        firstName: firstName || '',
+        lastName: lastName || '',
+        nic: nic || '',
+        passport: passport || '',
+        address: address || '',
+        email: email || '',
+        phone: phone || '',
+        secondaryPhone: secondaryPhone || '',
+      });
+    }
+  }, [isSuccess, userData]);
+
+  if (isLoading) {
+    return <div className="text-white text-center">Loading user data...</div>;
+  }
+
   return (
     <div className='text-white px-2 sm:px-4 md:px-6 py-4 sm:py-6 mx-2 sm:mx-5 rounded-lg bg-black'>
       <h1 className='text-gasolindark font-semibold text-xl sm:text-2xl'>Personal Details</h1>
@@ -27,6 +76,7 @@ export default function Account() {
               <p className='text-sm sm:text-base'>First Name</p>
               <input
                 type='text'
+                value={formData.firstName}
                 className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
                 placeholder='First Name'
               />
@@ -35,6 +85,7 @@ export default function Account() {
               <p className='text-sm sm:text-base'>Last Name</p>
               <input
                 type='text'
+                value={formData.lastName}
                 className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
                 placeholder='Last Name'
               />
@@ -46,6 +97,7 @@ export default function Account() {
             <p className='text-sm sm:text-base'>NIC</p>
             <input
               type='text'
+              value={formData.nic}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='NIC'
             />
@@ -55,6 +107,7 @@ export default function Account() {
           <div className='flex flex-col space-y-2 mb-6'>
             <p className='text-sm sm:text-base'>Address</p>
             <textarea
+              value={formData.address}
               className='border border-graydark text-graydark h-20 rounded-lg px-3 py-2 w-full'
               placeholder='Address'
             />
@@ -78,6 +131,7 @@ export default function Account() {
             <p className='text-sm sm:text-base'>Email</p>
             <input
               type='email'
+              value={formData.email}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='jakedaniel@gmail.com'
             />
@@ -88,6 +142,7 @@ export default function Account() {
             <p className='text-sm sm:text-base'>Mobile</p>
             <input
               type='tel'
+              value={formData.phone}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='011-234 3452'
             />
@@ -98,6 +153,7 @@ export default function Account() {
             <p className='text-sm sm:text-base'>Emergency Contact</p>
             <input
               type='tel'
+              value={formData.secondaryPhone}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='011-231 1234'
             />

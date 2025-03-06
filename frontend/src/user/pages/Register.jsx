@@ -20,7 +20,6 @@ export default function Register() {
   const [lname, setLname] = useState("");
   const [phone, setPhone] = useState("");
   const [sphone, setSphone] = useState("");
-  const [nic, setNic] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
