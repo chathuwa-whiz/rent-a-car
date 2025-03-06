@@ -55,7 +55,7 @@ export default function Payment() {
           {/* Car Image */}
           <div className="relative h-32 sm:h-40 md:h-48 lg:h-56">
             <img
-              src={vehicle.images[0]}
+              src={vehicle.primaryImage}
               alt={`${vehicle.brand} ${vehicle.model}`}
               className="w-full h-full object-contain p-4"
             />

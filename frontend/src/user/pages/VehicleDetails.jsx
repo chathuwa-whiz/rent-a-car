@@ -30,7 +30,10 @@ export default function VehicleDetails() {
       return;
     }
 
-    navigate(`/payment/${vehicle._id}?name=${name}&phone=${phoneNumber}&address=${address}&startDate=${startDate}&endDate=${endDate}`);
+    // Use vehicle.id instead of vehicle.id
+    navigate(
+      `/payment/${vehicle.id}?name=${name}&phone=${phoneNumber}&address=${address}&startDate=${startDate}&endDate=${endDate}`
+    );
   };
 
   return (
@@ -58,7 +61,7 @@ export default function VehicleDetails() {
           <div className="flex">
             <div className="flex flex-col space-y-2 w-1/2 text-sm md:text-base text-graylight">
               <p>Security Deposit</p>
-              <p>Includes</p>
+              <p>Includes</p> {/* remove or replace if "includes" isn't in your schema */}
               <p>Top Speed</p>
               <p>0-60 mph</p>
               <p>Transmission</p>
@@ -67,7 +70,7 @@ export default function VehicleDetails() {
             </div>
             <div className="flex flex-col space-y-2 w-1/2 text-sm md:text-base text-graydark">
               <p>Rs.{vehicle.securityDeposit}</p>
-              <p>{vehicle.includes}</p>
+              <p>{vehicle.includes}</p> {/* remove or replace if "includes" isn't in your schema */}
               <p>{vehicle.topSpeed} km/h</p>
               <p>{vehicle.acceleration} sec</p>
               <p>{vehicle.transmission}</p>
@@ -126,29 +129,31 @@ export default function VehicleDetails() {
 
         {/* Right side - Vehicle Images & Description */}
         <div className="w-full lg:w-3/5 flex flex-col gap-4">
-          {/* Main Image */}
+          {/* Main Image (primaryImage) */}
           <div className="flex flex-col gap-4">
             <img
-              src={vehicle.images[0]}
+              src={vehicle.primaryImage}
               alt={vehicle.brand}
               className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover rounded-lg"
             />
           </div>
 
-          {/* Thumbnail Images */}
+          {/* Thumbnail Images (thumbnails) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-0">
-            {vehicle.images.slice(1).map((image, index) => (
+            {vehicle.thumbnails && vehicle.thumbnails.map((image, index) => (
               <img
                 key={index}
                 src={image}
-                alt={`${vehicle.brand} view ${index + 2}`}
+                alt={`${vehicle.brand} view ${index + 1}`}
                 className="w-full h-24 md:h-32 object-cover cursor-pointer hover:opacity-80 transition-opacity"
               />
             ))}
           </div>
 
           {/* Vehicle Description */}
-          <p className="text-graydark text-sm md:text-base">{vehicle.description}</p>
+          <p className="text-graydark text-sm md:text-base">
+            {vehicle.description}
+          </p>
         </div>
       </div>
     </div>

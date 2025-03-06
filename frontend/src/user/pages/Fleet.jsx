@@ -396,7 +396,7 @@ export default function Fleet() {
                     </p>
                     <div 
                       className='flex items-center gap-2 text-gasolindark font-bold cursor-pointer'
-                      onClick={() => navigate(`/vehicle/${car._id}`)}
+                      onClick={() => navigate(`/vehicle/${car.id}`)}
                     >
                       <p>DRIVE NOW</p>
                       <TbArrowRight />
