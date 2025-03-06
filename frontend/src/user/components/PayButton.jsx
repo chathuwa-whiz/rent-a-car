@@ -1,8 +1,10 @@
 import React from "react";
 import { useGetPaymentHashMutation } from "../../redux/services/payhereSlice";
+import { useCreateBookingMutation } from "../../redux/services/bookingSlice";
 
 const PayButton = ({ booking }) => {
   const [getPaymentHash, { isLoading }] = useGetPaymentHashMutation();
+  const [createBooking] = useCreateBookingMutation();
 
   const handlePayment = async () => {
     try {
@@ -20,7 +22,7 @@ const PayButton = ({ booking }) => {
       const payment = {
         sandbox: true,
         merchant_id: data.merchant_id,
-        return_url: "http://localhost:5173/user/profile/rentals",
+        return_url: undefined,
         cancel_url: undefined,
         notify_url: "http://localhost:5010/api/payhere/notify",
         order_id: booking.booking_id,
@@ -39,10 +41,36 @@ const PayButton = ({ booking }) => {
 
       console.log("🔹 Sending Payment Request:", payment);
 
-      payhere.onCompleted = function onCompleted(bookingId) {
-        console.log("Payment Completed. Booking ID:", bookingId);
+      payhere.onCompleted = async function onCompleted(bookingId) {
+        console.log("✅ Payment Completed. Booking ID:", bookingId);
         alert("Payment Successful!");
-        window.location.href = "/user/profile/rentals";
+
+        // ✅ Save Booking in the Backend
+        try {
+          const newBooking = await createBooking({
+            vehicleId: booking.vehicleId,
+            name: booking.first_name + " " + booking.last_name,
+            phone: booking.phone,
+            address: booking.address,
+            dates: { from: booking.startDate, to: booking.endDate },
+            total: booking.amount,
+          });
+          console.log("🔹 Booking:", booking);
+
+          if (newBooking.error) {
+            console.error("❌ Booking Save Failed:", newBooking.error);
+            alert("Booking could not be saved.");
+          } else {
+            console.log("✅ Booking Saved Successfully:", newBooking.data);
+            alert("Booking Saved Successfully!");
+          }
+        } catch (error) {
+          console.error("❌ Booking Error:", error);
+          alert("Error saving booking.");
+        }
+
+        // ✅ Redirect User to Rentals Page
+        // window.location.href = "/user/profile/rentals";
       };
 
       payhere.onDismissed = function onDismissed() {
@@ -51,13 +79,13 @@ const PayButton = ({ booking }) => {
       };
 
       payhere.onError = function onError(error) {
-        console.error("PayHere Payment Error:", error);
+        console.error("❌ PayHere Payment Error:", error);
         alert("Payment error: " + error);
       };
 
       payhere.startPayment(payment);
     } catch (error) {
-      console.error("Payment Error:", error);
+      console.error("❌ Payment Error:", error);
       alert("Payment request failed. Check console for details.");
     }
   };
