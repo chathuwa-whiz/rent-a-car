@@ -30,7 +30,7 @@ export default function Fleet() {
         rentalType: vehicle.rentalType,
         securityDeposit: vehicle.securityDeposit,
         availability: vehicle.availability,
-        images: vehicle.images[0],
+        primaryImage: vehicle.primaryImage,
       }));
       
       setVehicles(Loadedvehicles);
@@ -379,7 +379,7 @@ export default function Fleet() {
             {vehicleData.map(car => (
               <div key={car.id} className='rounded-2xl border border-graydark'>
                 <div className='relative'>
-                  <img src={car.images} alt={car.name} className='w-full' />
+                  <img src={car.primaryImage} alt={car.name} className='w-full' />
                   <div className='absolute top-2 right-2 rounded-full p-2'>
                     <TbHeart className='text-graydark' />
                   </div>
