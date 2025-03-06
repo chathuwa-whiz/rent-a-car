@@ -9,7 +9,7 @@ export default function Booking() {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [bookingDates, setBookingDates] = useState([]);
 
-  // ✅ Fetch real bookings from the backend
+  // Fetch real bookings from the backend
   const { data: bookingsData, isLoading, isError } = useGetBookingsQuery();
 
   useEffect(() => {
@@ -30,20 +30,21 @@ export default function Booking() {
     setBookingDates(allDates);
   }, [bookingsData]);
 
-  // ✅ Filter bookings based on search query and status filter
+  // Filter bookings based on search query and status filter
   const filteredBookings = bookingsData
     ? bookingsData.filter((booking) => {
         const matchesSearch =
           booking.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          booking.vehicle.brand.toLowerCase().includes(searchQuery.toLowerCase());
-
+          (booking.vehicle &&
+            booking.vehicle.brand &&
+            booking.vehicle.model &&
+            `${booking.vehicle.brand} ${booking.vehicle.model}`.toLowerCase().includes(searchQuery.toLowerCase()));
         const matchesStatus = statusFilter === "All Status" || booking.status === statusFilter;
-
         return matchesSearch && matchesStatus;
       })
     : [];
 
-  // ✅ Get status badge color
+  // Get status badge color
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case "Active":
@@ -59,8 +60,10 @@ export default function Booking() {
     }
   };
 
-  if (isLoading) return <div className="text-white text-center mt-10">Loading bookings...</div>;
-  if (isError) return <div className="text-red-500 text-center mt-10">Failed to fetch bookings.</div>;
+  if (isLoading)
+    return <div className="text-white text-center mt-10">Loading bookings...</div>;
+  if (isError)
+    return <div className="text-red-500 text-center mt-10">Failed to fetch bookings.</div>;
 
   return (
     <div className="space-y-6">
@@ -75,10 +78,10 @@ export default function Booking() {
         </button>
       </div>
 
-      {/* ✅ Calendar View */}
+      {/* Calendar View */}
       {showCalendar && <Calendar bookingDates={bookingDates} onClose={() => setShowCalendar(false)} />}
 
-      {/* ✅ Search and Filter */}
+      {/* Search and Filter */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -115,16 +118,26 @@ export default function Booking() {
         </div>
       </div>
 
-      {/* ✅ Bookings Table */}
+      {/* Bookings Table */}
       <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
         <table className="min-w-full">
           <thead className="bg-gray-50 text-left">
             <tr>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Customer & Vehicle</th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Dates</th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Total</th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
+                Customer & Vehicle
+              </th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
+                Dates
+              </th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
+                Total
+              </th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-graylight">
@@ -133,14 +146,23 @@ export default function Booking() {
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <img
-                      src={booking.user.avatar || "https://randomuser.me/api/portraits/men/32.jpg"}
+                      src={
+                        booking.user.avatar ||
+                        "https://randomuser.me/api/portraits/men/32.jpg"
+                      }
                       alt={booking.name}
                       className="w-10 h-10 rounded-full object-cover"
                     />
                     <div>
                       <p className="font-medium">{booking.name}</p>
                       <div className="flex items-center gap-2 text-sm text-graydark">
-                        {booking.vehicle.brand} {booking.vehicle.model}
+                        {booking.vehicle ? (
+                          <>
+                            {booking.vehicle.brand} {booking.vehicle.model}
+                          </>
+                        ) : (
+                          "Vehicle Info Unavailable"
+                        )}
                       </div>
                     </div>
                   </div>
@@ -153,7 +175,11 @@ export default function Booking() {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClass(booking.status)}`}>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClass(
+                      booking.status
+                    )}`}
+                  >
                     {booking.status}
                   </span>
                 </td>
@@ -161,12 +187,18 @@ export default function Booking() {
                 <td className="px-6 py-4">
                   <div className="flex gap-3">
                     {booking.returnStatus === "Pending" && (
-                      <button className="text-blue hover:text-opacity-80 font-medium">Return</button>
+                      <button className="text-blue hover:text-opacity-80 font-medium">
+                        Return
+                      </button>
                     )}
                     {booking.status === "Pending" && (
                       <>
-                        <button className="text-green hover:text-opacity-80 font-medium">Approve</button>
-                        <button className="text-darkred hover:text-opacity-80 font-medium">Cancel</button>
+                        <button className="text-green hover:text-opacity-80 font-medium">
+                          Approve
+                        </button>
+                        <button className="text-darkred hover:text-opacity-80 font-medium">
+                          Cancel
+                        </button>
                       </>
                     )}
                   </div>
@@ -179,3 +211,19 @@ export default function Booking() {
     </div>
   );
 }
+
+// Helper function for status badge
+const getStatusBadgeClass = (status) => {
+  switch (status) {
+    case "Active":
+      return "bg-gasolinlight text-green";
+    case "Pending":
+      return "bg-yellowlight bg-opacity-30 text-yellowdark";
+    case "Completed":
+      return "bg-gasolinlight bg-opacity-30 text-gasolindark";
+    case "Cancelled":
+      return "bg-lightred bg-opacity-30 text-darkred";
+    default:
+      return "bg-graylight bg-opacity-30 text-graydark";
+  }
+};

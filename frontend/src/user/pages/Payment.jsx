@@ -30,8 +30,8 @@ export default function Payment() {
   // Calculate rental period (number of days)
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const rentalDays = Math.max(1, (end - start) / (1000 * 60 * 60 * 24) + 1); // Ensure at least 1 day
-  const totalPrice = (rentalDays * vehicle.price).toFixed(2); // Ensure two decimal places
+  const rentalDays = Math.max(1, (end - start) / (1000 * 60 * 60 * 24) + 1);
+  const totalPrice = (rentalDays * vehicle.price).toFixed(2);
 
   // Use authenticated user's email
   const userEmail = user?.email || "customer@example.com";
@@ -42,9 +42,15 @@ export default function Payment() {
     amount: totalPrice,
     first_name: name?.split(" ")[0] || "Customer",
     last_name: name?.split(" ")[1] || "",
-    email: userEmail, // Use authenticated user's email
+    email: userEmail,
     phone: phone,
     items: `${vehicle.brand} ${vehicle.model} - ${rentalDays} Days`,
+
+    // Add the fields your PayButton references:
+    vehicleId: id,       // The vehicle's ID
+    startDate,           // For your booking dates
+    endDate,             // ...
+    address              // So booking.address is not undefined
   };
 
   return (
