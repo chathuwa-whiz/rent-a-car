@@ -14,10 +14,19 @@ const vehicleSchema = new mongoose.Schema({
   rentalType: { type: String, required: true },
   securityDeposit: { type: Number, required: true },
   availability: { type: String, default: "available" },
-  primaryImage: { type: String, required: true }, // Primary image Cloudinary URL
-  thumbnails: [{ type: String }],              // Thumbnail images Cloudinary URLs
-  description: { type: String }                  // Description of the vehicle
+  primaryImage: { type: String, required: true },
+  thumbnails: [{ type: String }],
+  description: { type: String }
 });
 
-const Vehicle = mongoose.model("Vehicle", vehicleSchema);
-export default Vehicle;
+// Transform _id -> id in JSON output
+vehicleSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    return ret;
+  },
+});
+
+export default mongoose.model("Vehicle", vehicleSchema);

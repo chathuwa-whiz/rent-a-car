@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, Car, Edit, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
-import AddVehicleModal from '../components/AddVehicleModal';
-import { useGetVehiclesQuery, useAddVehicleMutation } from "../../redux/services/vehicleSlice";;
+import UpdateVehicleModal from '../components/UpdateVehicleModal'; // For editing vehicles
+import AddVehicleModal from '../components/AddVehicleModal';       // For adding new vehicles
+import { useGetVehiclesQuery, useAddVehicleMutation, useUpdateVehicleMutation, useDeleteVehicleMutation } from "../../redux/services/vehicleSlice";
 
 const statusColors = { available: 'bg-[#bafff0] text-gasolinlight', booked: 'bg-[#cadbf3] text-blue', maintenance: 'bg-[#fff6c6] text-yellowdark' };
 const statusIcons = { available: CheckCircle, booked: Car, maintenance: AlertTriangle };
 
 export default function Vehicles() {
   const { data: vehiclesList, error, isLoading, refetch } = useGetVehiclesQuery();
-  const [addVehicle, { isLoading: addLoading }] = useAddVehicleMutation();
+  const [addVehicle] = useAddVehicleMutation();
+  const [updateVehicle] = useUpdateVehicleMutation();
+  const [deleteVehicle] = useDeleteVehicleMutation();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [vehicleToEdit, setVehicleToEdit] = useState(null);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching vehicles</div>;
 
-  // Filter based on brand and model combined and vehicle.availability
+  // Filter based on brand and model (concatenated) and availability.
   const filteredVehicles = (vehiclesList || []).filter(vehicle => {
     const vehicleName = `${vehicle.brand} ${vehicle.model}`.toLowerCase();
     const availability = vehicle.availability ? vehicle.availability.toLowerCase() : '';
@@ -41,9 +46,48 @@ export default function Vehicles() {
     try {
       await addVehicle(formData).unwrap();
       refetch();
-      setIsModalOpen(false);
+      setIsAddModalOpen(false);
     } catch (err) {
       console.error("Failed to add vehicle", err);
+    }
+  };
+
+    // =============== EDIT VEHICLE (Partial Update) ===============
+    const handleEditVehicle = async (editedVehicle) => {
+      const { id, primaryImage, thumbnails, ...rest } = editedVehicle;
+      const formData = new FormData();
+  
+      // 1) Append all text/number fields from rest
+      for (let key in rest) {
+        formData.append(key, rest[key]);
+      }
+  
+      // 2) Append new primaryImage only if a new file was chosen
+      if (primaryImage) {
+        formData.append('primaryImage', primaryImage);
+      }
+  
+      // 3) Append new thumbnails only if user selected new files
+      if (thumbnails && thumbnails.length > 0) {
+        thumbnails.forEach(file => formData.append('thumbnails', file));
+      }
+  
+      try {
+        await updateVehicle({ id, data: formData }).unwrap();
+        refetch();
+        setVehicleToEdit(null);
+        setIsEditModalOpen(false);
+      } catch (err) {
+        console.error("Failed to update vehicle", err);
+      }
+    };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteVehicle(id).unwrap();
+      refetch();
+    } catch (err) {
+      console.error("Failed to delete vehicle", err);
     }
   };
 
@@ -53,7 +97,7 @@ export default function Vehicles() {
         <h1 className="text-2xl font-bold">Vehicle Management</h1>
         <button
           className="w-[200px] bg-blue text-white px-4 py-2 rounded-lg hover:bg-[#0024b5] flex justify-center items-center cursor-pointer"
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsAddModalOpen(true)}
         >
           <Plus className="h-5 w-5 mr-2" /> Add New Vehicle
         </button>
@@ -109,10 +153,19 @@ export default function Vehicles() {
                   <p className="text-lg font-semibold mt-2">${vehicle.price}/day</p>
                 </div>
                 <div className="mt-4 flex space-x-2">
-                  <button className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center cursor-pointer">
+                  <button
+                    className="flex-1 bg-[#cadbf3] text-blue px-4 py-2 rounded hover:bg-blue-100 flex items-center justify-center cursor-pointer"
+                    onClick={() => {
+                      setVehicleToEdit(vehicle);
+                      setIsEditModalOpen(true);
+                    }}
+                  >
                     <Edit className="h-4 w-4 mr-2" /> Edit
                   </button>
-                  <button className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center cursor-pointer">
+                  <button
+                    className="flex-1 bg-[#f2dddd] text-darkred px-4 py-2 rounded hover:bg-red-100 flex items-center justify-center cursor-pointer"
+                    onClick={() => handleDelete(vehicle.id)}
+                  >
                     <Trash2 className="h-4 w-4 mr-2" /> Delete
                   </button>
                 </div>
@@ -123,11 +176,26 @@ export default function Vehicles() {
       </div>
 
       {/* Add New Vehicle Modal */}
-      <AddVehicleModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleAddVehicle}
-      />
+      {isAddModalOpen && (
+        <AddVehicleModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={handleAddVehicle}
+        />
+      )}
+
+      {/* Update Vehicle Modal */}
+      {isEditModalOpen && vehicleToEdit && (
+        <UpdateVehicleModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setVehicleToEdit(null);
+          }}
+          onSave={handleEditVehicle}
+          initialData={vehicleToEdit}
+        />
+      )}
     </div>
   );
 }

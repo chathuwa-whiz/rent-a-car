@@ -72,10 +72,22 @@ export const getVehicle = async (req, res) => {
   }
 };
 
-// Update a vehicle
+// Update a vehicle (process file uploads if provided)
 export const updateVehicle = async (req, res) => {
   try {
-    const updatedVehicle = await Vehicle.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updateData = { ...req.body };
+
+    // If files are uploaded, update the corresponding fields
+    if (req.files) {
+      if (req.files.primaryImage && req.files.primaryImage.length > 0) {
+        updateData.primaryImage = req.files.primaryImage[0].path;
+      }
+      if (req.files.thumbnails && req.files.thumbnails.length > 0) {
+        updateData.thumbnails = req.files.thumbnails.map(file => file.path);
+      }
+    }
+
+    const updatedVehicle = await Vehicle.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(updatedVehicle);
   } catch (error) {
     res.status(400).json({ message: error.message });

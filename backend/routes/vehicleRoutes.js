@@ -30,7 +30,11 @@ router.post("/",
 router.put("/:id",
   authenticate,
   authorize("admin"),
-   updateVehicle);
+  upload.fields([
+    { name: "primaryImage", maxCount: 1 },
+    { name: "thumbnails", maxCount: 4 },
+  ]),
+  updateVehicle);
 
 router.delete("/:id",
   authenticate,
