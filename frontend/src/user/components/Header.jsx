@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X, User } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    setIsLoggedIn(!!token && !!user);
+    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        
         setIsVisible(false);
       } else if (currentScrollY < lastScrollY) {
-        
         setIsVisible(true);
       }
 
@@ -26,7 +32,17 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('role');
+    setIsLoggedIn(false);
+    navigate('/');
+  };
+
+  const navigateToProfile = () => {
+    navigate('/user/profile');
+  };
 
   return (
     <nav
@@ -61,16 +77,22 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Language & Sign Up (Desktop View) */}
+          {/* Language & Sign Up/Profile (Desktop View) */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
-              EN
-            </button> */}
-            <button 
-              onClick={() => navigate("/register")}
-              className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight cursor-pointer">
-              Sign Up
-            </button>
+            {isLoggedIn ? (
+              <button 
+                onClick={navigateToProfile}
+                className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight cursor-pointer flex items-center gap-2">
+                <User size={16} />
+                Profile
+              </button>
+            ) : (
+              <button 
+                onClick={() => navigate("/register")}
+                className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight cursor-pointer">
+                Sign Up
+              </button>
+            )}
           </div>
         </div>
 
@@ -83,14 +105,20 @@ export default function Header() {
             <a href="#contact" className="text-white hover:text-graylight">Contacts</a>
 
             <div className="flex items-center space-x-4 mt-4">
-              <button className="bg-black text-white text-sm font-medium rounded-full w-[34px] h-8 pb-[2px] flex items-center justify-center">
-                EN
-              </button>
-              <button 
-                onClick={() => navigate("/login")}
-                className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight">
-                Sign Up
-              </button>
+              {isLoggedIn ? (
+                <button 
+                  onClick={navigateToProfile}
+                  className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight flex items-center gap-2">
+                  <User size={16} />
+                  Profile
+                </button>
+              ) : (
+                <button 
+                  onClick={() => navigate("/login")}
+                  className="bg-white text-black font-semibold px-6 py-1 rounded-full hover:bg-graylight">
+                  Sign Up
+                </button>
+              )}
             </div>
           </div>
         )}
