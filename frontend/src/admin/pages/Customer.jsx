@@ -1,92 +1,42 @@
 import React, { useState } from 'react';
 import { Search, Phone, Mail, MapPin, Star } from 'lucide-react';
-
-const customers = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 234 567 890',
-    location: 'New York, USA',
-    totalBookings: 12,
-    totalSpent: 4800,
-    rating: 4.8,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    phone: '+1 234 567 891',
-    location: 'Los Angeles, USA',
-    totalBookings: 8,
-    totalSpent: 3200,
-    rating: 4.5,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 3,
-    name: 'Ben Dover',
-    email: 'john.doe@example.com',
-    phone: '+1 234 567 890',
-    location: 'New York, USA',
-    totalBookings: 12,
-    totalSpent: 4800,
-    rating: 4.8,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 4,
-    name: 'Ivy Doe',
-    email: 'jane.smith@example.com',
-    phone: '+1 234 567 891',
-    location: 'Los Angeles, USA',
-    totalBookings: 8,
-    totalSpent: 3200,
-    rating: 4.5,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 5,
-    name: 'Mike Rafone',
-    email: 'john.doe@example.com',
-    phone: '+1 234 567 890',
-    location: 'New York, USA',
-    totalBookings: 12,
-    totalSpent: 4800,
-    rating: 4.8,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 6,
-    name: 'Lois Griffin',
-    email: 'jane.smith@example.com',
-    phone: '+1 234 567 891',
-    location: 'Los Angeles, USA',
-    totalBookings: 8,
-    totalSpent: 3200,
-    rating: 4.5,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-  },
-
-];
+import { useGetUsersQuery } from '../../redux/services/userSlice'; // adjust the import path as needed
 
 export default function Customers() {
+  const { data: users, error, isLoading } = useGetUsersQuery();
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Map backend user data to the UI's customer structure.
+  // Some fields (like totalBookings, totalSpent, rating, and image) are not in your backend,
+  // so we provide default values.
+  const mappedCustomers = users
+    ? users.map((user) => ({
+        id: user._id,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        phone: user.phone,
+        location: user.address,
+        totalBookings: 0, // default value
+        totalSpent: 0,    // default value
+        rating: 0,        // default value
+        status: 'active', // default value
+        image: user.image || 'https://via.placeholder.com/100', // default image
+      }))
+    : [];
+
+    console.log("Token in localStorage:", localStorage.getItem("token"));
+
+
   // Filter customers based on the search term
-  const filteredCustomers = customers.filter((customer) =>
+  const filteredCustomers = mappedCustomers.filter((customer) =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.phone.includes(searchTerm) ||
     customer.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching customers</p>;
 
   return (
     <div className="space-y-6">
@@ -154,5 +104,4 @@ export default function Customers() {
       </div>
     </div>
   );
-};
-
+}
