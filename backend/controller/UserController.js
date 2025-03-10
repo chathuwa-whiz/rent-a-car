@@ -1,17 +1,37 @@
 import User from '../model/User.js';
 
 //READ ALL USERS
-
 export const getAllUsers = async (req, res) => {
-
-    try {
-        
-        const users = await User.find();
-        res.status(200).json(users);
-    } catch (error) {
-
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const users = await User.aggregate([
+      {
+        $lookup: {
+          from: "bookings",
+          localField: "_id",
+          foreignField: "user",
+          as: "bookings",
+        },
+      },
+      {
+        $project: {
+          firstName: 1,
+          lastName: 1,
+          email: 1,
+          phone: 1,
+          address: 1,
+          nic: 1,
+          role: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          totalBookings: { $size: "$bookings" },
+          totalSpent: { $sum: "$bookings.total" },
+        },
+      },
+    ]);
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 //READ USER BY ID

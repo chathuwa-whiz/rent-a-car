@@ -7,8 +7,7 @@ export default function Customers() {
   const [searchTerm, setSearchTerm] = useState('');
 
   // Map backend user data to the UI's customer structure.
-  // Some fields (like totalBookings, totalSpent, rating, and image) are not in your backend,
-  // so we provide default values.
+  // Now we use user.totalBookings and user.totalSpent from the aggregated response.
   const mappedCustomers = users
     ? users.map((user) => ({
         id: user._id,
@@ -16,16 +15,13 @@ export default function Customers() {
         email: user.email,
         phone: user.phone,
         location: user.address,
-        totalBookings: 0, // default value
-        totalSpent: 0,    // default value
-        rating: 0,        // default value
-        status: 'active', // default value
+        totalBookings: user.totalBookings || 0, // aggregated field from backend
+        totalSpent: user.totalSpent || 0,       // aggregated field from backend
+        rating: user.rating || 0,               // default value if not provided
+        status: 'active',                       // default value
         image: user.image || 'https://via.placeholder.com/100', // default image
       }))
     : [];
-
-    console.log("Token in localStorage:", localStorage.getItem("token"));
-
 
   // Filter customers based on the search term
   const filteredCustomers = mappedCustomers.filter((customer) =>
