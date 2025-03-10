@@ -21,6 +21,10 @@ export const vehicleApi = createApi({
             query: () => '/vehicles',
         }),
 
+        getVehicle: builder.query({
+            query: (id) => `/vehicles/${id}`,
+          }),
+
         addVehicle: builder.mutation({
             query: (data) => ({
                 url: '/vehicles',
@@ -51,6 +55,7 @@ export const vehicleApi = createApi({
 export const {
 
     useGetVehiclesQuery,
+    useGetVehicleQuery,
     useAddVehicleMutation,
     useUpdateVehicleMutation,
     useDeleteVehicleMutation,

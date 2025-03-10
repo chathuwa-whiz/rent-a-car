@@ -5,6 +5,7 @@ import {
   addVehicle,
   updateVehicle,
   deleteVehicle,
+  getVehicle
 } from "../controller/vehicleController.js";
 
 import { authenticate, authorize } from "../middleware/AuthMiddleware.js";
@@ -14,16 +15,26 @@ const router = express.Router();
 router.get("/",
    getVehicles);
 
+router.get("/:id",
+  getVehicle);
+
 router.post("/",
-  authenticate,
-  authorize("admin"),
-   upload.array("images", 5), 
-   addVehicle);
+    authenticate,
+    authorize("admin"),
+    upload.fields([
+      { name: "primaryImage", maxCount: 1 },
+      { name: "thumbnails", maxCount: 4 }
+    ]),
+    addVehicle);
 
 router.put("/:id",
   authenticate,
   authorize("admin"),
-   updateVehicle);
+  upload.fields([
+    { name: "primaryImage", maxCount: 1 },
+    { name: "thumbnails", maxCount: 4 },
+  ]),
+  updateVehicle);
 
 router.delete("/:id",
   authenticate,

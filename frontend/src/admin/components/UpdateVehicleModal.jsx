@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 
-const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
-  const [newVehicle, setNewVehicle] = useState({
+const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
+  const defaultState = {
+    id: '',
     brand: '',
     model: '',
     engine: '',
     topSpeed: '',
     acceleration: '',
-    primaryImage: null,      // For primary image file
-    thumbnails: [],          // For thumbnail image files
+    primaryImage: null,
+    thumbnails: [],
     price: '',
     booked: false,
     type: '',
@@ -18,55 +19,83 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
     rentalType: '',
     securityDeposit: '',
     availability: 'available',
-    description: ''          // New field for vehicle description
-  });
+    description: ''
+  };
+
+  const [vehicleData, setVehicleData] = useState(defaultState);
+
+  useEffect(() => {
+    if (initialData) {
+      setVehicleData({
+        id: initialData.id, // from the Mongoose transform
+        brand: initialData.brand || '',
+        model: initialData.model || '',
+        engine: initialData.engine || '',
+        topSpeed: initialData.topSpeed || '',
+        acceleration: initialData.acceleration || '',
+        primaryImage: null, // File inputs cannot be pre-filled; use initialData.primaryImage for preview.
+        thumbnails: [],
+        price: initialData.price || '',
+        booked: initialData.booked || false,
+        type: initialData.type || '',
+        transmission: initialData.transmission || '',
+        seats: initialData.seats || '',
+        rentalType: initialData.rentalType || '',
+        securityDeposit: initialData.securityDeposit || '',
+        availability: initialData.availability || 'available',
+        description: initialData.description || ''
+      });
+    } else {
+      setVehicleData(defaultState);
+    }
+  }, [initialData]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setNewVehicle({
-      ...newVehicle,
+    setVehicleData({
+      ...vehicleData,
       [name]: type === 'checkbox' ? checked : value
     });
   };
 
   const handlePrimaryImageUpload = (e) => {
     const file = e.target.files[0];
-    setNewVehicle({
-      ...newVehicle,
+    setVehicleData({
+      ...vehicleData,
       primaryImage: file
     });
   };
 
   const handleThumbnailsUpload = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length + newVehicle.thumbnails.length > 4) {
+    if (files.length + vehicleData.thumbnails.length > 4) {
       alert('You can only upload up to 4 thumbnail images.');
       return;
     }
-    setNewVehicle({
-      ...newVehicle,
-      thumbnails: [...newVehicle.thumbnails, ...files]
+    setVehicleData({
+      ...vehicleData,
+      thumbnails: [...vehicleData.thumbnails, ...files]
     });
   };
 
   const handleRemovePrimaryImage = () => {
-    setNewVehicle({
-      ...newVehicle,
+    setVehicleData({
+      ...vehicleData,
       primaryImage: null
     });
   };
 
   const handleRemoveThumbnail = (index) => {
-    const updatedThumbnails = newVehicle.thumbnails.filter((_, i) => i !== index);
-    setNewVehicle({
-      ...newVehicle,
+    const updatedThumbnails = vehicleData.thumbnails.filter((_, i) => i !== index);
+    setVehicleData({
+      ...vehicleData,
       thumbnails: updatedThumbnails
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(newVehicle);
+    onSave(vehicleData);
     onClose();
   };
 
@@ -78,11 +107,11 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 space-y-4"
+        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-2/3 p-6 space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold">Add New Vehicle</h2>
+          <h2 className="text-xl font-bold">Update Vehicle</h2>
           <button onClick={onClose}>
             <X className="h-6 w-6 text-graylight cursor-pointer" />
           </button>
@@ -94,7 +123,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="brand"
               placeholder="Brand"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.brand}
+              value={vehicleData.brand}
               onChange={handleInputChange}
               required
             />
@@ -103,7 +132,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="model"
               placeholder="Model"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.model}
+              value={vehicleData.model}
               onChange={handleInputChange}
               required
             />
@@ -112,7 +141,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="engine"
               placeholder="Engine"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.engine}
+              value={vehicleData.engine}
               onChange={handleInputChange}
               required
             />
@@ -121,7 +150,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="topSpeed"
               placeholder="Top Speed (km/h)"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.topSpeed}
+              value={vehicleData.topSpeed}
               onChange={handleInputChange}
               required
             />
@@ -130,7 +159,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="acceleration"
               placeholder="Acceleration (0-100 km/h)"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.acceleration}
+              value={vehicleData.acceleration}
               onChange={handleInputChange}
               required
             />
@@ -139,14 +168,14 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="price"
               placeholder="Price"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.price}
+              value={vehicleData.price}
               onChange={handleInputChange}
               required
             />
             <select
               name="type"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.type}
+              value={vehicleData.type}
               onChange={handleInputChange}
               required
             >
@@ -158,7 +187,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
             <select
               name="transmission"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.transmission}
+              value={vehicleData.transmission}
               onChange={handleInputChange}
               required
             >
@@ -171,14 +200,14 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="seats"
               placeholder="Seats"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.seats}
+              value={vehicleData.seats}
               onChange={handleInputChange}
               required
             />
             <select
               name="rentalType"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.rentalType}
+              value={vehicleData.rentalType}
               onChange={handleInputChange}
               required
             >
@@ -191,14 +220,14 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               name="securityDeposit"
               placeholder="Security Deposit"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.securityDeposit}
+              value={vehicleData.securityDeposit}
               onChange={handleInputChange}
               required
             />
             <select
               name="availability"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-              value={newVehicle.availability}
+              value={vehicleData.availability}
               onChange={handleInputChange}
               required
             >
@@ -206,14 +235,12 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               <option value="booked">Booked</option>
               <option value="maintenance">Maintenance</option>
             </select>
-
-            {/* Description Field */}
             <div className="col-span-full">
               <textarea
                 name="description"
                 placeholder="Description"
                 className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
-                value={newVehicle.description}
+                value={vehicleData.description}
                 onChange={handleInputChange}
                 required
               />
@@ -221,17 +248,19 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
 
             {/* Primary Image Upload */}
             <div className="col-span-full">
-              <label className="block text-sm font-medium text-graydark">Upload Primary Image (1)</label>
+              <label className="block text-sm font-medium text-graydark">
+                Upload Primary Image (1)
+              </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handlePrimaryImageUpload}
                 className="mt-1 block w-full px-3 py-2 border border-graylight rounded-md shadow-sm focus:outline-none focus:ring-blue focus:border-blue sm:text-sm cursor-pointer"
               />
-              {newVehicle.primaryImage && (
+              {vehicleData.primaryImage ? (
                 <div className="mt-2 relative w-20 h-20">
                   <img
-                    src={URL.createObjectURL(newVehicle.primaryImage)}
+                    src={URL.createObjectURL(vehicleData.primaryImage)}
                     alt="Primary Preview"
                     className="w-full h-full object-cover rounded-lg"
                   />
@@ -243,12 +272,22 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
                     <X className="h-3 w-3" />
                   </button>
                 </div>
-              )}
+              ) : initialData && initialData.primaryImage ? (
+                <div className="mt-2 relative w-20 h-20">
+                  <img
+                    src={initialData.primaryImage}
+                    alt="Primary Preview"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              ) : null}
             </div>
 
             {/* Thumbnails Upload */}
             <div className="col-span-full">
-              <label className="block text-sm font-medium text-graydark">Upload Thumbnails (Max 4)</label>
+              <label className="block text-sm font-medium text-graydark">
+                Upload Thumbnails (Max 4)
+              </label>
               <input
                 type="file"
                 accept="image/*"
@@ -256,9 +295,9 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
                 onChange={handleThumbnailsUpload}
                 className="mt-1 block w-full px-3 py-2 border border-graylight rounded-md shadow-sm focus:outline-none focus:ring-blue focus:border-blue sm:text-sm cursor-pointer"
               />
-              {newVehicle.thumbnails.length > 0 && (
+              {vehicleData.thumbnails.length > 0 ? (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {newVehicle.thumbnails.map((file, index) => (
+                  {vehicleData.thumbnails.map((file, index) => (
                     <div key={index} className="w-20 h-20 relative">
                       <img
                         src={URL.createObjectURL(file)}
@@ -275,7 +314,19 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
                     </div>
                   ))}
                 </div>
-              )}
+              ) : initialData && initialData.thumbnails && initialData.thumbnails.length > 0 ? (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {initialData.thumbnails.map((url, index) => (
+                    <div key={index} className="w-20 h-20 relative">
+                      <img
+                        src={url}
+                        alt={`Thumbnail ${index + 1}`}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
             </div>
           </div>
           <div className="flex justify-end space-x-4">
@@ -299,4 +350,4 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
   );
 };
 
-export default AddVehicleModal;
+export default UpdateVehicleModal;

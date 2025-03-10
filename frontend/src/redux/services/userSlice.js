@@ -19,7 +19,7 @@ export const userApi = createApi({
     endpoints: (builder) => ({
 
         getUsers: builder.query({
-            query: () => '/users',
+            query: () => '/user',
         }),
 
         getUserById: builder.query({
