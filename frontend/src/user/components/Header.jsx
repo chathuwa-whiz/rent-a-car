@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, User } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,7 @@ export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -29,6 +30,22 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
+    }
+    if (isProfileOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isProfileOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -89,19 +106,22 @@ export default function Header() {
                   <User className="w-4 h-4" />
                 </button>
                 {isProfileOpen && (
-                  <div className="absolute top-10 -right-15 text-white mt-2 w-48 bg-black/60 backdrop-blur-md rounded-md shadow-lg py-2">
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-10 -right-15 text-white mt-2 w-48 bg-black/60 backdrop-blur-md rounded-md shadow-lg py-2"
+                  >
                     <button
                       onClick={() => {
                         navigate("/user/profile");
                         setIsProfileOpen(false);
                       }}
-                      className="block px-4 py-2 text-gray-800 hover:bg-graydark w-full text-left cursor-pointer"
+                      className="block px-4 py-2 hover:bg-graydark w-full text-left cursor-pointer"
                     >
                       Profile
                     </button>
                     <button
                       onClick={handleLogout}
-                      className="block px-4 py-2 text-gray-800 hover:bg-graydark w-full text-left cursor-pointer"
+                      className="block px-4 py-2 hover:bg-graydark w-full text-left cursor-pointer"
                     >
                       Log Out
                     </button>
@@ -148,7 +168,10 @@ export default function Header() {
                     <User className="w-5 h-5" />
                   </button>
                   {isProfileOpen && (
-                    <div className="absolute -right-15 top-16 text-white mt-2 w-48 bg-black/60 backdrop-blur-md rounded-md shadow-lg py-2">
+                    <div
+                      ref={dropdownRef}
+                      className="absolute -right-15 top-16 text-white mt-2 w-48 bg-black/60 backdrop-blur-md rounded-md shadow-lg py-2"
+                    >
                       <button
                         onClick={() => {
                           navigate("/user/profile");
