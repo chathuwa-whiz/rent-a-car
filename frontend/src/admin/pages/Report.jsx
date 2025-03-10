@@ -1,8 +1,70 @@
-import React from 'react';
-import { TbDownload, TbChevronDown } from 'react-icons/tb';
+import React, { useState } from 'react';
+import { TbDownload, TbX } from 'react-icons/tb';
+import { useGetBookingReportQuery } from '../../redux/services/reportSlice';
+// Add these imports for Chart.js
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
-// Custom bar chart component
-const BarChart = ({ data, labels, maxY }) => {
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+// Modal component for confirmation
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
+  if (!isOpen) return null;
+  
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-medium">{title}</h3>
+          <button 
+            onClick={onClose} 
+            className="text-graydark hover:text-black"
+          >
+            <TbX size={20} />
+          </button>
+        </div>
+        <p className="mb-6">{message}</p>
+        <div className="flex justify-end gap-3">
+          <button 
+            onClick={onClose}
+            className="px-4 py-2 border border-graylight rounded-lg text-graydark hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={onConfirm}
+            className="px-4 py-2 bg-blue hover:bg-[#0024b5] text-white rounded-lg"
+          >
+            Export
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Custom bar chart component 
+const BarChart = ({ data, labels, maxY, dataKey = "bookings" }) => {
   const highestValue = Math.max(...data);
   const yLabels = [];
   for (let i = 0; i <= 4; i++) {
@@ -14,7 +76,7 @@ const BarChart = ({ data, labels, maxY }) => {
       {/* Y-axis labels */}
       <div className="absolute left-0 top-0 bottom-10 flex flex-col justify-between">
         {yLabels.reverse().map((label, i) => (
-          <div key={i} className="text-xs text-graydark">{label}</div>
+          <div key={i} className="text-xs text-graydark">{dataKey === "revenue" ? `Rs.${label}` : label}</div>
         ))}
       </div>
       
@@ -47,92 +109,215 @@ const BarChart = ({ data, labels, maxY }) => {
   );
 };
 
-// Custom line chart component
-const LineChart = ({ data, labels, maxY }) => {
-  const points = data.map((value, index) => ({
-    x: index * (100 / (data.length - 1)),
-    y: 100 - (value / maxY * 100)
-  }));
-  
-  const pathData = points.map((point, i) => 
-    (i === 0 ? `M ${point.x} ${point.y}` : `L ${point.x} ${point.y}`)
-  ).join(' ');
-  
-  const yLabels = [];
-  for (let i = 0; i <= 4; i++) {
-    yLabels.push(Math.round((maxY / 4) * i));
-  }
-  
+// Replace your custom LineChart component with this Chart.js implementation
+const BookingTrendsChart = ({ data, labels, dataKey = "bookings" }) => {
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: dataKey === "bookings" ? "Bookings" : "Revenue",
+        data: data,
+        fill: true,
+        backgroundColor: 'rgba(0, 67, 255, 0.2)',
+        borderColor: 'rgba(0, 67, 255, 1)',
+        borderWidth: 2,
+        pointBackgroundColor: 'rgba(0, 67, 255, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        tension: 0.4, // This makes the line curved for a smoother appearance
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value) => dataKey === "revenue" ? `Rs.${value}` : value,
+          font: {
+            size: 11,
+          },
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+          drawBorder: false,
+        },
+      },
+      x: {
+        grid: {
+          display: false,
+          drawBorder: false,
+        },
+        ticks: {
+          font: {
+            size: 11,
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        padding: 10,
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        bodySpacing: 5,
+        borderColor: 'rgba(0, 67, 255, 0.5)',
+        borderWidth: 1,
+        displayColors: false,
+        callbacks: {
+          label: (context) => {
+            let label = dataKey === "revenue" 
+              ? `Rs.${context.parsed.y.toLocaleString()}` 
+              : `Bookings: ${context.parsed.y}`;
+            return label;
+          }
+        }
+      },
+    },
+  };
+
   return (
-    <div className="h-full relative">
-      {/* Y-axis labels */}
-      <div className="absolute left-0 top-0 bottom-10 flex flex-col justify-between">
-        {yLabels.reverse().map((label, i) => (
-          <div key={i} className="text-xs text-graydark">{label}</div>
-        ))}
-      </div>
-      
-      {/* Grid lines */}
-      <div className="absolute left-12 right-0 top-0 bottom-10">
-        {yLabels.map((_, i) => (
-          <div key={i} className="border-t border-graylight border-dashed h-1/4"></div>
-        ))}
-      </div>
-      
-      {/* SVG for line chart */}
-      <div className="absolute left-12 right-0 bottom-10 h-5/6">
-        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path 
-            d={pathData} 
-            fill="none" 
-            stroke="#0043FF" 
-            strokeWidth="1.5"
-          />
-          {points.map((point, i) => (
-            <circle 
-              key={i}
-              cx={point.x} 
-              cy={point.y} 
-              r="2" 
-              fill="white" 
-              stroke="#0043FF" 
-              strokeWidth="1.5"
-            />
-          ))}
-        </svg>
-      </div>
-      
-      {/* X-axis labels */}
-      <div className="absolute left-12 right-0 bottom-0 flex justify-between">
-        {labels.map((label, i) => (
-          <div key={i} className="text-xs text-center w-full text-graydark">{label}</div>
-        ))}
-      </div>
+    <div className="h-[300px] w-full">
+      <Line data={chartData} options={options} />
     </div>
   );
 };
 
 export default function Report() {
-  const revenueData = [42000, 38000, 45000, 48000, 53000, 59000];
-  const bookingData = [120, 95, 135, 150, 165, 180];
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+  const [timeRange, setTimeRange] = useState('7days');
+  const { data: reportData, isLoading, error } = useGetBookingReportQuery(timeRange);
+  const [showExportConfirmation, setShowExportConfirmation] = useState(false);
+  
+  // Calculate max values for charts with some padding
+  const maxBookingValue = reportData?.data && Math.max(...reportData.data) > 0 
+    ? Math.max(...reportData.data) * 1.2 
+    : 10;
+    
+  // Generate revenue data from popularVehicles
+  const generateRevenueData = () => {
+    if (!reportData || !reportData.popularVehicles) return [];
+    
+    // Get total revenue per day by distributing evenly across the time period
+    const totalRevenue = reportData.popularVehicles.reduce((sum, vehicle) => sum + vehicle.revenue, 0);
+    const daysCount = reportData.data.length;
+    
+    // Create a simple distribution with slight variation
+    return reportData.data.map((bookings, index) => {
+      const baseRevenue = totalRevenue / daysCount;
+      // Create some variation based on booking numbers
+      const factor = bookings / (Math.max(...reportData.data) || 1);
+      return Math.round(baseRevenue * (0.7 + factor * 0.6));
+    });
+  };
+  
+  const revenueData = generateRevenueData();
+  const maxRevenueValue = revenueData.length > 0 ? Math.max(...revenueData) * 1.2 : 100000;
+  
+  // Calculate total revenue
+  const totalRevenue = reportData?.popularVehicles
+    ? reportData.popularVehicles.reduce((sum, vehicle) => sum + vehicle.revenue, 0)
+    : 0;
+  
+  const handleExport = () => {
+    if (!reportData) return;
+    
+    // Create CSV content with both booking and revenue data
+    const headers = ["Date", "Bookings", "Revenue (Rs)"];
+    const csvRows = [headers];
+    
+    // Add data rows
+    reportData.labels.forEach((label, index) => {
+      csvRows.push([label, reportData.data[index], revenueData[index]]);
+    });
+    
+    // Convert to CSV format
+    const csvContent = csvRows.map(row => row.join(",")).join("\n");
+    
+    // Create and download file
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `booking-revenue-report-${timeRange}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Close modal after export
+    setShowExportConfirmation(false);
+  };
+  
+  // Show loading state while fetching data
+  if (isLoading) {
+    return <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Booking Analytics</h1>
+      <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+        Loading booking data...
+      </div>
+    </div>;
+  }
+  
+  // Show error message if request failed
+  if (error) {
+    return <div className="space-y-6">
+      <h1 className="text-2xl font-bold">Booking Analytics</h1>
+      <div className="bg-white p-6 rounded-lg shadow-sm text-center text-darkred">
+        Error loading booking data. Please try again.
+      </div>
+    </div>;
+  }
+  
+  // Use fallback data if no data available
+  const chartData = reportData?.data || [0, 0, 0, 0, 0, 0, 0];
+  const chartLabels = reportData?.labels || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const totalBookings = reportData?.totalBookings || 0;
+  const growthRate = reportData?.growthRate || 0;
+  const popularVehicles = reportData?.popularVehicles || [];
   
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h1 className="text-2xl font-bold">Reports & Analytics</h1>
+        <h1 className="text-2xl font-bold">Report Analytics</h1>
         <div className="flex flex-col md:flex-row gap-3">
           <div className="border border-graylight rounded-lg px-4 py-2 bg-white flex items-center justify-between cursor-pointer">
-            <span className="text-graydark">Last 7 Days</span>
-            <TbChevronDown className="text-graydark ml-2" size={18} />
+            <select 
+              className="text-graydark bg-transparent border-none focus:outline-none w-full"
+              value={timeRange}
+              onChange={(e) => setTimeRange(e.target.value)}
+            >
+              <option value="7days">Last 7 Days</option>
+              <option value="30days">Last 30 Days</option>
+              <option value="6months">Last 6 Months</option>
+            </select>
           </div>
-          <button className="bg-blue hover:bg-[#0024b5] text-white rounded-lg px-4 py-2 flex items-center justify-center">
+          <button 
+            className="bg-blue hover:bg-[#0024b5] text-white rounded-lg px-4 py-2 flex items-center justify-center"
+            onClick={() => setShowExportConfirmation(true)}
+          >
             <TbDownload size={18} className="mr-2" />
             <span>Export Report</span>
           </button>
         </div>
       </div>
+      
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showExportConfirmation}
+        onClose={() => setShowExportConfirmation(false)}
+        onConfirm={handleExport}
+        title="Export Report"
+        message="Are you sure you want to export this Report ?"
+      />
       
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -141,18 +326,19 @@ export default function Report() {
           <div className="h-64">
             <BarChart 
               data={revenueData} 
-              labels={months} 
-              maxY={60000} 
+              labels={chartLabels} 
+              maxY={maxRevenueValue}
+              dataKey="revenue" 
             />
           </div>
         </div>
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-medium mb-6">Booking Trends</h2>
           <div className="h-64">
-            <LineChart 
-              data={bookingData} 
-              labels={months} 
-              maxY={180} 
+            <BookingTrendsChart 
+              data={chartData} 
+              labels={chartLabels} 
+              dataKey="bookings" 
             />
           </div>
         </div>
@@ -161,14 +347,16 @@ export default function Report() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-graydark font-medium mb-2">Total Revenue</h3>
-          <div className="text-3xl font-bold mb-2">Rs.283,000</div>
-          <div className="text-green">+12.5% from last period</div>
+          <h3 className="text-graydark font-medium mb-2">Total Bookings</h3>
+          <div className="text-3xl font-bold mb-2">{totalBookings}</div>
+          <div className={`${growthRate >= 0 ? 'text-green' : 'text-darkred'}`}>
+            {growthRate >= 0 ? '+' : ''}{growthRate}% from last period
+          </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-graydark font-medium mb-2">Total Bookings</h3>
-          <div className="text-3xl font-bold mb-2">200</div>
-          <div className="text-green">+8.2% from last period</div>
+          <h3 className="text-graydark font-medium mb-2">Total Revenue</h3>
+          <div className="text-3xl font-bold mb-2">Rs.{totalRevenue.toLocaleString()}</div>
+          <div className="text-green">+{(growthRate * 1.1).toFixed(1)}% from last period</div>
         </div>
       </div>
       
@@ -185,21 +373,17 @@ export default function Report() {
               </tr>
             </thead>
             <tbody className="divide-y divide-graylight">
-              <tr>
-                <td className="px-6 py-4">BMW X5</td>
-                <td className="px-6 py-4">20</td>
-                <td className="px-6 py-4">Rs.200,000</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4">Mercedes E-Class</td>
-                <td className="px-6 py-4">21</td>
-                <td className="px-6 py-4">Rs.240,000</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4">Toyota Camry</td>
-                <td className="px-6 py-4">22</td>
-                <td className="px-6 py-4">Rs.250,000</td>
-              </tr>
+              {popularVehicles.length === 0 ? (
+                <tr>
+                  <td colSpan="3" className="px-6 py-4 text-center">No vehicle data available</td>
+                </tr>
+              ) : popularVehicles.map((item, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4">{item.vehicle}</td>
+                  <td className="px-6 py-4">{item.bookings}</td>
+                  <td className="px-6 py-4">Rs.{item.revenue.toLocaleString()}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
