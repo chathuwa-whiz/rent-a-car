@@ -78,7 +78,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 space-y-4"
+        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 space-y-4 m-4 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
