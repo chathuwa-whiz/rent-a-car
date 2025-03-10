@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetPaymentHashMutation } from "../../redux/services/payhereSlice";
 import { useCreateBookingMutation } from "../../redux/services/bookingSlice";
+import { toast } from "react-toastify";
 
 const PayButton = ({ booking }) => {
   const [getPaymentHash, { isLoading }] = useGetPaymentHashMutation();
@@ -13,7 +14,7 @@ const PayButton = ({ booking }) => {
 
       if (error || !data.success) {
         console.error("Payment Initialization Failed:", error || data.message);
-        alert("Payment failed: " + (error?.message || data.message));
+        toast.error("Payment failed: " + (error?.message || data.message));
         return;
       }
 
@@ -39,13 +40,13 @@ const PayButton = ({ booking }) => {
         hash: data.hash,
       };
 
-      console.log("🔹 Sending Payment Request:", payment);
+      console.log("Sending Payment Request:", payment);
 
       payhere.onCompleted = async function onCompleted(bookingId) {
-        console.log("✅ Payment Completed. Booking ID:", bookingId);
-        alert("Payment Successful!");
+        console.log(" Payment Completed. Booking ID:", bookingId);
+        toast.success("Payment Successful!");
 
-        // ✅ Save Booking in the Backend
+        //  Save Booking in the Backend
         try {
           const newBooking = await createBooking({
             vehicleId: booking.vehicleId,
@@ -58,35 +59,35 @@ const PayButton = ({ booking }) => {
           console.log("🔹 Booking:", booking);
 
           if (newBooking.error) {
-            console.error("❌ Booking Save Failed:", newBooking.error);
-            alert("Booking could not be saved.");
+            console.error("Booking Save Failed:", newBooking.error);
+            toast.error("Booking could not be saved.");
           } else {
-            console.log("✅ Booking Saved Successfully:", newBooking.data);
-            alert("Booking Saved Successfully!");
+            console.log("Booking Saved Successfully:", newBooking.data);
+            toast.success("Booking Saved Successfully!");
           }
         } catch (error) {
-          console.error("❌ Booking Error:", error);
-          alert("Error saving booking.");
+          console.error("Booking Error:", error);
+          toast.error("Error saving booking.");
         }
 
-        // ✅ Redirect User to Rentals Page
-        // window.location.href = "/user/profile/rentals";
+        //  Redirect User to Rentals Page
+         window.location.href = "/user/profile/rentals";
       };
 
       payhere.onDismissed = function onDismissed() {
         console.log("Payment dismissed by user");
-        alert("Payment cancelled.");
+        toast.info("Payment cancelled.");
       };
 
       payhere.onError = function onError(error) {
-        console.error("❌ PayHere Payment Error:", error);
-        alert("Payment error: " + error);
+        console.error("PayHere Payment Error:", error);
+        toast.error("Payment error: " + error);
       };
 
       payhere.startPayment(payment);
     } catch (error) {
-      console.error("❌ Payment Error:", error);
-      alert("Payment request failed. Check console for details.");
+      console.error("Payment Error:", error);
+      toast.error("Payment request failed. Check console for details.");
     }
   };
 
