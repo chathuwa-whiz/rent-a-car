@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, Car, Edit, Trash2, CheckCircle, AlertTriangle } from 'lucide-react';
-import UpdateVehicleModal from '../components/UpdateVehicleModal'; // For editing vehicles
-import AddVehicleModal from '../components/AddVehicleModal';       // For adding new vehicles
+import UpdateVehicleModal from '../components/UpdateVehicleModal'; 
+import AddVehicleModal from '../components/AddVehicleModal';       
 import { useGetVehiclesQuery, useAddVehicleMutation, useUpdateVehicleMutation, useDeleteVehicleMutation } from "../../redux/services/vehicleSlice";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const statusColors = { available: 'bg-[#bafff0] text-gasolinlight', booked: 'bg-[#cadbf3] text-blue', maintenance: 'bg-[#fff6c6] text-yellowdark' };
 const statusIcons = { available: CheckCircle, booked: Car, maintenance: AlertTriangle };
@@ -22,7 +24,7 @@ export default function Vehicles() {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error fetching vehicles</div>;
 
-  // Filter based on brand and model (concatenated) and availability.
+  // Filter based on brand, model, and availability.
   const filteredVehicles = (vehiclesList || []).filter(vehicle => {
     const vehicleName = `${vehicle.brand} ${vehicle.model}`.toLowerCase();
     const availability = vehicle.availability ? vehicle.availability.toLowerCase() : '';
@@ -45,50 +47,77 @@ export default function Vehicles() {
     }
     try {
       await addVehicle(formData).unwrap();
+      toast.success("Vehicle added successfully");
       refetch();
       setIsAddModalOpen(false);
     } catch (err) {
+      toast.error("Failed to add vehicle");
       console.error("Failed to add vehicle", err);
     }
   };
 
-    // =============== EDIT VEHICLE (Partial Update) ===============
-    const handleEditVehicle = async (editedVehicle) => {
-      const { id, primaryImage, thumbnails, ...rest } = editedVehicle;
-      const formData = new FormData();
-  
-      // 1) Append all text/number fields from rest
-      for (let key in rest) {
-        formData.append(key, rest[key]);
-      }
-  
-      // 2) Append new primaryImage only if a new file was chosen
-      if (primaryImage) {
-        formData.append('primaryImage', primaryImage);
-      }
-  
-      // 3) Append new thumbnails only if user selected new files
-      if (thumbnails && thumbnails.length > 0) {
-        thumbnails.forEach(file => formData.append('thumbnails', file));
-      }
-  
-      try {
-        await updateVehicle({ id, data: formData }).unwrap();
-        refetch();
-        setVehicleToEdit(null);
-        setIsEditModalOpen(false);
-      } catch (err) {
-        console.error("Failed to update vehicle", err);
-      }
-    };
+  const handleEditVehicle = async (editedVehicle) => {
+    const { id, primaryImage, thumbnails, ...rest } = editedVehicle;
+    const formData = new FormData();
 
-  const handleDelete = async (id) => {
+    // 1) Append all text/number fields from rest
+    for (let key in rest) {
+      formData.append(key, rest[key]);
+    }
+
+    // 2) Append new primaryImage only if a new file was chosen
+    if (primaryImage) {
+      formData.append('primaryImage', primaryImage);
+    }
+
+    // 3) Append new thumbnails only if user selected new files
+    if (thumbnails && thumbnails.length > 0) {
+      thumbnails.forEach(file => formData.append('thumbnails', file));
+    }
+
+    try {
+      await updateVehicle({ id, data: formData }).unwrap();
+      toast.success("Vehicle updated successfully");
+      refetch();
+      setVehicleToEdit(null);
+      setIsEditModalOpen(false);
+    } catch (err) {
+      toast.error("Failed to update vehicle");
+      console.error("Failed to update vehicle", err);
+    }
+  };
+
+  // New function to execute deletion after confirmation.
+  const confirmDeleteVehicle = async (id) => {
     try {
       await deleteVehicle(id).unwrap();
+      toast.success("Vehicle deleted successfully");
       refetch();
     } catch (err) {
+      toast.error("Failed to delete vehicle");
       console.error("Failed to delete vehicle", err);
     }
+  };
+
+  // Updated deletion confirmation using Toastify.
+  const handleDelete = (id) => {
+    toast((t) => (
+      <div>
+        <p>Are you sure you want to delete this vehicle?</p>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "8px" }}>
+          <button className='bg-[#f2dddd] text-darkred px-4 py-2 rounded '
+            onClick={() => {
+              confirmDeleteVehicle(id);
+              toast.dismiss(t.id);
+            }}
+            style={{ marginRight: "8px" }}
+          >
+            Yes
+          </button>
+          <button className='bg-[#bafff0] text-gasolinlight px-4 py-2 rounded ' onClick={() => toast.dismiss(t.id)}>No</button>
+        </div>
+      </div>
+    ), { autoClose: false });
   };
 
   return (
@@ -196,6 +225,9 @@ export default function Vehicles() {
           initialData={vehicleToEdit}
         />
       )}
+
+      {/* Toast Container */}
+      <ToastContainer />
     </div>
   );
 }
