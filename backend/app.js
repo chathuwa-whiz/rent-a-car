@@ -8,6 +8,7 @@ import authRoutes from './routes/AuthRoutes.js';
 import userRoutes from './routes/UserRoutes.js';
 import paymentRoutes from './routes/PaymentRoutes.js';
 import cardRoutes from './routes/CardRoutes.js';
+import maintenanceRoutes from './routes/MainTenanceRoutes.js';
 
 
 dotenv.config();
@@ -25,5 +26,6 @@ app.use('/api/payment', paymentRoutes);
 // app.use('/api/card', cardRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/maintenance", maintenanceRoutes);
 
 export default app;
