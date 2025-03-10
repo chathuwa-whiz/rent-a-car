@@ -15,10 +15,8 @@ export default function Customers() {
         phone: user.phone,
         location: user.address,
         totalBookings: user.totalBookings || 0,
-        totalSpent: user.totalSpent || 0,      
-        rating: user.rating || 0,               
+        totalSpent: user.totalSpent || 0,                 
         status: 'active',                       
-        image: user.image || 'https://via.placeholder.com/100', 
       }))
     : [];
 
@@ -57,13 +55,9 @@ export default function Customers() {
         {filteredCustomers.map((customer) => (
           <div key={customer.id} className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center space-x-4">
-              <img src={customer.image} alt="" className="h-16 w-16 rounded-full" />
+
               <div>
                 <h3 className="text-lg font-semibold text-black">{customer.name}</h3>
-                <div className="flex items-center text-sm text-graydark">
-                  <Star className="h-4 w-4 text-yellowlight mr-1" />
-                  {customer.rating} rating
-                </div>
               </div>
             </div>
             
