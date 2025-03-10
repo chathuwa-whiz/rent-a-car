@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Search, Phone, Mail, MapPin, Star } from 'lucide-react';
-import { useGetUsersQuery } from '../../redux/services/userSlice'; // adjust the import path as needed
+import { useGetUsersQuery } from '../../redux/services/userSlice'; 
 
 export default function Customers() {
   const { data: users, error, isLoading } = useGetUsersQuery();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Map backend user data to the UI's customer structure.
-  // Now we use user.totalBookings and user.totalSpent from the aggregated response.
+
   const mappedCustomers = users
     ? users.map((user) => ({
         id: user._id,
@@ -15,15 +14,15 @@ export default function Customers() {
         email: user.email,
         phone: user.phone,
         location: user.address,
-        totalBookings: user.totalBookings || 0, // aggregated field from backend
-        totalSpent: user.totalSpent || 0,       // aggregated field from backend
-        rating: user.rating || 0,               // default value if not provided
-        status: 'active',                       // default value
-        image: user.image || 'https://via.placeholder.com/100', // default image
+        totalBookings: user.totalBookings || 0,
+        totalSpent: user.totalSpent || 0,      
+        rating: user.rating || 0,               
+        status: 'active',                       
+        image: user.image || 'https://via.placeholder.com/100', 
       }))
     : [];
 
-  // Filter customers based on the search term
+
   const filteredCustomers = mappedCustomers.filter((customer) =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
