@@ -25,6 +25,7 @@ export default function VehicleDetails() {
   }
 
   const handleBookNow = () => {
+    
     if (!name || !phoneNumber || !address || !startDate || !endDate) {
       alert("Please fill in all the required fields.");
       return;

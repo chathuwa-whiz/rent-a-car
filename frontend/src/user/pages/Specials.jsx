@@ -12,7 +12,7 @@ export default function Specials() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [carsPerPage, setCarsPerPage] = useState(3);
-  
+
   // Fetch vehicles data using Redux
   const { data: vehiclesData, isLoading, error } = useGetVehiclesQuery();
 
@@ -22,14 +22,14 @@ export default function Specials() {
   useEffect(() => {
     if (vehiclesData) {
       // Map API data to the format needed by the component
-      const formattedCars = vehiclesData.map(vehicle => ({
+      const formattedCars = vehiclesData.map((vehicle) => ({
         id: vehicle.id || vehicle._id,
         name: `${vehicle.brand} ${vehicle.model}`,
         type: vehicle.type || "R Design",
-        price: `Rs.${vehicle.price}`, 
-        img: vehicle.primaryImage || "/car1.webp" // Fallback to default image if no primaryImage
+        price: `Rs.${vehicle.price}`,
+        img: vehicle.primaryImage || "/car1.webp", // Fallback to default image if no primaryImage
       }));
-      
+
       setCars(formattedCars);
     }
   }, [vehiclesData]);
@@ -68,7 +68,9 @@ export default function Specials() {
   if (error) {
     return (
       <div className="flex justify-center items-center h-[50vh]">
-        <p className="text-darkred">Error loading vehicles. Please try again later.</p>
+        <p className="text-darkred">
+          Error loading vehicles. Please try again later.
+        </p>
       </div>
     );
   }
@@ -84,7 +86,9 @@ export default function Specials() {
 
       {/* Header Section */}
       <div className="relative flex flex-col md:flex-row justify-between items-center mt-6 md:mt-10 mb-12 md:mb-20">
-        <h2 className=" text-lg lg:text-2xl mb-6 md:mb-0  font-bold">TODAY SPECIALS</h2>
+        <h2 className=" text-lg lg:text-2xl mb-6 md:mb-0  font-bold">
+          TODAY SPECIALS
+        </h2>
 
         <div className="flex flex-col md:flex-row items-center gap-4 lg:gap-8">
           {/* Car Categories */}
@@ -104,7 +108,10 @@ export default function Specials() {
           </div>
 
           {/* View All Cars Button */}
-          <button onClick={() => navigate(`/fleet/`)} className="border-2 lg:border-3 border-gasolindark px-6 lg:px-8 py-2 rounded cursor-pointer hover:bg-gasolinlight hover:border-gasolinlight transition text-sm lg:text-base">
+          <button
+            onClick={() => navigate(`/fleet/`)}
+            className="border-2 lg:border-3 border-gasolindark px-6 lg:px-8 py-2 rounded cursor-pointer hover:bg-gasolinlight hover:border-gasolinlight transition text-sm lg:text-base"
+          >
             VIEW ALL CARS
           </button>
         </div>
@@ -122,17 +129,32 @@ export default function Specials() {
         >
           {currentCars.map((car, index) => (
             <motion.div key={car.id} className="text-center font-bold">
-              <img src={car.img} alt={car.name} className="mx-auto w-48 lg:w-56 h-28 lg:h-36 object-contain" />
-              <h3 className="text-lg lg:text-xl font-semibold mt-4">{car.name}</h3>
+              <img
+                src={car.img}
+                alt={car.name}
+                className="mx-auto w-48 lg:w-56 h-28 lg:h-36 object-contain"
+              />
+              <h3 className="text-lg lg:text-xl font-semibold mt-4">
+                {car.name}
+              </h3>
               <p className="text-graydark text-sm lg:text-base">{car.type}</p>
 
               <div className="flex flex-col md:flex-row justify-center items-center gap-2 lg:gap-4 mt-2">
                 <p className="text-gasolindark tracking-widest text-sm lg:text-base">
-                  {car.price} <span className="text-graydark tracking-wide">/ Per Day</span>
+                  {car.price}{" "}
+                  <span className="text-graydark tracking-wide">/ Per Day</span>
                 </p>
-                <button 
-                  onClick={() => navigate(`/vehicle/${car.id}`)}
-                  className="text-gasolindark flex items-center gap-1 lg:gap-2 cursor-pointer hover:text-gasolinlight transition text-xs lg:text-base">
+                <button
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                      navigate("/register");
+                    } else {
+                      navigate(`/vehicle/${car.id}`);
+                    }
+                  }}
+                  className="text-gasolindark flex items-center gap-1 lg:gap-2 cursor-pointer hover:text-gasolinlight transition text-xs lg:text-base"
+                >
                   DRIVE NOW <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
                 </button>
               </div>
@@ -151,10 +173,14 @@ export default function Specials() {
           <FaChevronLeft />
         </motion.button>
         <span className="text-base md:text-lg">{currentPage}</span>
-        <span className="text-gray-500 text-sm md:text-base">/ {totalPages}</span>
+        <span className="text-gray-500 text-sm md:text-base">
+          / {totalPages}
+        </span>
         <motion.button
           whileTap={{ scale: 0.8 }}
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           className="text-graydark cursor-pointer hover:text-white text-lg md:text-xl"
         >
           <FaChevronRight />
