@@ -3,7 +3,6 @@ import {
   FaFacebookF,
   FaInstagram,
   FaEnvelope,
-  FaWhatsapp,
   FaFacebookMessenger,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -47,6 +46,17 @@ export default function ContactPage() {
     if (!emailRegex.test(formData.email)) {
       toast.error("Please enter a valid email address");
       return;
+    }
+
+    // Phone validation: must start with 070, 071, 072, 074, 075, 076, 077, or 078 and contain exactly 10 digits
+    if (formData.phone) {
+      const phoneRegex = /^(070|071|072|074|075|076|077|078)\d{7}$/;
+      if (!phoneRegex.test(formData.phone)) {
+        toast.error(
+          "Please enter a valid phone number"
+        );
+        return;
+      }
     }
 
     try {
