@@ -28,6 +28,7 @@ app.use("/api/payment", paymentRoutes);
 // app.use('/api/card', cardRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/payhere", payhereRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/reports", reportRoutes);
 
