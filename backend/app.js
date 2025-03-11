@@ -12,6 +12,7 @@ import paymentRoutes from "./routes/PaymentRoutes.js";
 import cardRoutes from "./routes/CardRoutes.js";
 import maintenanceRoutes from "./routes/MainTenanceRoutes.js";
 import reportRoutes from "./routes/ReportRoutes.js";
+import emailRoutes from "./routes/emailRoutes.js";
 
 dotenv.config();
 
@@ -31,5 +32,6 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/payhere", payhereRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/send-email", emailRoutes);
 
 export default app;
