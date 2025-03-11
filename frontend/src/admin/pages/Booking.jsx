@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { TbSearch, TbFilter, TbCalendarEvent } from "react-icons/tb";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Calendar from "../components/Calendar";
-import { useGetBookingsQuery } from "../../redux/services/bookingSlice";
+import { useGetBookingsQuery, useUpdateBookingMutation } from "../../redux/services/bookingSlice";
 
 export default function Booking() {
   const [showCalendar, setShowCalendar] = useState(false);
@@ -9,8 +11,8 @@ export default function Booking() {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [bookingDates, setBookingDates] = useState([]);
 
-  // Fetch real bookings from the backend
   const { data: bookingsData, isLoading, isError } = useGetBookingsQuery();
+  const [updateBooking] = useUpdateBookingMutation();
 
   useEffect(() => {
     if (!bookingsData) return;
@@ -30,43 +32,51 @@ export default function Booking() {
     setBookingDates(allDates);
   }, [bookingsData]);
 
-  // Filter bookings based on search query and status filter
-  const filteredBookings = bookingsData
-    ? bookingsData.filter((booking) => {
-        const matchesSearch =
-          booking.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (booking.vehicle &&
-            booking.vehicle.brand &&
-            booking.vehicle.model &&
-            `${booking.vehicle.brand} ${booking.vehicle.model}`.toLowerCase().includes(searchQuery.toLowerCase()));
-        const matchesStatus = statusFilter === "All Status" || booking.status === statusFilter;
-        return matchesSearch && matchesStatus;
-      })
-    : [];
+  const confirmAndUpdateStatus = (id, newStatus) => {
+    const statusMessages = {
+      Active: "Are you sure you want to approve this booking?",
+      Cancelled: "Are you sure you want to cancel this booking?",
+      Completed: "Are you sure you want to mark this booking as returned?"
+    };
 
-  // Get status badge color
-  const getStatusBadgeClass = (status) => {
-    switch (status) {
-      case "Active":
-        return "bg-gasolinlight text-green";
-      case "Pending":
-        return "bg-yellowlight bg-opacity-30 text-yellowdark";
-      case "Completed":
-        return "bg-gasolinlight bg-opacity-30 text-gasolindark";
-      case "Cancelled":
-        return "bg-lightred bg-opacity-30 text-darkred";
-      default:
-        return "bg-graylight bg-opacity-30 text-graydark";
-    }
+    toast.warn(
+      <div>
+        <p>{statusMessages[newStatus]}</p>
+        <div className="flex gap-4 mt-2">
+          <button
+            className="bg-gasolinlight hover:bg-gasolindark text-white px-3 py-1 rounded"
+            onClick={async () => {
+              try {
+                await updateBooking({ id, data: { status: newStatus } });
+                toast.success(`Booking status updated to ${newStatus}`, { position: "top-center" });
+              } catch (error) {
+                toast.error("Error updating booking status.", { position: "top-center" });
+              }
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="bg-lightred hover:bg-darkred text-white px-3 py-1 rounded"
+            onClick={() => toast.dismiss()}
+          >
+            No
+          </button>
+        </div>
+      </div>,
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false
+      }
+    );
   };
-
-  if (isLoading)
-    return <div className="text-white text-center mt-10">Loading bookings...</div>;
-  if (isError)
-    return <div className="text-red-500 text-center mt-10">Failed to fetch bookings.</div>;
 
   return (
     <div className="space-y-6">
+      <ToastContainer /> {/* ✅ Required for Toast notifications */}
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold">Booking Management</h1>
         <button
@@ -78,130 +88,55 @@ export default function Booking() {
         </button>
       </div>
 
-      {/* Calendar View */}
       {showCalendar && <Calendar bookingDates={bookingDates} onClose={() => setShowCalendar(false)} />}
 
-      {/* Search and Filter */}
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <TbSearch className="text-graydark" size={20} />
-          </div>
-          <input
-            type="text"
-            className="w-full py-2 pl-10 pr-4 text-textPrimary bg-white border border-graylight rounded-lg focus:outline-none focus:ring-1 focus:ring-blue focus:border-blue"
-            placeholder="Search bookings..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="relative">
-          <button
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-graylight rounded-lg text-graydark"
-            onClick={() => {
-              const nextStatus =
-                statusFilter === "All Status"
-                  ? "Active"
-                  : statusFilter === "Active"
-                  ? "Pending"
-                  : statusFilter === "Pending"
-                  ? "Completed"
-                  : statusFilter === "Completed"
-                  ? "Cancelled"
-                  : "All Status";
-              setStatusFilter(nextStatus);
-            }}
-          >
-            <TbFilter size={20} />
-            {statusFilter}
-          </button>
-        </div>
-      </div>
-
-      {/* Bookings Table */}
       <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
         <table className="min-w-full">
           <thead className="bg-gray-50 text-left">
             <tr>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
-                Customer & Vehicle
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
-                Dates
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
-                Total
-              </th>
-              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">
-                Actions
-              </th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Customer & Vehicle</th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Dates</th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Total</th>
+              <th className="px-6 py-3 text-xs font-medium text-graydark uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-graylight">
-            {filteredBookings.map((booking) => (
+            {bookingsData?.map((booking) => (
               <tr key={booking._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={
-                        booking.user.avatar ||
-                        "https://randomuser.me/api/portraits/men/32.jpg"
-                      }
-                      alt={booking.name}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                    <div>
-                      <p className="font-medium">{booking.name}</p>
-                      <div className="flex items-center gap-2 text-sm text-graydark">
-                        {booking.vehicle ? (
-                          <>
-                            {booking.vehicle.brand} {booking.vehicle.model}
-                          </>
-                        ) : (
-                          "Vehicle Info Unavailable"
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <p className="font-medium">{booking.name}</p>
+                  <p className="text-sm text-graydark">{booking.vehicle?.brand} {booking.vehicle?.model}</p>
                 </td>
                 <td className="px-6 py-4">
-                  <div>
-                    {new Date(booking.dates.from).toLocaleDateString("en-US")}
-                    <p className="text-sm text-graydark">to</p>
-                    {new Date(booking.dates.to).toLocaleDateString("en-US")}
-                  </div>
+                  {new Date(booking.dates.from).toLocaleDateString("en-US")} to {new Date(booking.dates.to).toLocaleDateString("en-US")}
                 </td>
                 <td className="px-6 py-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClass(
-                      booking.status
-                    )}`}
-                  >
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClass(booking.status)}`}>
                     {booking.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 font-medium">Rs.{booking.total}</td>
                 <td className="px-6 py-4">
-                  <div className="flex gap-3">
-                    {booking.returnStatus === "Pending" && (
-                      <button className="text-blue hover:text-opacity-80 font-medium">
-                        Return
-                      </button>
-                    )}
-                    {booking.status === "Pending" && (
-                      <>
-                        <button className="text-green hover:text-opacity-80 font-medium">
-                          Approve
+                  {booking.status !== "Completed" && booking.status !== "Cancelled" && (
+                    <div className="flex gap-3">
+                      {booking.returnStatus === "Pending" && (
+                        <button className="text-blue hover:text-opacity-80 font-medium" onClick={() => confirmAndUpdateStatus(booking._id, "Completed")}>
+                          Return
                         </button>
-                        <button className="text-darkred hover:text-opacity-80 font-medium">
-                          Cancel
-                        </button>
-                      </>
-                    )}
-                  </div>
+                      )}
+                      {booking.status === "Pending" && (
+                        <>
+                          <button className="text-green hover:text-opacity-80 font-medium" onClick={() => confirmAndUpdateStatus(booking._id, "Active")}>
+                            Approve
+                          </button>
+                          <button className="text-darkred hover:text-opacity-80 font-medium" onClick={() => confirmAndUpdateStatus(booking._id, "Cancelled")}>
+                            Cancel
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
@@ -212,18 +147,12 @@ export default function Booking() {
   );
 }
 
-// Helper function for status badge
 const getStatusBadgeClass = (status) => {
   switch (status) {
-    case "Active":
-      return "bg-gasolinlight text-green";
-    case "Pending":
-      return "bg-yellowlight bg-opacity-30 text-yellowdark";
-    case "Completed":
-      return "bg-gasolinlight bg-opacity-30 text-gasolindark";
-    case "Cancelled":
-      return "bg-lightred bg-opacity-30 text-darkred";
-    default:
-      return "bg-graylight bg-opacity-30 text-graydark";
+    case "Active": return "bg-gasolinlight text-green";
+    case "Pending": return "bg-yellowlight bg-opacity-30 text-yellowdark";
+    case "Completed": return "bg-gasolinlight bg-opacity-30 text-gasolindark";
+    case "Cancelled": return "bg-lightred bg-opacity-30 text-darkred";
+    default: return "bg-graylight bg-opacity-30 text-graydark";
   }
 };
