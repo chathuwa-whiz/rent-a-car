@@ -5,17 +5,18 @@ import bcrypt from 'bcryptjs';
 
 export const register = async(req, res) => {
 
-    const { firstName, lastName, phone, secondaryPhone, nic, address, email, password } = req.body;
+    const { firstName, lastName, phone, secondaryPhone, identificationType, nic, passport, address, email, password } = req.body;
 
     try {
 
         const user = new User({
-
             firstName,
             lastName,
             phone,
             secondaryPhone,
-            nic,
+            identificationType,
+            nic: identificationType === 'nic' ? nic : undefined,
+            passport: identificationType === 'passport' ? passport : undefined,
             address,
             email,
             password

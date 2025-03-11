@@ -10,12 +10,26 @@ export default function Fleet() {
   const { data: vehicleData, isSuccess: vehicledataFetched } = useGetVehiclesQuery();
 
   const [vehicles, setVehicles] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [range, setRange] = useState([0, 500]);
+  const [filters, setFilters] = useState({
+    search: '',
+    brand: '',
+    model: '',
+    types: [],
+    transmission: [],
+    seats: '',
+    availableOnly: false,
+    rentalType: 'Any'
+  });
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 9;
 
   useEffect(() => {
     if (vehicleData) {
       const Loadedvehicles = vehicleData.map(vehicle => ({
-        
         id: vehicle._id,
         brand: vehicle.brand,
         model: vehicle.model,
@@ -34,35 +48,74 @@ export default function Fleet() {
       }));
       
       setVehicles(Loadedvehicles);
+      setFilteredCars(Loadedvehicles);
       setIsLoading(false);
     }
   }, [vehicleData]);
 
+  // Apply filters whenever filters or range changes
+  useEffect(() => {
+    let result = vehicles;
+
+    // Apply search filter
+    if (filters.search) {
+      result = result.filter(car => 
+        car.brand.toLowerCase().includes(filters.search.toLowerCase()) ||
+        car.model.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+
+    // Apply brand filter
+    if (filters.brand) {
+      result = result.filter(car => car.brand === filters.brand);
+    }
+
+    // Apply model filter
+    if (filters.model) {
+      result = result.filter(car => car.model === filters.model);
+    }
+
+    // Apply price range filter
+    result = result.filter(car => car.price >= range[0] && car.price <= range[1]);
+
+    // Apply type filters
+    if (filters.types.length > 0) {
+      result = result.filter(car => filters.types.includes(car.type));
+    }
+
+    // Apply transmission filters
+    if (filters.transmission.length > 0) {
+      result = result.filter(car => filters.transmission.includes(car.transmission));
+    }
+
+    // Apply seats filter
+    if (filters.seats) {
+      result = result.filter(car => car.seats.toString() === filters.seats);
+    }
+
+    // Apply available only filter
+    if (filters.availableOnly) {
+      result = result.filter(car => !car.booked);
+    }
+
+    // Apply rental type filter
+    if (filters.rentalType !== 'Any') {
+      result = result.filter(car => car.rentalType === filters.rentalType);
+    }
+
+    setCurrentPage(1);
+    setFilteredCars(result);
+  }, [filters, range, vehicles]);
+
   const getModelsByBrand = (brand) => {
-    return [...new Set(vehicleData
+    return [...new Set(vehicles
       .filter(car => car.brand === brand)
       .map(car => car.model))];
   };
   
   const getUniqueBrands = () => {
-    return [...new Set(vehicleData.map(car => car.brand))];
+    return [...new Set(vehicles.map(car => car.brand))];
   };
-
-  const [range, setRange] = useState([0, 500]);
-  const [filters, setFilters] = useState({
-    search: '',
-    brand: '',
-    model: '',
-    types: [],
-    transmission: [],
-    seats: '',
-    availableOnly: false,
-    rentalType: 'Any'
-  });
-  const [filteredCars, setFilteredCars] = useState(vehicles);
-  const [isFilterVisible, setIsFilterVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const carsPerPage = 9;
 
   const handleRangeChange = (newRange) => {
     setRange(newRange);
@@ -110,60 +163,6 @@ export default function Fleet() {
   const toggleFilter = () => {
     setIsFilterVisible(!isFilterVisible);
   };
-
-  useEffect(() => {
-    let result = vehicles;
-
-    // Apply search filter
-    if (filters.search) {
-      result = result.filter(car => 
-        car.brand.toLowerCase().includes(filters.search.toLowerCase()) ||
-        car.model.toLowerCase().includes(filters.search.toLowerCase())
-      );
-    }
-
-    // Apply brand filter
-    if (filters.brand) {
-      result = result.filter(car => car.brand === filters.brand);
-    }
-
-    // Apply model filter
-    if (filters.model) {
-      result = result.filter(car => car.model === filters.model);
-    }
-
-    // Apply price range filter
-    result = result.filter(car => car.price >= range[0] && car.price <= range[1]);
-
-    // Apply type filters
-    if (filters.types.length > 0) {
-      result = result.filter(car => filters.types.includes(car.type));
-    }
-
-    // Apply transmission filters
-    if (filters.transmission.length > 0) {
-      result = result.filter(car => filters.transmission.includes(car.transmission));
-    }
-
-    // Apply seats filter
-    if (filters.seats) {
-      result = result.filter(car => car.seats.toString() === filters.seats);
-    }
-
-    // Apply available only filter
-    if (filters.availableOnly) {
-      result = result.filter(car => !car.booked);
-    }
-
-    // Apply rental type filter
-    if (filters.rentalType !== 'Any') {
-      result = result.filter(car => car.rentalType === filters.rentalType || car.rentalType === 'Any');
-    }
-
-    setCurrentPage(1);
-
-    setFilteredCars(result);
-  }, [filters, range]);
 
   const indexOfLastCar = currentPage * carsPerPage;
   const indexOfFirstCar = indexOfLastCar - carsPerPage;
@@ -369,14 +368,9 @@ export default function Fleet() {
 
         {/* Vehicle list */}
         <div className='w-full lg:w-3/4'>
-          {/* <div className='flex gap-2 items-center mb-5'>
-            <TbArrowLeft className='text-graydark' />
-            <div className='font-bold text-graydark'>Back</div>
-          </div> */}
-
           {/* Vehicle grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
-            {vehicleData.map(car => (
+            {currentCars.map(car => (
               <div key={car.id} className='rounded-2xl border border-graydark'>
                 <div className='relative'>
                   <img src={car.primaryImage} alt={car.name} className='w-full' />

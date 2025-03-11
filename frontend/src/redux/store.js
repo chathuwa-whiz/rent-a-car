@@ -5,6 +5,8 @@ import { userApi } from "./services/userSlice";
 import { vehicleApi } from "./services/vehicleSlice"
 import { bookingApi } from "./services/bookingSlice"
 import { paymentApi } from "./services/payhereSlice";
+import { maintenanceApi } from "./services/maintenanceSlice";
+import { reportApi } from "./services/reportSlice";
 
 export const store = configureStore({
 
@@ -15,6 +17,8 @@ export const store = configureStore({
         [vehicleApi.reducerPath]: vehicleApi.reducer,
         [bookingApi.reducerPath]: bookingApi.reducer,
         [paymentApi.reducerPath]: paymentApi.reducer,
+        [maintenanceApi.reducerPath]: maintenanceApi.reducer,
+        [reportApi.reducerPath]: reportApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -23,6 +27,8 @@ export const store = configureStore({
             .concat(vehicleApi.middleware)
             .concat(userApi.middleware)
             .concat(bookingApi.middleware)
-            .concat(paymentApi.middleware),
-
+            .concat(paymentApi.middleware)
+            .concat(maintenanceApi.middleware)
+            .concat(reportApi.middleware)
+            .concat(userApi.middleware),
 })

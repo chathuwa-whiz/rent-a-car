@@ -1,7 +1,102 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import user from "./assets/i55.png"
+import { useGetUserByIdQuery, useUpdateUserMutation, useDeleteUserMutation } from "../../redux/services/userSlice"
+import { useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast'
 
 export default function Account() {
+
+  const userId = JSON.parse(localStorage.getItem("user"))?._id;  
+  const { data: userData, isSuccess, isLoading, refetch } = useGetUserByIdQuery(userId);
+
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    nic: '',
+    passport: '',
+    address: '',
+    email: '',
+    phone: '',
+    secondaryPhone: '',
+  });
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess && userData) {
+      const {
+        firstName,
+        lastName,
+        nic,
+        passport,
+        address,
+        email,
+        phone,
+        secondaryPhone,
+      } = userData;
+
+      setFormData({
+        firstName: firstName || '',
+        lastName: lastName || '',
+        nic: nic || '',
+        passport: passport || '',
+        address: address || '',
+        email: email || '',
+        phone: phone || '',
+        secondaryPhone: secondaryPhone || '',
+      });
+    }
+  }, [isSuccess, userData]);
+
+  console.log("User data:", userData);
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleUserUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const updatedData = { ...formData };
+      
+      await updateUser({ id: userId, user: updatedData }).unwrap();
+      setLoading(false);
+      refetch();
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      toast.error("Error updating user data");
+      console.log("Failed to update profile:", error);
+      setLoading(false);
+    }
+  }
+
+  const handleDeleteUser = async () => {
+
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      try {
+        await deleteUser(userId).unwrap();
+        localStorage.removeItem("user");
+        toast.success("Account deleted successfully");
+        window.location.href = "/login";
+      } catch (error) {
+        toast.error("Error deleting account");
+        console.log("Failed to delete account:", error);
+      }
+    }
+  }
+
+  if (isLoading) {
+    return <div className="text-white text-center">Loading user data...</div>;
+  }
+
   return (
     <div className='text-white px-2 sm:px-4 md:px-6 py-4 sm:py-6 mx-2 sm:mx-5 rounded-lg bg-black'>
       <h1 className='text-gasolindark font-semibold text-xl sm:text-2xl'>Personal Details</h1>
@@ -27,6 +122,9 @@ export default function Account() {
               <p className='text-sm sm:text-base'>First Name</p>
               <input
                 type='text'
+                name='firstName'
+                value={formData.firstName}
+                onChange={handleInputChange}
                 className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
                 placeholder='First Name'
               />
@@ -35,6 +133,9 @@ export default function Account() {
               <p className='text-sm sm:text-base'>Last Name</p>
               <input
                 type='text'
+                name='lastName'
+                value={formData.lastName}
+                onChange={handleInputChange}
                 className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
                 placeholder='Last Name'
               />
@@ -43,9 +144,12 @@ export default function Account() {
 
           {/* NIC */}
           <div className='flex flex-col space-y-2 mb-6'>
-            <p className='text-sm sm:text-base'>NIC</p>
+            <p className='text-sm sm:text-base'>NIC or Passport</p>
             <input
               type='text'
+              name='nic'
+              value={formData.nic || formData.passport}
+              onChange={handleInputChange}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='NIC'
             />
@@ -55,6 +159,9 @@ export default function Account() {
           <div className='flex flex-col space-y-2 mb-6'>
             <p className='text-sm sm:text-base'>Address</p>
             <textarea
+              name='address'
+              value={formData.address}
+              onChange={handleInputChange}
               className='border border-graydark text-graydark h-20 rounded-lg px-3 py-2 w-full'
               placeholder='Address'
             />
@@ -62,10 +169,10 @@ export default function Account() {
 
           {/* buttons */}
           <div className='flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-6'>
-            <button className='bg-gasolindark text-white px-5 py-2 rounded-md hover:bg-gasolinlight cursor-pointer w-full sm:w-auto'>
+            <button onClick={handleUserUpdate} className='bg-gasolindark text-white px-5 py-2 rounded-md hover:bg-gasolinlight cursor-pointer w-full sm:w-auto'>
               Edit Details
             </button>
-            <button className='bg-darkred text-white px-5 py-2 rounded-lg cursor-pointer w-full sm:w-auto'>
+            <button  onClick={handleDeleteUser} className='bg-darkred text-white px-5 py-2 rounded-lg cursor-pointer w-full sm:w-auto'>
               Delete Profile
             </button>
           </div>
@@ -78,6 +185,9 @@ export default function Account() {
             <p className='text-sm sm:text-base'>Email</p>
             <input
               type='email'
+              name='email'
+              value={formData.email}
+              onChange={handleInputChange}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='jakedaniel@gmail.com'
             />
@@ -88,6 +198,9 @@ export default function Account() {
             <p className='text-sm sm:text-base'>Mobile</p>
             <input
               type='tel'
+              name='phone'
+              value={formData.phone}
+              onChange={handleInputChange}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='011-234 3452'
             />
@@ -98,20 +211,23 @@ export default function Account() {
             <p className='text-sm sm:text-base'>Emergency Contact</p>
             <input
               type='tel'
+              name='secondaryPhone'
+              value={formData.secondaryPhone}
+              onChange={handleInputChange}
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='011-231 1234'
             />
           </div>
 
           {/* driver licence */}
-          <div className='flex flex-col space-y-2 mb-6'>
+          {/* <div className='flex flex-col space-y-2 mb-6'>
             <p className='text-sm sm:text-base'>Driver License Number</p>
             <input
               type='text'
               className='border border-graydark text-graydark h-10 rounded-lg px-3 w-full'
               placeholder='B12322323'
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

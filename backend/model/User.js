@@ -31,12 +31,33 @@ const userSchema = new mongoose.Schema(
     },
     nic: {
       type: String,
-      required: true,
-      unique: true,
       validate: {
-        validator: (v) => /^[0-9]{9}[vVxX]$|^[0-9]{12}$/.test(v),
-        message: (props) => `${props.value} is not a valid NIC number!`,
+        validator: function(v) {
+          if (this.identificationType === 'nic') {
+            return /^[0-9]{9}[vVxX]$|^[0-9]{12}$/.test(v);
+          }
+          return true;
+        },
+        message: props => `${props.value} is not a valid NIC number!`
       },
+    },
+    passport: {
+      type: String,
+      validate: {
+        validator: function(v) {
+          if (this.identificationType === 'passport') {
+            return /^[A-Z0-9]{6,12}$/.test(v); // Basic passport validation
+          }
+          return true;
+        },
+        message: props => `${props.value} is not a valid passport number!`
+      },
+    },
+    identificationType: {
+      type: String,
+      required: true,
+      enum: ['nic', 'passport'],
+      default: 'nic'
     },
     address: { 
         type: String, 

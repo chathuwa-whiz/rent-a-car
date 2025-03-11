@@ -15,6 +15,11 @@ export default function Header() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    setIsLoggedIn(!!token && !!user);
+    
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
