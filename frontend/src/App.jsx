@@ -28,6 +28,8 @@ import AdminBooking from './admin/pages/Booking'
 import AdminPayment from './admin/pages/Payment'
 import AdminReport from './admin/pages/Report'
 
+import AdminRoutes from "./auth/AdminRoutes";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -52,7 +54,7 @@ export default function App() {
         </Route>
 
         {/* Admin Routes */}
-        <Route path='/admin' element={<AdminLayout />}>
+        <Route path='/admin' element={<AdminRoutes> <AdminLayout /> </AdminRoutes> }>
           <Route index element={<AdminDashboard />} />
           <Route path='maintenance' element={<AdminMaintenance />} />
           <Route path='vehicle' element={<AdminVehicle />} />
