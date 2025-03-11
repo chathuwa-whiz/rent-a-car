@@ -62,7 +62,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-        <button className="hover:bg-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+        <button className="bg-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
           <TbDownload size={18} />
           Download Report
         </button>
@@ -75,9 +75,9 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Total Vehicles</span>
             <span className="text-3xl font-bold mt-2">{totalVehicles}</span>
-            <span className="text-green text-sm mt-1">+12% from last month</span>
+        
           </div>
-          <div className="absolute top-6 right-6 bg-blue-100 p-2 rounded-full">
+          <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbCar size={20} className="text-blue" />
           </div>
         </div>
@@ -87,9 +87,9 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Active Customers</span>
             <span className="text-3xl font-bold mt-2">{activeCustomers}</span>
-            <span className="text-green text-sm mt-1">+12% from last month</span>
+          
           </div>
-          <div className="absolute top-6 right-6 bg-blue-100 p-2 rounded-full">
+          <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbUsers size={20} className="text-blue" />
           </div>
         </div>
@@ -99,9 +99,9 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Revenue</span>
             <span className="text-3xl font-bold mt-2">{`$${revenue.toLocaleString()}`}</span>
-            <span className="text-green text-sm mt-1">+12% from last month</span>
+          
           </div>
-          <div className="absolute top-6 right-6 bg-blue-100 p-2 rounded-full">
+          <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbCreditCard size={20} className="text-blue" />
           </div>
         </div>
@@ -111,9 +111,9 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Pending Booking</span>
             <span className="text-3xl font-bold mt-2">{pendingBookings}</span>
-            <span className="text-darkred text-sm mt-1">-5% from last month</span>
+            
           </div>
-          <div className="absolute top-6 right-6 bg-blue-100 p-2 rounded-full">
+          <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbCalendarEvent size={20} className="text-blue" />
           </div>
         </div>
@@ -154,7 +154,7 @@ export default function Dashboard() {
           <div className="space-y-6">
             {recentActivities.map(activity => (
               <div key={activity.id} className="flex items-start gap-4">
-                <div className="bg-blue-100 p-2 rounded-full">
+                <div className="bg-[#cadbf3] p-2 rounded-full">
                   {activity.icon}
                 </div>
                 <div className="flex-1">

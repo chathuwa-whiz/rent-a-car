@@ -75,7 +75,7 @@ export default function Booking() {
 
   return (
     <div className="space-y-6">
-      <ToastContainer /> {/* ✅ Required for Toast notifications */}
+      <ToastContainer /> {/* Required for Toast notifications */}
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold">Booking Management</h1>
