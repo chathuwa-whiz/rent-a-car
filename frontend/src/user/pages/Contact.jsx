@@ -1,5 +1,6 @@
 import { FaFacebookF, FaInstagram, FaEnvelope, FaWhatsapp, FaFacebookMessenger } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useCreateEmailMutation } from "../../redux/services/emailSlice";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 50 },
@@ -7,6 +8,9 @@ const fadeIn = {
 };
 
 export default function ContactPage() {
+
+  const [createEmail] = useCreateEmailMutation();
+  
   return (
     <div id="contact" className="md:py-16 px-6 md:px-20 flex justify-center items-center min-h-[70vh]">
       <motion.div
