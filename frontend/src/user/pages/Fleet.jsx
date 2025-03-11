@@ -30,7 +30,7 @@ export default function Fleet() {
   useEffect(() => {
     if (vehicleData) {
       const Loadedvehicles = vehicleData.map(vehicle => ({
-        id: vehicle._id,
+        id: vehicle.id,
         brand: vehicle.brand,
         model: vehicle.model,
         engine: vehicle.engine,
@@ -52,6 +52,7 @@ export default function Fleet() {
       setIsLoading(false);
     }
   }, [vehicleData]);
+  
 
   // Apply filters whenever filters or range changes
   useEffect(() => {
