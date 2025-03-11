@@ -49,8 +49,10 @@ export default function Booking() {
               try {
                 await updateBooking({ id, data: { status: newStatus } });
                 toast.success(`Booking status updated to ${newStatus}`, { position: "top-center" });
+                toast.dismiss(10)
               } catch (error) {
                 toast.error("Error updating booking status.", { position: "top-center" });
+                toast.dismiss()
               }
             }}
           >
@@ -121,16 +123,16 @@ export default function Booking() {
                   {booking.status !== "Completed" && booking.status !== "Cancelled" && (
                     <div className="flex gap-3">
                       {booking.returnStatus === "Pending" && (
-                        <button className="text-blue hover:text-opacity-80 font-medium" onClick={() => confirmAndUpdateStatus(booking._id, "Completed")}>
+                        <button className="bg-lightblue px-4 py-1 rounded-full text-blue hover:text-opacity-80 font-medium cursor-pointer" onClick={() => confirmAndUpdateStatus(booking._id, "Completed")}>
                           Return
                         </button>
                       )}
                       {booking.status === "Pending" && (
                         <>
-                          <button className="text-green hover:text-opacity-80 font-medium" onClick={() => confirmAndUpdateStatus(booking._id, "Active")}>
+                          <button className= "bg-[#bafff0] px-4 py-1 rounded-full text-green hover:text-opacity-80 font-medium cursor-pointer" onClick={() => confirmAndUpdateStatus(booking._id, "Active")}>
                             Approve
                           </button>
-                          <button className="text-darkred hover:text-opacity-80 font-medium" onClick={() => confirmAndUpdateStatus(booking._id, "Cancelled")}>
+                          <button className="bg-[#f2dddd] px-4 py-1 rounded-full text-darkred hover:text-opacity-80 font-medium cursor-pointer" onClick={() => confirmAndUpdateStatus(booking._id, "Cancelled")}>
                             Cancel
                           </button>
                         </>
@@ -149,10 +151,10 @@ export default function Booking() {
 
 const getStatusBadgeClass = (status) => {
   switch (status) {
-    case "Active": return "bg-gasolinlight text-green";
-    case "Pending": return "bg-yellowlight bg-opacity-30 text-yellowdark";
-    case "Completed": return "bg-gasolinlight bg-opacity-30 text-gasolindark";
-    case "Cancelled": return "bg-lightred bg-opacity-30 text-darkred";
+    case "Active": return "bg-lightblue text-blue";
+    case "Pending": return "bg-[#fff6c6] bg-opacity-30 text-yellowdark";
+    case "Completed": return "bg-[#bafff0] bg-opacity-30 text-gasolindark";
+    case "Cancelled": return "bg-[#f2dddd] bg-opacity-30 text-darkred";
     default: return "bg-graylight bg-opacity-30 text-graydark";
   }
 };
