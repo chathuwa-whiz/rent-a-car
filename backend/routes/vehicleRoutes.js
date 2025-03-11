@@ -16,6 +16,8 @@ router.get("/",
    getVehicles);
 
 router.get("/:id",
+  authenticate,
+  authorize("user","admin"),
   getVehicle);
 
 router.post("/",
