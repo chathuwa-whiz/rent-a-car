@@ -23,15 +23,39 @@ export default function Dashboard() {
   const revenue = bookings ? bookings.reduce((acc, booking) => acc + booking.total, 0) : 0;
   const pendingBookings = bookings ? bookings.filter(booking => booking.status === 'Pending').length : 0;
 
-  // Group bookings by weekday to compute weekly revenue
+  // Calculate current week: Monday to Sunday
+  const currentDate = new Date();
+  const currentDay = currentDate.getDay();
+  
+  const diffToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+  const startOfWeek = new Date(currentDate);
+  startOfWeek.setDate(currentDate.getDate() + diffToMonday);
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+  //all days in the current week
+  const daysOfWeek = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + i);
+    const dayName = date.toLocaleString('en-US', { weekday: 'short' });
+    daysOfWeek.push(dayName);
+  }
+
+  // Group bookings by weekday
   const revenueByDay = {};
   bookings?.forEach(booking => {
-    const day = new Date(booking.createdAt).toLocaleString('en-US', { weekday: 'short' });
-    revenueByDay[day] = (revenueByDay[day] || 0) + booking.total;
+    const bookingDate = new Date(booking.createdAt);
+    if (bookingDate >= startOfWeek && bookingDate <= endOfWeek) {
+      const day = bookingDate.toLocaleString('en-US', { weekday: 'short' });
+      revenueByDay[day] = (revenueByDay[day] || 0) + booking.total;
+    }
   });
-  const weeklyRevenueData = Object.entries(revenueByDay).map(([day, total]) => ({
+
+  // Build the weekly revenue data
+  const weeklyRevenueData = daysOfWeek.map(day => ({
     name: day,
-    revenue: total,
+    revenue: revenueByDay[day] || 0,
   }));
 
   // Build recent activities using the 4 most recent bookings
@@ -41,6 +65,7 @@ export default function Dashboard() {
         type: 'booking',
         title: `Booking confirmed for vehicle ${booking.vehicle?.model || ''}`,
         time: new Date(booking.createdAt).toLocaleTimeString(),
+        date: new Date(booking.createdAt).toLocaleDateString(),
         icon: <TbCalendarEvent size={20} className="text-blue" />,
       }))
     : [];
@@ -75,7 +100,6 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Total Vehicles</span>
             <span className="text-3xl font-bold mt-2">{totalVehicles}</span>
-        
           </div>
           <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbCar size={20} className="text-blue" />
@@ -87,7 +111,6 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Active Customers</span>
             <span className="text-3xl font-bold mt-2">{activeCustomers}</span>
-          
           </div>
           <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbUsers size={20} className="text-blue" />
@@ -99,7 +122,6 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Revenue</span>
             <span className="text-3xl font-bold mt-2">{`$${revenue.toLocaleString()}`}</span>
-          
           </div>
           <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbCreditCard size={20} className="text-blue" />
@@ -111,7 +133,6 @@ export default function Dashboard() {
           <div className="flex flex-col">
             <span className="text-graydark font-medium">Pending Booking</span>
             <span className="text-3xl font-bold mt-2">{pendingBookings}</span>
-            
           </div>
           <div className="absolute top-6 right-6 bg-[#cadbf3] p-2 rounded-full">
             <TbCalendarEvent size={20} className="text-blue" />
@@ -160,6 +181,7 @@ export default function Dashboard() {
                 <div className="flex-1">
                   <p className="font-medium text-graydark">{activity.title}</p>
                   <p className="text-sm text-graydark">{activity.time}</p>
+                  <p className="text-sm text-graydark">{activity.date}</p>
                 </div>
               </div>
             ))}
