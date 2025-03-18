@@ -10,7 +10,7 @@ import authRoutes from "./routes/AuthRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import paymentRoutes from "./routes/PaymentRoutes.js";
 import cardRoutes from "./routes/CardRoutes.js";
-import maintenanceRoutes from "./routes/MainTenanceRoutes.js";
+import maintenanceRoutes from "./routes/MaintenanceRoutes.js";
 import reportRoutes from "./routes/ReportRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
 
