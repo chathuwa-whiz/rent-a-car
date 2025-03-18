@@ -1,5 +1,5 @@
 import React from "react";
-import { FaSignOutAlt, FaWallet, FaCar, FaUser } from "react-icons/fa";
+import { FaSignOutAlt, FaWallet, FaCar, FaCarSide, FaUser } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen, onClose }) {
               >
                 <FaCar className="mr-4" /> Dashboard
               </Link>
-              <Link 
+              {/* <Link 
                 to="payment" 
                 className={`flex items-center hover:text-gasolinlight mb-6 ${
                   currentPath === "/user/profile/payment" ? "text-gasolinlight" : "text-white"
@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 onClick={onClose}
               >
                 <FaWallet className="mr-4" /> Payment
-              </Link>
+              </Link> */}
               <Link 
                 to="rentals" 
                 className={`flex items-center hover:text-gasolinlight mb-6 ${
@@ -51,7 +51,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 }`}
                 onClick={onClose}
               >
-                <FaCar className="mr-4" /> Rentals
+                <FaCarSide className="mr-4" /> Rentals
               </Link>
               <Link 
                 to="account" 

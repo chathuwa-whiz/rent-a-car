@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 
 export default function Account() {
 
-  const userId = JSON.parse(localStorage.getItem("user"))?._id;  
+  const userId = JSON.parse(localStorage.getItem("user"))?._id;
   const { data: userData, isSuccess, isLoading, refetch } = useGetUserByIdQuery(userId);
 
   const [updateUser] = useUpdateUserMutation();
@@ -50,8 +50,6 @@ export default function Account() {
       });
     }
   }, [isSuccess, userData]);
-
-  console.log("User data:", userData);
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -105,16 +103,16 @@ export default function Account() {
       <div className='flex flex-col lg:flex-row lg:space-x-10 mt-4 sm:mt-7 px-2 sm:px-6 md:px-10'>
         {/* Left section - personal details edit/delete */}
         <div className='w-full lg:w-1/2 mb-6 lg:mb-0'>
-          <p className='mb-3'>Upload Profile Photo</p>
+          {/* <p className='mb-3'>Upload Profile Photo</p> */}
 
           {/* profile image */}
-          <div className='flex items-center space-x-4 sm:space-x-6 mb-6'>
+          {/* <div className='flex items-center space-x-4 sm:space-x-6 mb-6'>
             <img src={user} alt='user' className='w-12 h-12 sm:w-16 sm:h-16 rounded-full' />
             <div className='text-sm sm:text-base'>
               <p>Max : 5MB</p>
               <p>PNG / JPG</p>
             </div>
-          </div>
+          </div> */}
 
           {/* name */}
           <div className='flex flex-col sm:flex-row sm:space-x-6 mb-6'>
