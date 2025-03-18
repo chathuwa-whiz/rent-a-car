@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetVehicleQuery } from "../../redux/services/vehicleSlice";
+import { toast } from "react-toastify";
 
 export default function VehicleDetails() {
   const { id } = useParams(); // Get vehicle ID from URL
@@ -25,13 +26,43 @@ export default function VehicleDetails() {
   }
 
   const handleBookNow = () => {
-    
+    // Validate all required fields
     if (!name || !phoneNumber || !address || !startDate || !endDate) {
-      alert("Please fill in all the required fields.");
+      toast.error("Please fill in all the required fields.");
       return;
     }
 
-    // Use vehicle.id instead of vehicle.id
+
+    const phoneRegex = /^(070|071|072|074|075|076|077|078)\d{7}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      toast.error(
+        "Please enter a valid phone number."
+      );
+      return;
+    }
+
+    // Date validation: cannot select past date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (start < today) {
+      toast.error("Start date cannot be in the past.");
+      return;
+    }
+
+    if (end < today) {
+      toast.error("End date cannot be in the past.");
+      return;
+    }
+
+    // Date validation: start date must be before end date
+    if (start > end) {
+      toast.error("Start date must be before end date.");
+      return;
+    }
+
     navigate(
       `/payment/${vehicle.id}?name=${name}&phone=${phoneNumber}&address=${address}&startDate=${startDate}&endDate=${endDate}`
     );
@@ -40,7 +71,6 @@ export default function VehicleDetails() {
   return (
     <div className="relative min-h-screen px-4 pt-24">
       <div className="flex flex-col lg:flex-row gap-8">
-        
         {/* Left side - User Input Details */}
         <div className="w-full lg:w-2/5 flex flex-col gap-6 lg:gap-10 lg:pr-8 xl:pr-32">
           {/* Title & Price */}
@@ -62,7 +92,6 @@ export default function VehicleDetails() {
           <div className="flex">
             <div className="flex flex-col space-y-2 w-1/2 text-sm md:text-base text-graylight">
               <p>Security Deposit</p>
-              <p>Includes</p> {/* remove or replace if "includes" isn't in your schema */}
               <p>Top Speed</p>
               <p>0-60 mph</p>
               <p>Transmission</p>
@@ -71,7 +100,6 @@ export default function VehicleDetails() {
             </div>
             <div className="flex flex-col space-y-2 w-1/2 text-sm md:text-base text-graydark">
               <p>Rs.{vehicle.securityDeposit}</p>
-              <p>{vehicle.includes}</p> {/* remove or replace if "includes" isn't in your schema */}
               <p>{vehicle.topSpeed} km/h</p>
               <p>{vehicle.acceleration} sec</p>
               <p>{vehicle.transmission}</p>

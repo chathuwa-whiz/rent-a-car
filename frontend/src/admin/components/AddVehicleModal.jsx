@@ -21,6 +21,27 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
     description: ''          // New field for vehicle description
   });
 
+  // Validate keypress for numeric fields.
+  // Blocks any other character
+  const validateNumber = (e) => {
+    const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+    if (allowedKeys.includes(e.key)) return;
+    
+    // Allow dot (".") if not already present in the input
+    if (e.key === '.') {
+      if (e.target.value.includes('.')) {
+        e.preventDefault();
+        alert('Only one dot allowed!');
+      }
+      return;
+    }
+
+    if (!/[0-9]/.test(e.key)) {
+      e.preventDefault();
+      alert('Only numbers allowed!');
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setNewVehicle({
@@ -78,7 +99,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 space-y-4 m-4 max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-2/3 p-6 space-y-4 m-4 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
@@ -114,6 +135,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.engine}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -123,6 +145,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.topSpeed}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -132,6 +155,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.acceleration}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -141,6 +165,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.price}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <select
@@ -173,6 +198,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.seats}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <select
@@ -206,8 +232,6 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               <option value="booked">Booked</option>
               <option value="maintenance">Maintenance</option>
             </select>
-
-            {/* Description Field */}
             <div className="col-span-full">
               <textarea
                 name="description"
@@ -218,10 +242,10 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
                 required
               />
             </div>
-
-            {/* Primary Image Upload */}
             <div className="col-span-full">
-              <label className="block text-sm font-medium text-graydark">Upload Primary Image (1)</label>
+              <label className="block text-sm font-medium text-graydark">
+                Upload Primary Image (1)
+              </label>
               <input
                 type="file"
                 accept="image/*"
@@ -245,10 +269,10 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
                 </div>
               )}
             </div>
-
-            {/* Thumbnails Upload */}
             <div className="col-span-full">
-              <label className="block text-sm font-medium text-graydark">Upload Thumbnails (Max 4)</label>
+              <label className="block text-sm font-medium text-graydark">
+                Upload Thumbnails (Max 4)
+              </label>
               <input
                 type="file"
                 accept="image/*"

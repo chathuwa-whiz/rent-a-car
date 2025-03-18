@@ -27,13 +27,13 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
   useEffect(() => {
     if (initialData) {
       setVehicleData({
-        id: initialData.id, // from the Mongoose transform
+        id: initialData.id, 
         brand: initialData.brand || '',
         model: initialData.model || '',
         engine: initialData.engine || '',
         topSpeed: initialData.topSpeed || '',
         acceleration: initialData.acceleration || '',
-        primaryImage: null, // File inputs cannot be pre-filled; use initialData.primaryImage for preview.
+        primaryImage: null, 
         thumbnails: [],
         price: initialData.price || '',
         booked: initialData.booked || false,
@@ -49,6 +49,27 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
       setVehicleData(defaultState);
     }
   }, [initialData]);
+
+  // Validate keypress for numeric fields.
+  // Blocks any other character.
+  const validateNumber = (e) => {
+    const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+    if (allowedKeys.includes(e.key)) return;
+    
+    // Allow dot (.) if not already present
+    if (e.key === '.') {
+      if (e.target.value.includes('.')) {
+        e.preventDefault();
+        alert('Only one dot allowed!');
+      }
+      return;
+    }
+
+    if (!/[0-9]/.test(e.key)) {
+      e.preventDefault();
+      alert('Only numbers allowed!');
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -143,6 +164,7 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={vehicleData.engine}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -152,6 +174,7 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={vehicleData.topSpeed}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -161,6 +184,7 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={vehicleData.acceleration}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -170,6 +194,7 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={vehicleData.price}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <select
@@ -202,6 +227,7 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={vehicleData.seats}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <select
@@ -245,8 +271,6 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
                 required
               />
             </div>
-
-            {/* Primary Image Upload */}
             <div className="col-span-full">
               <label className="block text-sm font-medium text-graydark">
                 Upload Primary Image (1)
@@ -282,8 +306,6 @@ const UpdateVehicleModal = ({ isOpen, onClose, onSave, initialData }) => {
                 </div>
               ) : null}
             </div>
-
-            {/* Thumbnails Upload */}
             <div className="col-span-full">
               <label className="block text-sm font-medium text-graydark">
                 Upload Thumbnails (Max 4)
