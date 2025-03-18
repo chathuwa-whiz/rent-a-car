@@ -36,9 +36,9 @@ export default function Customers() {
     <div className="space-y-6">
       <div className="flex-col lg:flex-row justify-start lg:justify-between gap-4 lg:items-center">
         <h1 className="text-2xl font-bold">Customer Management</h1>
-        <button className="bg-blue text-white px-4 py-2 mt-4 rounded-lg cursor-pointer hover:bg-[#0024b5]">
+        {/* <button className="bg-blue text-white px-4 py-2 mt-4 rounded-lg cursor-pointer hover:bg-[#0024b5]">
           Export Customer Data
-        </button>
+        </button> */}
       </div>
 
       <div className="flex-1 relative">

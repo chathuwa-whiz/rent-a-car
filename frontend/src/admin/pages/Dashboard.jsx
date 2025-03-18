@@ -87,10 +87,10 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-        <button className="bg-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+        {/* <button className="bg-blue text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
           <TbDownload size={18} />
           Download Report
-        </button>
+        </button> */}
       </div>
 
       {/* Stats Cards */}
