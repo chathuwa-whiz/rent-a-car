@@ -48,8 +48,8 @@ export default function Footer() {
               <ul className="mt-2 text-graydark space-y-2">
                 <li><a href="" className="hover:text-graylight">Home</a></li>
                 <li><a href="/fleet" className="hover:text-graylight">Fleet</a></li>
-                <li><a href="#aboutus" className="hover:text-graylight">About</a></li>
-                <li><a href="#contact" className="hover:text-graylight">Contact</a></li>
+                <li><a href="/#aboutus" className="hover:text-graylight">About</a></li>
+                <li><a href="/#contact" className="hover:text-graylight">Contact</a></li>
               </ul>
             </div>
 

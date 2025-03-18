@@ -82,10 +82,10 @@ export default function Header() {
             <a href="/fleet" className="hover:text-graylight">
               Fleet
             </a>
-            <a href="#aboutus" className="hover:text-graylight">
+            <a href="/#aboutus" className="hover:text-graylight">
               About Us
             </a>
-            <a href="#contact" className="hover:text-graylight">
+            <a href="/#contact" className="hover:text-graylight">
               Contacts
             </a>
           </div>
@@ -154,10 +154,10 @@ export default function Header() {
             <a href="/fleet" className="text-white hover:text-graylight">
               Garage
             </a>
-            <a href="#aboutus" className="text-white hover:text-graylight">
+            <a href="/#aboutus" className="text-white hover:text-graylight">
               About Us
             </a>
-            <a href="#contact" className="text-white hover:text-graylight">
+            <a href="/#contact" className="text-white hover:text-graylight">
               Contacts
             </a>
 
