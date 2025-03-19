@@ -64,12 +64,6 @@ export default function Sidebar({ isOpen, onClose }) {
               </Link>
             </nav>
           </div>
-          <Link 
-            to="/" 
-            className="flex items-center text-white hover:text-darkred focus:text-darkred text-[20px]"
-          >
-            <FaSignOutAlt className="mr-2" /> Log out
-          </Link>
         </div>
       </div>
     </>
