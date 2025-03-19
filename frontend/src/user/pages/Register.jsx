@@ -75,14 +75,14 @@ export default function Register() {
           Enter your personal data to create an account
         </p>
 
-        <button className="flex items-center gap-2 border lg:border-graydark text-xs sm:text-sm py-2 px-4 mt-4 rounded-[5px] w-full max-w-xs justify-center">
+        {/* <button className="flex items-center gap-2 border lg:border-graydark text-xs sm:text-sm py-2 px-4 mt-4 rounded-[5px] w-full max-w-xs justify-center">
           <FcGoogle className="w-5 h-5" />
           Sign Up with Google
-        </button>
+        </button> */}
 
         <div className="flex items-center w-full max-w-md my-3">
           <hr className="flex-grow lg:border-graydark" />
-          <span className="lg:text-graylight text-sm px-2">Or</span>
+          {/* <span className="lg:text-graylight text-sm px-2">Or</span> */}
           <hr className="flex-grow lg:border-graydark" />
         </div>
 

@@ -87,6 +87,7 @@ export default function Footer() {
           <GradientText text="RENTACAR" />
         </motion.div>
       )}
+      <p className="text-center text-graydark mb-4">© 2025 Rentacar by Traffic Tours. Developed by Webminds. All rights reserved.</p>
     </motion.div>
   );
 }

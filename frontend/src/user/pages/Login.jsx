@@ -58,14 +58,14 @@ export default function Login() {
           Enter your personal data to Login
         </p>
 
-        <button className="flex items-center gap-2 border lg:border-graydark  px-6 py-2 mt-5 rounded-md w-full max-w-xs justify-center">
+        {/* <button className="flex items-center gap-2 border lg:border-graydark  px-6 py-2 mt-5 rounded-md w-full max-w-xs justify-center">
           <FcGoogle className="w-5 h-5" />
           Login with Google
-        </button>
+        </button> */}
 
         <div className="flex items-center w-full max-w-xs my-5">
           <hr className="flex-grow lg:border-graydark" />
-          <span className="lg:text-graylight px-2">Or</span>
+          {/* <span className="lg:text-graylight px-2">Or</span> */}
           <hr className="flex-grow lg:border-graydark" />
         </div>
 
