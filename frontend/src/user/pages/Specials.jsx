@@ -6,11 +6,33 @@ import { TbCarSuvFilled } from "react-icons/tb";
 import { IoCarSport } from "react-icons/io5";
 import { FaCarSide } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { useGetVehiclesQuery } from "../../redux/services/vehicleSlice";
 
 export default function Specials() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [carsPerPage, setCarsPerPage] = useState(3);
+
+  // Fetch vehicles data using Redux
+  const { data: vehiclesData, isLoading, error } = useGetVehiclesQuery();
+
+  // Transform vehicles data to match component's format
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    if (vehiclesData) {
+      // Map API data to the format needed by the component
+      const formattedCars = vehiclesData.map((vehicle) => ({
+        id: vehicle.id || vehicle._id,
+        name: `${vehicle.brand} ${vehicle.model}`,
+        type: vehicle.type || "R Design",
+        price: `Rs.${vehicle.price}`,
+        img: vehicle.primaryImage || "/car1.webp", // Fallback to default image if no primaryImage
+      }));
+
+      setCars(formattedCars);
+    }
+  }, [vehiclesData]);
 
   useEffect(() => {
     const updateCarsPerPage = () => {
@@ -22,33 +44,36 @@ export default function Specials() {
     return () => window.removeEventListener("resize", updateCarsPerPage);
   }, []);
 
-  const cars = [
-    { id: "1", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-    { id: "2", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { id: "3", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { id: "4", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { id: "5", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { id: "6", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-    { id: "7", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-    { id: "8", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { id: "9", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { id: "10", name: "Honda CR-V", type: "R Design", price: "$600", img: "/car2.webp" },
-    { id: "11", name: "Civic Type R", type: "R Design", price: "$600", img: "/car1.webp" },
-    { id: "12", name: "HR-V Hybrid", type: "R Design", price: "$600", img: "/car3.webp" },
-  ];
-
-  const totalPages = Math.ceil(cars.length / carsPerPage);
+  const totalPages = Math.ceil((cars?.length || 0) / carsPerPage);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentPage((prev) => (prev < totalPages ? prev + 1 : 1));
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [totalPages]);
 
   const startIndex = (currentPage - 1) * carsPerPage;
   const currentCars = cars.slice(startIndex, startIndex + carsPerPage);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <p className="text-white">Loading special offers...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <p className="text-darkred">
+          Error loading vehicles. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative text-white py-8 px-10 lg:px-16 h-auto md:h-[85vh]">
@@ -61,7 +86,9 @@ export default function Specials() {
 
       {/* Header Section */}
       <div className="relative flex flex-col md:flex-row justify-between items-center mt-6 md:mt-10 mb-12 md:mb-20">
-        <h2 className=" text-lg lg:text-2xl mb-6 md:mb-0  font-bold">TODAY SPECIALS</h2>
+        <h2 className=" text-lg lg:text-2xl mb-6 md:mb-0  font-bold">
+          TODAY SPECIALS
+        </h2>
 
         <div className="flex flex-col md:flex-row items-center gap-4 lg:gap-8">
           {/* Car Categories */}
@@ -81,7 +108,10 @@ export default function Specials() {
           </div>
 
           {/* View All Cars Button */}
-          <button className="border-2 lg:border-3 border-gasolindark px-6 lg:px-8 py-2 rounded cursor-pointer hover:bg-gasolinlight hover:border-gasolinlight transition text-sm lg:text-base">
+          <button
+            onClick={() => navigate(`/fleet/`)}
+            className="border-2 lg:border-3 border-gasolindark px-6 lg:px-8 py-2 rounded cursor-pointer hover:bg-gasolinlight hover:border-gasolinlight transition text-sm lg:text-base"
+          >
             VIEW ALL CARS
           </button>
         </div>
@@ -98,18 +128,33 @@ export default function Specials() {
           transition={{ duration: 0.5 }}
         >
           {currentCars.map((car, index) => (
-            <motion.div key={index} className="text-center font-bold">
-              <img src={car.img} alt={car.name} className="mx-auto w-48 lg:w-56 h-28 lg:h-36" />
-              <h3 className="text-lg lg:text-xl font-semibold mt-4">{car.name}</h3>
+            <motion.div key={car.id} className="text-center font-bold">
+              <img
+                src={car.img}
+                alt={car.name}
+                className="mx-auto w-48 lg:w-56 h-28 lg:h-36 object-contain"
+              />
+              <h3 className="text-lg lg:text-xl font-semibold mt-4">
+                {car.name}
+              </h3>
               <p className="text-graydark text-sm lg:text-base">{car.type}</p>
 
               <div className="flex flex-col md:flex-row justify-center items-center gap-2 lg:gap-4 mt-2">
                 <p className="text-gasolindark tracking-widest text-sm lg:text-base">
-                  {car.price} <span className="text-graydark tracking-wide">/ Per Day</span>
+                  {car.price}{" "}
+                  <span className="text-graydark tracking-wide">/ Per Day</span>
                 </p>
-                <button 
-                  onClick={() => navigate(`/vehicle/${car.id}`)}
-                  className="text-gasolindark flex items-center gap-1 lg:gap-2 cursor-pointer hover:text-gasolinlight transition text-xs lg:text-base">
+                <button
+                  onClick={() => {
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                      navigate("/register");
+                    } else {
+                      navigate(`/vehicle/${car.id}`);
+                    }
+                  }}
+                  className="text-gasolindark flex items-center gap-1 lg:gap-2 cursor-pointer hover:text-gasolinlight transition text-xs lg:text-base"
+                >
                   DRIVE NOW <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
                 </button>
               </div>
@@ -128,10 +173,14 @@ export default function Specials() {
           <FaChevronLeft />
         </motion.button>
         <span className="text-base md:text-lg">{currentPage}</span>
-        <span className="text-gray-500 text-sm md:text-base">/ {totalPages}</span>
+        <span className="text-gray-500 text-sm md:text-base">
+          / {totalPages}
+        </span>
         <motion.button
           whileTap={{ scale: 0.8 }}
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
           className="text-graydark cursor-pointer hover:text-white text-lg md:text-xl"
         >
           <FaChevronRight />

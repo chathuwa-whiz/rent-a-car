@@ -8,7 +8,8 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
     engine: '',
     topSpeed: '',
     acceleration: '',
-    images: [],
+    primaryImage: null,      // For primary image file
+    thumbnails: [],          // For thumbnail image files
     price: '',
     booked: false,
     type: '',
@@ -16,8 +17,30 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
     seats: '',
     rentalType: '',
     securityDeposit: '',
-    availability: 'available' 
+    availability: 'available',
+    description: ''          // New field for vehicle description
   });
+
+  // Validate keypress for numeric fields.
+  // Blocks any other character
+  const validateNumber = (e) => {
+    const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'];
+    if (allowedKeys.includes(e.key)) return;
+    
+    // Allow dot (".") if not already present in the input
+    if (e.key === '.') {
+      if (e.target.value.includes('.')) {
+        e.preventDefault();
+        alert('Only one dot allowed!');
+      }
+      return;
+    }
+
+    if (!/[0-9]/.test(e.key)) {
+      e.preventDefault();
+      alert('Only numbers allowed!');
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -27,30 +50,45 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
     });
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files); // Convert FileList to an array
-    if (files.length + newVehicle.images.length > 5) {
-      alert('You can only upload up to 5 images.');
+  const handlePrimaryImageUpload = (e) => {
+    const file = e.target.files[0];
+    setNewVehicle({
+      ...newVehicle,
+      primaryImage: file
+    });
+  };
+
+  const handleThumbnailsUpload = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + newVehicle.thumbnails.length > 4) {
+      alert('You can only upload up to 4 thumbnail images.');
       return;
     }
     setNewVehicle({
       ...newVehicle,
-      images: [...newVehicle.images, ...files] // Append new files to existing ones
+      thumbnails: [...newVehicle.thumbnails, ...files]
     });
   };
 
-  const handleRemoveImage = (index) => {
-    const updatedImages = newVehicle.images.filter((_, i) => i !== index);
+  const handleRemovePrimaryImage = () => {
     setNewVehicle({
       ...newVehicle,
-      images: updatedImages
+      primaryImage: null
+    });
+  };
+
+  const handleRemoveThumbnail = (index) => {
+    const updatedThumbnails = newVehicle.thumbnails.filter((_, i) => i !== index);
+    setNewVehicle({
+      ...newVehicle,
+      thumbnails: updatedThumbnails
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(newVehicle); 
-    onClose(); 
+    onSave(newVehicle);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -58,11 +96,11 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
   return (
     <div
       className="fixed inset-0 bg-black/50 backdrop-blur-md flex justify-center items-center"
-      onClick={onClose} 
+      onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-1/3 p-6 space-y-4"
-        onClick={(e) => e.stopPropagation()} 
+        className="bg-white rounded-lg w-11/12 md:w-1/2 lg:w-2/3 p-6 space-y-4 m-4 max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold">Add New Vehicle</h2>
@@ -71,7 +109,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
           </button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input
               type="text"
               name="brand"
@@ -97,6 +135,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.engine}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -106,6 +145,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.topSpeed}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -115,6 +155,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.acceleration}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <input
@@ -124,6 +165,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.price}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <select
@@ -156,6 +198,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
               value={newVehicle.seats}
               onChange={handleInputChange}
+              onKeyPress={validateNumber}
               required
             />
             <select
@@ -178,7 +221,6 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               onChange={handleInputChange}
               required
             />
-           
             <select
               name="availability"
               className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
@@ -191,17 +233,56 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
               <option value="maintenance">Maintenance</option>
             </select>
             <div className="col-span-full">
-              <label className="block text-sm font-medium text-graydark">Upload Images (Max 5)</label>
+              <textarea
+                name="description"
+                placeholder="Description"
+                className="w-full px-4 py-2 rounded-lg border border-graylight focus:outline-none focus:ring-1 focus:ring-blue"
+                value={newVehicle.description}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="col-span-full">
+              <label className="block text-sm font-medium text-graydark">
+                Upload Primary Image (1)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePrimaryImageUpload}
+                className="mt-1 block w-full px-3 py-2 border border-graylight rounded-md shadow-sm focus:outline-none focus:ring-blue focus:border-blue sm:text-sm cursor-pointer"
+              />
+              {newVehicle.primaryImage && (
+                <div className="mt-2 relative w-20 h-20">
+                  <img
+                    src={URL.createObjectURL(newVehicle.primaryImage)}
+                    alt="Primary Preview"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                  <button
+                    type="button"
+                    className="absolute top-0 right-0 bg-darkred text-white rounded-full p-1 cursor-pointer"
+                    onClick={handleRemovePrimaryImage}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="col-span-full">
+              <label className="block text-sm font-medium text-graydark">
+                Upload Thumbnails (Max 4)
+              </label>
               <input
                 type="file"
                 accept="image/*"
                 multiple
-                onChange={handleImageUpload}
+                onChange={handleThumbnailsUpload}
                 className="mt-1 block w-full px-3 py-2 border border-graylight rounded-md shadow-sm focus:outline-none focus:ring-blue focus:border-blue sm:text-sm cursor-pointer"
               />
-              {newVehicle.images.length > 0 && (
+              {newVehicle.thumbnails.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {newVehicle.images.map((file, index) => (
+                  {newVehicle.thumbnails.map((file, index) => (
                     <div key={index} className="w-20 h-20 relative">
                       <img
                         src={URL.createObjectURL(file)}
@@ -211,7 +292,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
                       <button
                         type="button"
                         className="absolute top-0 right-0 bg-darkred text-white rounded-full p-1 cursor-pointer"
-                        onClick={() => handleRemoveImage(index)}
+                        onClick={() => handleRemoveThumbnail(index)}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -224,7 +305,7 @@ const AddVehicleModal = ({ isOpen, onClose, onSave }) => {
           <div className="flex justify-end space-x-4">
             <button
               type="button"
-              className="px-4 py-2 rounded-lg border border-graylight hover:bg-graylight cursor-pointer" 
+              className="px-4 py-2 rounded-lg border border-graylight hover:bg-graylight cursor-pointer"
               onClick={onClose}
             >
               Cancel

@@ -2,11 +2,52 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import toast from 'react-hot-toast';
+import { useLoginMutation } from "../../redux/services/authSlice"
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
 
+  const [ login ] = useLoginMutation();
+  
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    try {
+
+      const credentials = {
+
+        email,
+        password,
+      };
+
+      const result = await login(credentials).unwrap();
+      console.log('login result: ', result);
+      toast.success("Login successful");
+
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('role', result.user.role);
+      localStorage.setItem('user', JSON.stringify(result.user));
+
+      if(result.user.role === 'admin'){
+        navigate("/admin");
+      }
+      else {
+        navigate("/");
+      }
+
+    } catch (error) {
+
+      console.log('Error in login: ', error);
+      toast.error(error.data.message);
+    }
+  }
+
 
   return (
     <div className="flex flex-row h-screen w-full pt-24">
@@ -32,6 +73,7 @@ export default function Login() {
           <label className="block text-lg lg:text-graylight">Email</label>
           <input
             type="email"
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="eg : Example@gmail.com"
             className="w-full pl-3 py-2 mt-1 rounded-md border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
           />
@@ -41,6 +83,7 @@ export default function Login() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your Password"
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full pl-3 py-2 mt-1 rounded-md border lg:border-graydark focus:outline-none focus:ring-1 focus:ring-gasolindark"
             />
             <span
@@ -52,7 +95,7 @@ export default function Login() {
           </div>
         </div>
 
-        <button className="w-full max-w-xs mt-6 p-2 bg-white text-black rounded-md font-bold">
+        <button onClick={handleSubmit} className="w-full max-w-xs mt-6 p-2 bg-white text-black rounded-md font-bold">
           Login
         </button>
 

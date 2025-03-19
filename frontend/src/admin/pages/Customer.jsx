@@ -1,100 +1,44 @@
 import React, { useState } from 'react';
 import { Search, Phone, Mail, MapPin, Star } from 'lucide-react';
-
-const customers = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 234 567 890',
-    location: 'New York, USA',
-    totalBookings: 12,
-    totalSpent: 4800,
-    rating: 4.8,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    phone: '+1 234 567 891',
-    location: 'Los Angeles, USA',
-    totalBookings: 8,
-    totalSpent: 3200,
-    rating: 4.5,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 3,
-    name: 'Ben Dover',
-    email: 'john.doe@example.com',
-    phone: '+1 234 567 890',
-    location: 'New York, USA',
-    totalBookings: 12,
-    totalSpent: 4800,
-    rating: 4.8,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 4,
-    name: 'Ivy Doe',
-    email: 'jane.smith@example.com',
-    phone: '+1 234 567 891',
-    location: 'Los Angeles, USA',
-    totalBookings: 8,
-    totalSpent: 3200,
-    rating: 4.5,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 5,
-    name: 'Mike Rafone',
-    email: 'john.doe@example.com',
-    phone: '+1 234 567 890',
-    location: 'New York, USA',
-    totalBookings: 12,
-    totalSpent: 4800,
-    rating: 4.8,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 6,
-    name: 'Lois Griffin',
-    email: 'jane.smith@example.com',
-    phone: '+1 234 567 891',
-    location: 'Los Angeles, USA',
-    totalBookings: 8,
-    totalSpent: 3200,
-    rating: 4.5,
-    status: 'active',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100'
-  },
-
-];
+import { useGetUsersQuery } from '../../redux/services/userSlice'; 
 
 export default function Customers() {
+  const { data: users, error, isLoading } = useGetUsersQuery();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filter customers based on the search term
-  const filteredCustomers = customers.filter((customer) =>
+
+  const mappedCustomers = users
+    ? users.map((user) => ({
+        id: user._id,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        phone: user.phone,
+        location: user.address,
+        totalBookings: user.totalBookings || 0,
+        totalSpent: user.totalSpent || 0,               
+        status: 'active',
+        image: user.image || 'https://via.placeholder.com/100',                    
+      }))
+    : [];
+
+
+  const filteredCustomers = mappedCustomers.filter((customer) =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     customer.phone.includes(searchTerm) ||
     customer.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching customers</p>;
+
   return (
     <div className="space-y-6">
       <div className="flex-col lg:flex-row justify-start lg:justify-between gap-4 lg:items-center">
         <h1 className="text-2xl font-bold">Customer Management</h1>
-        <button className="bg-blue text-white px-4 py-2 mt-4 rounded-lg cursor-pointer hover:bg-[#0024b5]">
+        {/* <button className="bg-blue text-white px-4 py-2 mt-4 rounded-lg cursor-pointer hover:bg-[#0024b5]">
           Export Customer Data
-        </button>
+        </button> */}
       </div>
 
       <div className="flex-1 relative">
@@ -112,13 +56,11 @@ export default function Customers() {
         {filteredCustomers.map((customer) => (
           <div key={customer.id} className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center space-x-4">
-              <img src={customer.image} alt="" className="h-16 w-16 rounded-full" />
+
+            <img src={customer.image} alt="" className="h-16 w-16 rounded-full" />
+
               <div>
                 <h3 className="text-lg font-semibold text-black">{customer.name}</h3>
-                <div className="flex items-center text-sm text-graydark">
-                  <Star className="h-4 w-4 text-yellowlight mr-1" />
-                  {customer.rating} rating
-                </div>
               </div>
             </div>
             
@@ -154,5 +96,4 @@ export default function Customers() {
       </div>
     </div>
   );
-};
-
+}

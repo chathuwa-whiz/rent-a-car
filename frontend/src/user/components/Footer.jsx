@@ -1,6 +1,12 @@
-import React, {useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import GradientText from "./GradientText";
 import TextHoverEffect from "./TextHoverEffect";
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } },
+};
 
 export default function Footer() {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -16,9 +22,16 @@ export default function Footer() {
   }, []);
 
   return (
-    <div>
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.2 }}
+    >
       <footer className="pt-22 px-6 md:px-20">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between">
+        <motion.div
+          className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between"
+          variants={fadeIn}
+        >
           {/* Left Section */}
           <div className="mb-8 md:mb-0">
             <h2 className="text-graylight font-bold text-lg">RENTACAR</h2>
@@ -35,8 +48,8 @@ export default function Footer() {
               <ul className="mt-2 text-graydark space-y-2">
                 <li><a href="" className="hover:text-graylight">Home</a></li>
                 <li><a href="/fleet" className="hover:text-graylight">Fleet</a></li>
-                <li><a href="#" className="hover:text-graylight">About</a></li>
-                <li><a href="#" className="hover:text-graylight">Contact</a></li>
+                <li><a href="/#aboutus" className="hover:text-graylight">About</a></li>
+                <li><a href="/#contact" className="hover:text-graylight">Contact</a></li>
               </ul>
             </div>
 
@@ -50,23 +63,30 @@ export default function Footer() {
               </ul>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Bottom Separator */}
-        <div className="mt-10 pb-6 border-t border-graydark"></div>
+        <motion.div
+          className="mt-10 pb-6 border-t border-graydark"
+          variants={fadeIn}
+        ></motion.div>
       </footer>
 
-  
       {isLargeScreen ? (
-        <div className="h-[200px] md:h-[400px] flex justify-center items-center">
+        <motion.div
+          className="h-[200px] md:h-[400px] flex justify-center items-center"
+          variants={fadeIn}
+        >
           <TextHoverEffect text="RENTACAR" />
-        </div>
+        </motion.div>
       ) : (
-        
-        <div className="h-[200px] md:h-[400px] flex justify-center items-center">
-      <GradientText text="RENTACAR" />
-    </div>
+        <motion.div
+          className="h-[200px] md:h-[400px] flex justify-center items-center"
+          variants={fadeIn}
+        >
+          <GradientText text="RENTACAR" />
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
