@@ -405,9 +405,9 @@ export default function Fleet() {
                     alt={car.name}
                     className="w-full"
                   />
-                  <div className="absolute top-2 right-2 rounded-full p-2">
+                  {/* <div className="absolute top-2 right-2 rounded-full p-2">
                     <TbHeart className="text-graydark" />
-                  </div>
+                  </div> */}
                   {car.booked && (
                     <div className="absolute top-2 left-2 bg-darkred text-graylight text-sm font-semibold px-2 rounded-sm">
                       Booked
