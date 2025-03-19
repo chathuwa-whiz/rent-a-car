@@ -19,32 +19,32 @@ export default function AboutUs() {
         />
 
         {/* "RENT A CAR" Banner */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: false, amount: 0.2 }}
-          className="absolute top-[80%] lg:top-[20%] right-[38%] lg:right-[37.5%] w-[35%] lg:w-[6%] h-[30%] lg:h-[50%] text-center bg-gradient-to-r from-gasolindark to-gasolinlight lg:px-2 py-4 lg:py-12 xl:py-16 font-bold z-50"
-        >
-          <h3 className="text:sm sm:text-xl md:text-2xl xl:text-3xl lg:w-[8rem] xl:w-[10rem] text-white lg:pl-2 xl:pl-4 md:pt-6 lg:pt-0 font-extrabold leading-tight">
-            RENT A CAR
-          </h3>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: false, amount: 0.2 }}
+            className="absolute top-[80%] lg:top-[20%] right-[38%] lg:right-[37.5%] w-[35%] lg:w-[6%] h-[30%] lg:h-[50%] text-center bg-gradient-to-r from-gasolindark to-gasolinlight lg:px-2 py-4 lg:py-12 xl:py-16 font-bold z-50"
+          >
+            <h3 className="text:sm sm:text-xl md:text-2xl xl:text-3xl lg:w-[8rem] xl:w-[10rem] text-white lg:pl-2 xl:pl-4 md:pt-6 lg:pt-0 font-extrabold leading-tight">
+              RENT A CAR
+            </h3>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          viewport={{ once: false, amount: 0.2 }}
-          className="absolute top-[102%] lg:top-[58%] xl:top-[55%] right-[10%] md:right-[24%] xl:right-[28%] text-gasolindark font-bold z-50"
-        >
-          <p className="text-sm lg:text-lg flex items-center gap-1">
-            Follow us <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
-          </p>
-        </motion.div>
-      </div>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: false, amount: 0.2 }}
+            className="absolute top-[102%] lg:top-[58%] xl:top-[55%] right-[10%] md:right-[24%] xl:right-[28%] text-gasolindark font-bold z-50"
+          >
+            <p onClick={() => window.open("https://www.instagram.com/", "_blank")} className="cursor-pointer text-sm lg:text-lg flex items-center gap-1">
+              Follow us <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5" />
+            </p>
+          </motion.div>
+              </div>
 
-      {/* Bottom Section - Content & Features */}
+              {/* Bottom Section - Content & Features */}
       <div className="relative py-14">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Side - Text Section */}

@@ -2,6 +2,9 @@ import React from 'react'
 import { TbMenu2, TbSearch, TbUser } from 'react-icons/tb';
 
 export default function Header({ toggleSidebar }) {
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
     return (
         <header className="bg-white border-b border-graylight">
             <div className="flex items-center justify-between px-4 py-3">
@@ -14,7 +17,7 @@ export default function Header({ toggleSidebar }) {
                 </button>
 
                 {/* Search bar */}
-                <div className="flex-1 max-w-xl mx-4">
+                {/* <div className="flex-1 max-w-xl mx-4">
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <TbSearch className="text-gray-400" size={20} />
@@ -25,7 +28,7 @@ export default function Header({ toggleSidebar }) {
                             placeholder="Search"
                         />
                     </div>
-                </div>
+                </div> */}
 
                 {/* User profile */}
                 <div className="flex items-center">
@@ -33,7 +36,7 @@ export default function Header({ toggleSidebar }) {
                         <div className="rounded-full p-2">
                             <TbUser size={20} className="text-graydark" />
                         </div>
-                        <span className="hidden md:block text-sm text-graydark font-medium">Admin User</span>
+                        <span className="hidden md:block text-sm text-graydark font-medium">Admin {user.firstName}</span>
                     </div>
                 </div>
             </div>

@@ -1,41 +1,57 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaFacebookF, FaInstagram, FaEnvelope, FaWhatsapp, FaFacebookMessenger } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaEnvelope,
+  FaWhatsapp,
+  FaFacebookMessenger,
+} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-const carData = [
-  {
-    id: 1,
-    name: "BMW M3 SEDAN",
-    price: "$600",
-    image: "/hero.png",
-  },
-  {
-    id: 2,
-    name: "Toyota Corolla",
-    price: "$400",
-    image: "/hero2.png",
-  },
-];
+import { useGetVehiclesQuery } from "../../redux/services/vehicleSlice";
 
 export default function Hero() {
-  const [currentCar, setCurrentCar] = useState(0);
   const navigate = useNavigate();
+  const [currentCar, setCurrentCar] = useState(0);
+  const [featuredVehicles, setFeaturedVehicles] = useState([]);
 
+  const { data: vehiclesData, isLoading } = useGetVehiclesQuery();
+
+  // Select 3-5 vehicles to feature in the hero section
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCar((prev) => (prev + 1) % carData.length);
-    }, 5000); 
+    if (vehiclesData && vehiclesData.length > 0) {
+      // Pick 3-5 vehicles or however many you want to feature
+      const featured = vehiclesData
+        .filter((vehicle) => vehicle.availability === "available") // Only show available vehicles
+        .slice(0, 5); // Take the first 5 vehicles (you can modify this logic)
 
-    return () => clearInterval(interval);
-  }, []);
+      setFeaturedVehicles(featured);
+    }
+  }, [vehiclesData]);
+
+  // Auto-switch carousel
+  useEffect(() => {
+    if (featuredVehicles.length === 0) return;
+
+    const intervalId = setInterval(() => {
+      setCurrentCar((prev) => (prev + 1) % featuredVehicles.length);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [featuredVehicles]);
+
+  if (isLoading || featuredVehicles.length === 0) {
+    return (
+      <div className="min-h-screen bg-primarybg flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-screen bg-gradient-to-b from-black via-[#1c1b1b] to-white md:bg-gradient-to-r md:from-black md:via-[#626262] md:to-white flex flex-col md:flex-row items-center justify-between px-6 md:px-16 overflow-hidden">
-      
       {/* Left Section (Social Icons & Content) */}
       <div className="flex flex-row items-center justify-center md:justify-start gap-x-10 md:gap-x-16 w-full mt-20 md:mt-0 md:ml-4">
-        
         {/* Social Icons */}
         <div className="flex flex-col mt-4 xl:mt-10 space-y-11 md:space-y-13 lg:space-y-16 xl:space-y-23 text-graydark">
           <FaFacebookF className="text-lg lg:text-xl cursor-pointer hover:text-graylight transition" />
@@ -63,27 +79,41 @@ export default function Hero() {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentCar}
-              initial={{ x: -100, opacity: 0 }} 
-              animate={{ x: 0, opacity: 1 }} 
-              exit={{ x: 100, opacity: 0 }} 
-              transition={{ duration: 0.8, ease: "easeInOut" }} 
+              initial={{ x: -100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 100, opacity: 0 }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
               className="mt-2 transition-opacity duration-500 ease-in-out"
             >
-              <p className="text-sm lg:text-2xl font-bold pb-2">{carData[currentCar].name}</p>
-              <p className="text-darkred text-sm lg:text-xl font-bold inline tracking-wider">
-                {carData[currentCar].price}
+              <p className="text-sm lg:text-2xl font-bold pb-2">
+                {featuredVehicles[currentCar]?.brand}{" "}
+                {featuredVehicles[currentCar]?.model}
               </p>
-              <span className="text-sm lg:text-lg font-bold text-graylight"> / Per Day</span>
+              <p className="text-darkred text-sm lg:text-xl font-bold inline tracking-wider">
+                Rs.{featuredVehicles[currentCar]?.price}
+              </p>
+              <span className="text-sm lg:text-lg font-bold text-graylight">
+                {" "}
+                / {featuredVehicles[currentCar]?.rentalType}
+              </span>
             </motion.div>
           </AnimatePresence>
 
           {/* Booking Button */}
-          <button 
-            onClick={() => navigate(`/vehicle/${carData[currentCar].id}`)}
-            className="mt-6 lg:mt-12 px-8 lg:px-12 py-2 lg:py-3 border-2 cursor-pointer border-gasolindark text-sm lg:text-lg font-semibold rounded-[2px] hover:bg-gasolinlight hover:border-gasolinlight transition">
+          <button
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (!token) {
+                navigate("/register");
+              } else {
+                navigate(`/vehicle/${featuredVehicles[currentCar]?.id}`);
+              }
+            }}
+            className="mt-6 lg:mt-12 px-8 lg:px-12 py-2 lg:py-3 border-2 cursor-pointer border-gasolindark text-sm lg:text-lg font-semibold rounded-[2px] hover:bg-gasolinlight hover:border-gasolinlight transition"
+          >
             Book Now
           </button>
-        </div>     
+        </div>
       </div>
 
       {/* Car Image Wrapper with Framer Motion (Slide-in Effect) */}
@@ -91,8 +121,8 @@ export default function Hero() {
         <AnimatePresence mode="wait">
           <motion.img
             key={currentCar}
-            src={carData[currentCar].image}
-            alt={carData[currentCar].name}
+            src={featuredVehicles[currentCar]?.primaryImage}
+            alt={`${featuredVehicles[currentCar]?.brand} ${featuredVehicles[currentCar]?.model}`}
             className="w-full object-contain"
             initial={{ x: "100%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

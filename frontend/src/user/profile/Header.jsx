@@ -1,9 +1,10 @@
 import React from "react";
-import user from "./assets/i55.png";
+import userImg from "./assets/i55.png";
 import { useLocation } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 
 const Header = ({ onMenuClick }) => {
+  const user = JSON.parse(localStorage.getItem("user"));
   const location = useLocation();
   const isProfilePage = location.pathname === "/user/profile";
 
@@ -16,13 +17,13 @@ const Header = ({ onMenuClick }) => {
         >
           <FaBars />
         </button>
-        <h1 className="text-2xl font-md">Welcome Jake !</h1>
+        <h1 className="text-2xl font-md">Welcome {user.firstName} !</h1>
       </div>
       {!isProfilePage && (
         <div className="flex gap-3 items-center">
-          <span className="text-sm font-bold mr-2">Jake Danial</span>
+          <span className="text-sm font-bold mr-2">{user.firstName} {user.lastName}</span>
           <img
-            src={user}
+            src={userImg}
             alt="User Avatar"
             className="w-8 h-8 rounded-full border-2 border-darkred"
           />
