@@ -20,6 +20,23 @@ dotenv.config();
 const app = express();
 
 app.use(helmet());
+
+// Custom Content Security Policy
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://apis.google.com"], // allow Google APIs if used
+            styleSrc: ["'self'", "'unsafe-inline'"], // allow inline styles if needed
+            imgSrc: ["'self'", "data:", "blob:"], // allow local and inline images
+            connectSrc: ["'self'"], // for API calls (e.g., fetch/XHR)
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            objectSrc: ["'none'"], // disallow Flash/Java objects
+            upgradeInsecureRequests: [],
+        },
+    })
+);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
