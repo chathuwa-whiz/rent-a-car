@@ -398,7 +398,7 @@ export default function Fleet() {
           {/* Vehicle grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {currentCars.map((car) => (
-              <div key={car.id} className="rounded-2xl border border-graydark">
+              <div key={car.id} className="rounded-2xl border border-graydark overflow-hidden">
                 <div className="relative">
                   <img
                     src={car.primaryImage}

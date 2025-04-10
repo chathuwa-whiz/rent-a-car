@@ -1,10 +1,16 @@
 import React from "react";
 import { FaSignOutAlt, FaWallet, FaCar, FaCarSide, FaUser } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Sidebar({ isOpen, onClose }) {
+  const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+
+  const navigateToHome = () => {
+    navigate('/');
+    if (onClose) onClose();
+  };
 
   return (
     <>
@@ -24,7 +30,7 @@ export default function Sidebar({ isOpen, onClose }) {
       >
         <div className="p-5 flex flex-col justify-between h-full">
           <div>
-            <h1 className="text-xl font-bold text-white">RENTACAR</h1>
+            <h1 onClick={navigateToHome} className="text-xl font-bold text-white hover:cursor-pointer">RENTACAR</h1>
             <nav className="space-y-4 mt-6 text-[20px]">
               <Link 
                 to="" 
