@@ -5,7 +5,7 @@ export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({
 
-        baseUrl: "http://localhost:5010/api",
+        baseUrl: "https://rent-a-car-0n6z.onrender.com/api",
         prepareHeaders: (headers) => {
 
             const token = localStorage.getItem('token');

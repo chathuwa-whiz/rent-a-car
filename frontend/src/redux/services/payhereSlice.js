@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const paymentApi = createApi({
   reducerPath: "paymentApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5010/api/payhere",
+    baseUrl: "https://rent-a-car-0n6z.onrender.com/api/payhere",
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
