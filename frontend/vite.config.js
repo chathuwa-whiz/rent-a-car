@@ -8,4 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  preview: {
+    allowedHosts: ['rent-a-car.duckdns.org']
+  }
 })
