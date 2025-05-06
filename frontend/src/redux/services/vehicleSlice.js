@@ -5,7 +5,7 @@ export const vehicleApi = createApi({
     reducerPath: "vehicleApi",
     baseQuery: fetchBaseQuery({
 
-        baseUrl: "http://localhost:5010/api",
+        baseUrl: "/api",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem('token');
             if(token){

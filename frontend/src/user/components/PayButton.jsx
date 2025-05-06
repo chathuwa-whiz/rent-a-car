@@ -25,7 +25,7 @@ const PayButton = ({ booking }) => {
         merchant_id: data.merchant_id,
         return_url: undefined,
         cancel_url: undefined,
-        notify_url: "http://localhost:5010/api/payhere/notify",
+        notify_url: "/api/payhere/notify",
         order_id: booking.booking_id,
         items: booking.items,
         amount: Number(booking.amount).toFixed(2),

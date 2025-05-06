@@ -5,7 +5,7 @@ export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
 
-        baseUrl: "http://localhost:5010/api",
+        baseUrl: "/api",
         
     }),
 
